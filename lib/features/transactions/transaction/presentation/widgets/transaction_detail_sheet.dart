@@ -17,8 +17,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-/// All fields of one transaction with Edit, Duplicate and Delete
-/// (DESIGN §8.4). A 90%-height bottom sheet.
+/// All fields of one transaction, a link to the rule that generated it, and
+/// Edit, Duplicate and Delete (DESIGN §8.4). A 90%-height bottom sheet.
 Future<void> showTransactionDetailSheet(BuildContext context, String id) =>
     showModalBottomSheet<void>(
       context: context,
@@ -125,6 +125,36 @@ class _Content extends StatelessWidget {
                     : '${view.account.name} → ${view.toAccount!.name}',
               ),
               if (t.note != null) field(l10n.detail_note, t.note!),
+              if (t.recurringRuleId case final ruleId?)
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        l10n.detail_recurring_rule,
+                        style: theme.textTheme.bodyMedium!.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: TextButton.icon(
+                          key: const ValueKey('detail-rule-link'),
+                          style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                          icon: const Icon(Symbols.repeat_rounded),
+                          label: Text(l10n.detail_view_rule),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            context.push(AppPaths.editRecurringOf(ruleId));
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               field(
                 l10n.detail_created,
                 '${AppDateFormat.dayMonthYear(LocalDate.fromDateTime(created))}, '

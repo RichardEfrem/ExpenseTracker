@@ -87,12 +87,15 @@ WITH moves(acct, day, delta) AS (
   Future<int> delete(String id) =>
       (_db.delete(_db.accounts)..where((a) => a.id.equals(id))).go();
 
+  /// Transactions and recurring rules that use the account.
   Future<int> countUsage(String id) async {
     final row = await _db
         .customSelect(
-          'SELECT COUNT(*) AS n FROM transactions '
-          'WHERE account_id = ? OR to_account_id = ?',
-          variables: [Variable<String>(id), Variable<String>(id)],
+          'SELECT (SELECT COUNT(*) FROM transactions '
+          'WHERE account_id = ?1 OR to_account_id = ?1) + '
+          '(SELECT COUNT(*) FROM recurring_rules '
+          'WHERE account_id = ?1 OR to_account_id = ?1) AS n',
+          variables: [Variable<String>(id)],
         )
         .getSingle();
     return row.read<int>('n');

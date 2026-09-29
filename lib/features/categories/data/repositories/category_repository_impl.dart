@@ -95,7 +95,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
       if (from.type != into.type) {
         _fail(const Failure.validation(ValidationReason.categoryTypeMismatch));
       }
-      await _dataSource.reassignTransactions(fromId, intoId, updatedAt: _now);
+      final now = _now;
+      await _dataSource.reassignTransactions(fromId, intoId, updatedAt: now);
+      await _dataSource.reassignRules(fromId, intoId, updatedAt: now);
       await _dataSource.delete(fromId);
       return unit;
     }),

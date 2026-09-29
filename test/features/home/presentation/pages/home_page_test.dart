@@ -216,6 +216,88 @@ void main() {
     },
   );
 
+  Future<void> addPending(WidgetTester tester, int count) =>
+      pumpUntilDone(tester, () async {
+        final cash = (await db.select(db.accounts).getSingle()).id;
+        await db
+            .into(db.recurringRules)
+            .insert(
+              RecurringRulesCompanion.insert(
+                id: 'gym',
+                type: 'expense',
+                amount: 150000,
+                accountId: cash,
+                categoryId: Value(
+                  (await db.select(db.categories).get()).first.id,
+                ),
+                frequency: 'weekly',
+                startDate: '2026-09-15',
+                autoCreate: const Value(false),
+                createdAt: 1,
+                updatedAt: 1,
+              ),
+            );
+        for (var i = 0; i < count; i++) {
+          await db
+              .into(db.pendingOccurrences)
+              .insert(
+                PendingOccurrencesCompanion.insert(
+                  id: 'p$i',
+                  ruleId: 'gym',
+                  date: '2026-09-${15 + 7 * i}',
+                  createdAt: 1,
+                ),
+              );
+        }
+      }());
+
+  testWidgets('no pending recurring items, no banner', (tester) async {
+    await seed(tester);
+    await pumpApp(tester);
+    expect(find.byKey(const ValueKey('pending-recurring')), findsNothing);
+    await dispose(tester);
+  });
+
+  testWidgets(
+    'pending recurring items show a banner after income/expense → Review',
+    (tester) async {
+      await seed(tester);
+      await addPending(tester, 2);
+      await pumpApp(tester);
+      expect(find.text('2 recurring items to confirm'), findsOneWidget);
+      final banner = tester.getTopLeft(
+        find.byKey(const ValueKey('pending-recurring')),
+      );
+      expect(
+        banner.dy,
+        greaterThan(
+          tester.getTopLeft(find.byKey(const ValueKey('expense-card'))).dy,
+        ),
+      );
+      expect(
+        banner.dy,
+        lessThan(
+          tester.getTopLeft(find.byKey(const ValueKey('top-spending'))).dy,
+        ),
+      );
+      await tester.tap(find.text('Review'));
+      await settle(tester);
+      expect(router.state.uri.path, '/more/recurring');
+      expect(find.text('To confirm'), findsOneWidget);
+      await dispose(tester);
+    },
+  );
+
+  testWidgets('the banner shows even before the first transaction', (
+    tester,
+  ) async {
+    await addPending(tester, 1);
+    await pumpApp(tester);
+    expect(find.text('1 recurring item to confirm'), findsOneWidget);
+    expect(find.text('Add expense'), findsOneWidget);
+    await dispose(tester);
+  });
+
   for (final location in ['/', '/reports', '/activity']) {
     testWidgets('$location with data fits at 360 dp and 200% font', (
       tester,

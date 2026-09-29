@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/utils/local_time.dart';
 import 'package:expense_tracker/features/accounts/accounts_data.dart';
 import 'package:expense_tracker/features/categories/categories_data.dart';
+import 'package:expense_tracker/features/recurring/recurring_data.dart';
 import 'package:expense_tracker/features/transactions/transactions_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -13,8 +14,9 @@ const backupFormat = 'expense_tracker_backup';
 
 int _ms(DateTime t) => t.toUtc().millisecondsSinceEpoch;
 
-/// The backup JSON (schema version 1). Keys are snake_case and every
-/// nullable field is written as an explicit null (never omitted).
+/// The backup JSON (schema version 2). Keys are snake_case and every
+/// nullable field is written as an explicit null (never omitted). v1 files
+/// have no `recurring_rules` / `pending_occurrences`; they read as empty.
 @freezed
 abstract class BackupFileDto with _$BackupFileDto {
   const factory BackupFileDto({
@@ -27,6 +29,8 @@ abstract class BackupFileDto with _$BackupFileDto {
     required List<AccountDto> accounts,
     required List<CategoryDto> categories,
     required List<TransactionDto> transactions,
+    @Default([]) List<RecurringRuleDto> recurringRules,
+    @Default([]) List<PendingOccurrenceDto> pendingOccurrences,
     required Map<String, String> settings,
   }) = _BackupFileDto;
 
@@ -223,5 +227,104 @@ abstract class TransactionDto with _$TransactionDto {
     receiptPath: receiptPath,
     createdAt: createdAt,
     updatedAt: updatedAt,
+  );
+}
+
+@freezed
+abstract class RecurringRuleDto with _$RecurringRuleDto {
+  const factory RecurringRuleDto({
+    required String id,
+    required String type,
+    required int amount,
+    required String accountId,
+    required String? toAccountId,
+    required String? categoryId,
+    required String? note,
+    required String frequency,
+    required int interval,
+    required int? dayOfMonth,
+
+    /// Local dates, `YYYY-MM-DD`.
+    required String startDate,
+    required String? endDate,
+    required bool autoCreate,
+    required String? lastGeneratedDate,
+    required int createdAt,
+    required int updatedAt,
+  }) = _RecurringRuleDto;
+
+  const RecurringRuleDto._();
+
+  factory RecurringRuleDto.fromJson(Map<String, dynamic> json) =>
+      _$RecurringRuleDtoFromJson(json);
+
+  factory RecurringRuleDto.fromEntity(RecurringRule r) => RecurringRuleDto(
+    id: r.id,
+    type: r.type.name,
+    amount: r.amount,
+    accountId: r.accountId,
+    toAccountId: r.toAccountId,
+    categoryId: r.categoryId,
+    note: r.note,
+    frequency: r.frequency.name,
+    interval: r.interval,
+    dayOfMonth: r.dayOfMonth,
+    startDate: r.startDate.toIso(),
+    endDate: r.endDate?.toIso(),
+    autoCreate: r.autoCreate,
+    lastGeneratedDate: r.lastGeneratedDate?.toIso(),
+    createdAt: _ms(r.createdAt),
+    updatedAt: _ms(r.updatedAt),
+  );
+
+  RecurringRuleRow toRow() => RecurringRuleRow(
+    id: id,
+    type: type,
+    amount: amount,
+    accountId: accountId,
+    toAccountId: toAccountId,
+    categoryId: categoryId,
+    note: note,
+    frequency: frequency,
+    interval: interval,
+    dayOfMonth: dayOfMonth,
+    startDate: startDate,
+    endDate: endDate,
+    autoCreate: autoCreate,
+    lastGeneratedDate: lastGeneratedDate,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  );
+}
+
+@freezed
+abstract class PendingOccurrenceDto with _$PendingOccurrenceDto {
+  const factory PendingOccurrenceDto({
+    required String id,
+    required String ruleId,
+
+    /// Local date, `YYYY-MM-DD`.
+    required String date,
+    required int createdAt,
+  }) = _PendingOccurrenceDto;
+
+  const PendingOccurrenceDto._();
+
+  factory PendingOccurrenceDto.fromJson(Map<String, dynamic> json) =>
+      _$PendingOccurrenceDtoFromJson(json);
+
+  factory PendingOccurrenceDto.fromEntity(PendingOccurrence p) =>
+      PendingOccurrenceDto(
+        id: p.id,
+        ruleId: p.ruleId,
+        date: p.date.toIso(),
+        createdAt: _ms(p.createdAt),
+      );
+
+  PendingOccurrenceRow toRow() => PendingOccurrenceRow(
+    id: id,
+    ruleId: ruleId,
+    date: date,
+    createdAt: createdAt,
   );
 }

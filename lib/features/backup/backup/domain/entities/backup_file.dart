@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/utils/local_date.dart';
 import 'package:expense_tracker/features/accounts/accounts_domain.dart';
 import 'package:expense_tracker/features/categories/categories_domain.dart';
+import 'package:expense_tracker/features/recurring/recurring_domain.dart';
 import 'package:expense_tracker/features/transactions/transactions_domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -17,6 +18,7 @@ abstract class BackupPreview with _$BackupPreview {
     required int transactions,
     required int accounts,
     required int categories,
+    @Default(0) int recurringRules,
     LocalDate? firstDate,
     LocalDate? lastDate,
     required DateTime exportedAt,
@@ -34,14 +36,19 @@ abstract class BackupFile with _$BackupFile {
     required List<Category> categories,
     required List<Transaction> transactions,
 
+    /// Schema v2 on; empty when restoring a v1 file.
+    @Default([]) List<RecurringRule> recurringRules,
+    @Default([]) List<PendingOccurrence> pendingOccurrences,
+
     /// Preferences and small app state, key → value.
     required Map<String, String> settings,
   }) = _BackupFile;
 
   const BackupFile._();
 
-  /// The newest backup format this app reads and writes.
-  static const currentSchemaVersion = 1;
+  /// The newest backup format this app reads and writes. v2 adds recurring
+  /// rules and pending occurrences; v1 files still restore.
+  static const currentSchemaVersion = 2;
 
   BackupPreview get preview {
     final dates = [for (final t in transactions) t.date]..sort();
@@ -49,6 +56,7 @@ abstract class BackupFile with _$BackupFile {
       transactions: transactions.length,
       accounts: accounts.length,
       categories: categories.length,
+      recurringRules: recurringRules.length,
       firstDate: dates.firstOrNull,
       lastDate: dates.lastOrNull,
       exportedAt: exportedAt,

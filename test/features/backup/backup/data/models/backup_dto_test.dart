@@ -97,6 +97,108 @@ void main() {
     }
   });
 
+  const rule = RecurringRuleDto(
+    id: 'r',
+    type: 'expense',
+    amount: 3000000,
+    accountId: 'a',
+    toAccountId: null,
+    categoryId: 'c',
+    note: null,
+    frequency: 'monthly',
+    interval: 1,
+    dayOfMonth: 31,
+    startDate: '2026-01-31',
+    endDate: null,
+    autoCreate: false,
+    lastGeneratedDate: null,
+    createdAt: 1,
+    updatedAt: 2,
+  );
+  const pending = PendingOccurrenceDto(
+    id: 'p',
+    ruleId: 'r',
+    date: '2026-09-30',
+    createdAt: 3,
+  );
+
+  test('recurring rule payload writes nulls explicitly, never omits', () {
+    final json = rule.toJson();
+    expect(json, {
+      'id': 'r',
+      'type': 'expense',
+      'amount': 3000000,
+      'account_id': 'a',
+      'to_account_id': null,
+      'category_id': 'c',
+      'note': null,
+      'frequency': 'monthly',
+      'interval': 1,
+      'day_of_month': 31,
+      'start_date': '2026-01-31',
+      'end_date': null,
+      'auto_create': false,
+      'last_generated_date': null,
+      'created_at': 1,
+      'updated_at': 2,
+    });
+    expect(RecurringRuleDto.fromJson(json), rule);
+  });
+
+  test('pending occurrence payload', () {
+    expect(pending.toJson(), {
+      'id': 'p',
+      'rule_id': 'r',
+      'date': '2026-09-30',
+      'created_at': 3,
+    });
+  });
+
+  test('v2 file always writes the recurring lists, even empty', () {
+    const empty = BackupFileDto(
+      schemaVersion: 2,
+      appVersion: '1.0.0 (1)',
+      exportedAt: '2026-09-29T14:00:00.000Z',
+      accounts: [],
+      categories: [],
+      transactions: [],
+      settings: {},
+    );
+    final json = empty.toJson();
+    expect(json['recurring_rules'], isEmpty);
+    expect(json['pending_occurrences'], isEmpty);
+    const full = BackupFileDto(
+      schemaVersion: 2,
+      appVersion: '1.0.0 (1)',
+      exportedAt: '2026-09-29T14:00:00.000Z',
+      accounts: [account],
+      categories: [category],
+      transactions: [transaction],
+      recurringRules: [rule],
+      pendingOccurrences: [pending],
+      settings: {},
+    );
+    expect(BackupFileDto.fromJson(full.toJson()), full);
+  });
+
+  test('a v1 file without recurring lists reads them as empty', () {
+    final v1 =
+        const BackupFileDto(
+            schemaVersion: 1,
+            appVersion: '1.0.0 (1)',
+            exportedAt: '2026-09-29T14:00:00.000Z',
+            accounts: [account],
+            categories: [category],
+            transactions: [transaction],
+            settings: {},
+          ).toJson()
+          ..remove('recurring_rules')
+          ..remove('pending_occurrences');
+    final dto = BackupFileDto.fromJson(v1);
+    expect(dto.recurringRules, isEmpty);
+    expect(dto.pendingOccurrences, isEmpty);
+  });
+
   test('file payload with format marker and nested lists', () {
     const file = BackupFileDto(
       schemaVersion: 1,

@@ -457,7 +457,7 @@ abstract class AppLocalizations {
   /// No description provided for @validation_category_in_use.
   ///
   /// In en, this message translates to:
-  /// **'This category has transactions. Archive it instead.'**
+  /// **'This category is used by transactions or recurring rules. Archive it instead.'**
   String get validation_category_in_use;
 
   /// No description provided for @validation_category_type_mismatch.
@@ -703,7 +703,7 @@ abstract class AppLocalizations {
   /// No description provided for @categories_in_use_body.
   ///
   /// In en, this message translates to:
-  /// **'\"{name}\" has transactions, so it can\'t be deleted. Archive it to hide it from pickers; it stays in reports.'**
+  /// **'\"{name}\" is used by transactions or recurring rules, so it can\'t be deleted. Archive it to hide it from pickers; it stays in reports.'**
   String categories_in_use_body(String name);
 
   /// No description provided for @categories_merge.
@@ -1625,7 +1625,7 @@ abstract class AppLocalizations {
   /// No description provided for @validation_account_in_use.
   ///
   /// In en, this message translates to:
-  /// **'This account has transactions. Archive it instead.'**
+  /// **'This account is used by transactions or recurring rules. Archive it instead.'**
   String get validation_account_in_use;
 
   /// No description provided for @validation_last_account.
@@ -1633,6 +1633,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep at least one active account.'**
   String get validation_last_account;
+
+  /// No description provided for @validation_interval.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a repeat interval from 1 to 365.'**
+  String get validation_interval;
+
+  /// No description provided for @validation_end_before_start.
+  ///
+  /// In en, this message translates to:
+  /// **'The end date can\'t be before the start date.'**
+  String get validation_end_before_start;
 
   /// No description provided for @account_type_cash.
   ///
@@ -1783,6 +1795,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 account ▾} other{{count} accounts ▾}}'**
   String reports_some_accounts(int count);
+
+  /// No description provided for @recurring_new.
+  ///
+  /// In en, this message translates to:
+  /// **'New recurring'**
+  String get recurring_new;
+
+  /// No description provided for @recurring_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit recurring'**
+  String get recurring_edit;
+
+  /// No description provided for @recurring_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Add rent, salary or subscriptions once and they\'ll appear automatically.'**
+  String get recurring_empty;
+
+  /// No description provided for @recurring_pending_header.
+  ///
+  /// In en, this message translates to:
+  /// **'To confirm'**
+  String get recurring_pending_header;
+
+  /// No description provided for @recurring_rules_header.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules'**
+  String get recurring_rules_header;
+
+  /// No description provided for @recurring_due.
+  ///
+  /// In en, this message translates to:
+  /// **'Due {date}'**
+  String recurring_due(String date);
+
+  /// No description provided for @recurring_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get recurring_confirm;
+
+  /// No description provided for @recurring_skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get recurring_skip;
+
+  /// No description provided for @recurring_confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your transactions'**
+  String get recurring_confirmed;
+
+  /// No description provided for @recurring_skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get recurring_skipped;
+
+  /// No description provided for @recurring_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next {date}'**
+  String recurring_next(String date);
+
+  /// No description provided for @recurring_ended.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get recurring_ended;
+
+  /// No description provided for @recurring_needs_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Asks first'**
+  String get recurring_needs_confirm;
+
+  /// No description provided for @recurring_daily.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Daily} other{Every {count} days}}'**
+  String recurring_daily(int count);
+
+  /// No description provided for @recurring_weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Weekly} other{Every {count} weeks}}'**
+  String recurring_weekly(int count);
+
+  /// No description provided for @recurring_monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Monthly on day {day}} other{Every {count} months on day {day}}}'**
+  String recurring_monthly(int count, int day);
+
+  /// No description provided for @recurring_yearly.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Yearly} other{Every {count} years}}'**
+  String recurring_yearly(int count);
+
+  /// No description provided for @recurring_frequency_daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get recurring_frequency_daily;
+
+  /// No description provided for @recurring_frequency_weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get recurring_frequency_weekly;
+
+  /// No description provided for @recurring_frequency_monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get recurring_frequency_monthly;
+
+  /// No description provided for @recurring_frequency_yearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get recurring_frequency_yearly;
+
+  /// No description provided for @recurring_repeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get recurring_repeat;
+
+  /// No description provided for @recurring_interval.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get recurring_interval;
+
+  /// No description provided for @recurring_day_of_month.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of the month'**
+  String get recurring_day_of_month;
+
+  /// No description provided for @recurring_day_value.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day}'**
+  String recurring_day_value(int day);
+
+  /// No description provided for @recurring_day_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'In shorter months, days past the end fall on the last day.'**
+  String get recurring_day_hint;
+
+  /// No description provided for @recurring_less.
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get recurring_less;
+
+  /// No description provided for @recurring_more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get recurring_more;
+
+  /// No description provided for @recurring_starts.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts {date}'**
+  String recurring_starts(String date);
+
+  /// No description provided for @recurring_ends.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends {date}'**
+  String recurring_ends(String date);
+
+  /// No description provided for @recurring_no_end.
+  ///
+  /// In en, this message translates to:
+  /// **'No end date'**
+  String get recurring_no_end;
+
+  /// No description provided for @recurring_ask_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask before adding'**
+  String get recurring_ask_first;
+
+  /// No description provided for @recurring_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring saved'**
+  String get recurring_saved;
+
+  /// No description provided for @recurring_delete_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this rule?'**
+  String get recurring_delete_title;
+
+  /// No description provided for @recurring_delete_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions it already added stay. Items waiting to be confirmed are removed.'**
+  String get recurring_delete_body;
+
+  /// No description provided for @recurring_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Rule deleted'**
+  String get recurring_deleted;
+
+  /// No description provided for @recurring_pending_banner.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 recurring item to confirm} other{{count} recurring items to confirm}}'**
+  String recurring_pending_banner(int count);
+
+  /// No description provided for @recurring_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get recurring_review;
+
+  /// No description provided for @detail_recurring_rule.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring rule'**
+  String get detail_recurring_rule;
+
+  /// No description provided for @detail_view_rule.
+  ///
+  /// In en, this message translates to:
+  /// **'View rule'**
+  String get detail_view_rule;
+
+  /// No description provided for @backup_preview_recurring.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 recurring rule} other{{count} recurring rules}}'**
+  String backup_preview_recurring(int count);
 }
 
 class _AppLocalizationsDelegate

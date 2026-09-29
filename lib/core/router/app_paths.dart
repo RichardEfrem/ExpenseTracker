@@ -12,6 +12,9 @@ abstract final class AppPaths {
   static const preferences = '/more/preferences';
   static const backup = '/more/backup';
   static const accounts = '/more/accounts';
+  static const recurring = '/more/recurring';
+  static const newRecurring = '/more/recurring/new';
+  static const editRecurring = '/more/recurring/:id/edit';
 
   /// The four tab roots in navigation-bar order.
   static const tabs = [home, activity, reports, more];
@@ -28,4 +31,8 @@ abstract final class AppPaths {
   /// `/transactions/<id>/edit`.
   static String editTransactionOf(String id) =>
       '/transactions/${Uri.encodeComponent(id)}/edit';
+
+  /// `/more/recurring/<id>/edit`.
+  static String editRecurringOf(String id) =>
+      '/more/recurring/${Uri.encodeComponent(id)}/edit';
 }

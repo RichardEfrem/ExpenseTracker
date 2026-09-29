@@ -173,6 +173,30 @@ void main() {
     expect((await repo.delete(spare.id)).isRight(), isTrue);
   });
 
+  test('an account used only by a recurring rule is in use', () async {
+    await db
+        .into(db.recurringRules)
+        .insert(
+          RecurringRulesCompanion.insert(
+            id: 'savings',
+            type: 'transfer',
+            amount: 500000,
+            accountId: cash,
+            toAccountId: Value(bank),
+            frequency: 'monthly',
+            startDate: '2026-09-25',
+            createdAt: 0,
+            updatedAt: 0,
+          ),
+        );
+    for (final id in [cash, bank]) {
+      expect(
+        (await repo.delete(id)).getLeft().toNullable(),
+        const Failure.validation(ValidationReason.accountInUse),
+      );
+    }
+  });
+
   test('the last active account cannot be archived', () async {
     expect((await repo.setArchived(bank, archived: true)).isRight(), isTrue);
     expect(

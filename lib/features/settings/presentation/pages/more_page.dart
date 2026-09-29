@@ -54,7 +54,11 @@ class MorePage extends ConsumerWidget {
             l10n.more_categories,
             path: AppPaths.categories,
           ),
-          item(Symbols.repeat_rounded, l10n.more_recurring),
+          item(
+            Symbols.repeat_rounded,
+            l10n.more_recurring,
+            path: AppPaths.recurring,
+          ),
           SectionHeader(l10n.more_section_data),
           item(Symbols.backup_rounded, l10n.more_backup, path: AppPaths.backup),
           item(Symbols.table_view_rounded, l10n.more_export_csv),

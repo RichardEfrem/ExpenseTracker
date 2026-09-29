@@ -106,7 +106,7 @@
   "weekday_sunday": "Sunday",
   "validation_name_empty": "Enter a name.",
   "validation_name_too_long": "Use 40 characters or fewer.",
-  "validation_category_in_use": "This category has transactions. Archive it instead.",
+  "validation_category_in_use": "This category is used by transactions or recurring rules. Archive it instead.",
   "validation_category_type_mismatch": "You can only merge categories of the same type.",
   "validation_merge_into_self": "Choose a different category to merge into.",
   "validation_month_start_day": "Choose a day from 1 to 31.",
@@ -178,7 +178,7 @@
     }
   },
   "categories_in_use_title": "Category in use",
-  "categories_in_use_body": "\"{name}\" has transactions, so it can't be deleted. Archive it to hide it from pickers; it stays in reports.",
+  "categories_in_use_body": "\"{name}\" is used by transactions or recurring rules, so it can't be deleted. Archive it to hide it from pickers; it stays in reports.",
   "@categories_in_use_body": {
     "placeholders": {
       "name": {
@@ -599,8 +599,10 @@
   "backup_erase_again_body": "This can't be undone.",
   "backup_erase_confirm": "Erase everything",
   "backup_erased": "All data erased",
-  "validation_account_in_use": "This account has transactions. Archive it instead.",
+  "validation_account_in_use": "This account is used by transactions or recurring rules. Archive it instead.",
   "validation_last_account": "Keep at least one active account.",
+  "validation_interval": "Choose a repeat interval from 1 to 365.",
+  "validation_end_before_start": "The end date can't be before the start date.",
   "account_type_cash": "Cash",
   "account_type_bank": "Bank",
   "account_type_ewallet": "E-wallet",
@@ -655,6 +657,127 @@
   "reports_all_accounts": "All accounts ▾",
   "reports_some_accounts": "{count, plural, =1{1 account ▾} other{{count} accounts ▾}}",
   "@reports_some_accounts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recurring_new": "New recurring",
+  "recurring_edit": "Edit recurring",
+  "recurring_empty": "Add rent, salary or subscriptions once and they'll appear automatically.",
+  "recurring_pending_header": "To confirm",
+  "recurring_rules_header": "Rules",
+  "recurring_due": "Due {date}",
+  "@recurring_due": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "recurring_confirm": "Confirm",
+  "recurring_skip": "Skip",
+  "recurring_confirmed": "Added to your transactions",
+  "recurring_skipped": "Skipped",
+  "recurring_next": "Next {date}",
+  "@recurring_next": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "recurring_ended": "Ended",
+  "recurring_needs_confirm": "Asks first",
+  "recurring_daily": "{count, plural, =1{Daily} other{Every {count} days}}",
+  "@recurring_daily": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recurring_weekly": "{count, plural, =1{Weekly} other{Every {count} weeks}}",
+  "@recurring_weekly": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recurring_monthly": "{count, plural, =1{Monthly on day {day}} other{Every {count} months on day {day}}}",
+  "@recurring_monthly": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "recurring_yearly": "{count, plural, =1{Yearly} other{Every {count} years}}",
+  "@recurring_yearly": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recurring_frequency_daily": "Daily",
+  "recurring_frequency_weekly": "Weekly",
+  "recurring_frequency_monthly": "Monthly",
+  "recurring_frequency_yearly": "Yearly",
+  "recurring_repeat": "Repeat",
+  "recurring_interval": "Repeats",
+  "recurring_day_of_month": "Day of the month",
+  "recurring_day_value": "Day {day}",
+  "@recurring_day_value": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "recurring_day_hint": "In shorter months, days past the end fall on the last day.",
+  "recurring_less": "Less",
+  "recurring_more": "More",
+  "recurring_starts": "Starts {date}",
+  "@recurring_starts": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "recurring_ends": "Ends {date}",
+  "@recurring_ends": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "recurring_no_end": "No end date",
+  "recurring_ask_first": "Ask before adding",
+  "recurring_saved": "Recurring saved",
+  "recurring_delete_title": "Delete this rule?",
+  "recurring_delete_body": "Transactions it already added stay. Items waiting to be confirmed are removed.",
+  "recurring_deleted": "Rule deleted",
+  "recurring_pending_banner": "{count, plural, =1{1 recurring item to confirm} other{{count} recurring items to confirm}}",
+  "@recurring_pending_banner": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recurring_review": "Review",
+  "detail_recurring_rule": "Recurring rule",
+  "detail_view_rule": "View rule",
+  "backup_preview_recurring": "{count, plural, =1{1 recurring rule} other{{count} recurring rules}}",
+  "@backup_preview_recurring": {
     "placeholders": {
       "count": {
         "type": "int"

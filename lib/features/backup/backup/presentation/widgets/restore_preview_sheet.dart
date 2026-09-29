@@ -40,6 +40,8 @@ Future<RestoreMode?> showRestorePreviewSheet(
               l10n.backup_preview_transactions(preview.transactions),
               l10n.backup_preview_accounts(preview.accounts),
               l10n.backup_preview_categories(preview.categories),
+              if (preview.recurringRules > 0)
+                l10n.backup_preview_recurring(preview.recurringRules),
               ?range,
             ].join(' · '),
             key: const ValueKey('restore-preview'),

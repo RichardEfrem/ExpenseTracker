@@ -31,6 +31,10 @@ abstract class RecurringRuleInput with _$RecurringRuleInput {
 
   /// Validated with the same rules as a transaction, plus the schedule.
   Either<ValidationReason, RecurringRuleInput> validated() {
+    // Adjustments correct a balance once; they never repeat.
+    if (type == TransactionType.adjustment) {
+      return const Left(ValidationReason.invalidInput);
+    }
     if (interval < 1 || interval > maxInterval) {
       return const Left(ValidationReason.intervalOutOfRange);
     }

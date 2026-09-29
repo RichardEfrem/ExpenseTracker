@@ -26,7 +26,8 @@ abstract interface class AccountRepository {
     required bool archived,
   });
 
-  /// Fails with [ValidationReason.accountInUse] if any transaction uses it.
+  /// Fails with [ValidationReason.accountInUse] if any transaction or
+  /// recurring rule uses it.
   Future<Either<Failure, Unit>> delete(String id);
 
   /// Every account's balance as of [asOf] (inclusive), archived included.

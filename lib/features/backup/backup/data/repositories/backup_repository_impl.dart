@@ -11,6 +11,7 @@ import 'package:expense_tracker/features/backup/backup/data/models/backup_dto.da
 import 'package:expense_tracker/features/backup/backup/domain/entities/backup_file.dart';
 import 'package:expense_tracker/features/backup/backup/domain/repositories/backup_repository.dart';
 import 'package:expense_tracker/features/categories/categories_data.dart';
+import 'package:expense_tracker/features/recurring/recurring_data.dart';
 import 'package:expense_tracker/features/settings/settings_data.dart';
 import 'package:expense_tracker/features/transactions/transactions_data.dart';
 import 'package:fpdart/fpdart.dart';
@@ -37,6 +38,10 @@ class BackupRepositoryImpl implements BackupRepository {
           accounts: [for (final r in rows.accounts) r.toEntity()],
           categories: [for (final r in rows.categories) r.toEntity()],
           transactions: [for (final r in rows.transactions) r.toEntity()],
+          recurringRules: [for (final r in rows.recurringRules) r.toEntity()],
+          pendingOccurrences: [
+            for (final r in rows.pendingOccurrences) r.toEntity(),
+          ],
           settings: {for (final r in rows.settings) r.key: r.value},
         );
       });
@@ -54,6 +59,13 @@ class BackupRepositoryImpl implements BackupRepository {
         ],
         transactions: [
           for (final t in file.transactions) TransactionDto.fromEntity(t),
+        ],
+        recurringRules: [
+          for (final r in file.recurringRules) RecurringRuleDto.fromEntity(r),
+        ],
+        pendingOccurrences: [
+          for (final p in file.pendingOccurrences)
+            PendingOccurrenceDto.fromEntity(p),
         ],
         settings: file.settings,
       ).toJson(),
@@ -81,6 +93,12 @@ class BackupRepositoryImpl implements BackupRepository {
         Failure.backup(BackupProblem.unsupportedVersion, '$version'),
       );
     }
+    // From v2 on the recurring lists are part of the format, even if empty.
+    if (version >= 2 &&
+        !(json.containsKey('recurring_rules') &&
+            json.containsKey('pending_occurrences'))) {
+      _corrupt('recurring lists');
+    }
     try {
       final dto = BackupFileDto.fromJson(json);
       _checkReferences(dto);
@@ -91,6 +109,12 @@ class BackupRepositoryImpl implements BackupRepository {
         accounts: [for (final a in dto.accounts) a.toRow().toEntity()],
         categories: [for (final c in dto.categories) c.toRow().toEntity()],
         transactions: [for (final t in dto.transactions) t.toRow().toEntity()],
+        recurringRules: [
+          for (final r in dto.recurringRules) r.toRow().toEntity(),
+        ],
+        pendingOccurrences: [
+          for (final p in dto.pendingOccurrences) p.toRow().toEntity(),
+        ],
         settings: dto.settings,
       );
     } on FailureException {
@@ -101,16 +125,32 @@ class BackupRepositoryImpl implements BackupRepository {
     }
   });
 
-  /// Every transaction must point at accounts and categories in the file.
+  /// Every transaction and rule must point at accounts, categories and
+  /// rules in the file, and every pending item at a rule.
   static void _checkReferences(BackupFileDto dto) {
     final accounts = {for (final a in dto.accounts) a.id};
     final categories = {for (final c in dto.categories) c.id};
+    final rules = {for (final r in dto.recurringRules) r.id};
+    bool known(Set<String> ids, String? id) => id == null || ids.contains(id);
     for (final t in dto.transactions) {
       final ok =
           accounts.contains(t.accountId) &&
-          (t.toAccountId == null || accounts.contains(t.toAccountId)) &&
-          (t.categoryId == null || categories.contains(t.categoryId));
+          known(accounts, t.toAccountId) &&
+          known(categories, t.categoryId) &&
+          known(rules, t.recurringRuleId);
       if (!ok) _corrupt('transaction ${t.id} references a missing row');
+    }
+    for (final r in dto.recurringRules) {
+      final ok =
+          accounts.contains(r.accountId) &&
+          known(accounts, r.toAccountId) &&
+          known(categories, r.categoryId);
+      if (!ok) _corrupt('rule ${r.id} references a missing row');
+    }
+    for (final p in dto.pendingOccurrences) {
+      if (!rules.contains(p.ruleId)) {
+        _corrupt('pending ${p.id} references a missing rule');
+      }
     }
   }
 
@@ -127,6 +167,14 @@ class BackupRepositoryImpl implements BackupRepository {
           transactions: [
             for (final t in file.transactions)
               TransactionDto.fromEntity(t).toRow(),
+          ],
+          recurringRules: [
+            for (final r in file.recurringRules)
+              RecurringRuleDto.fromEntity(r).toRow(),
+          ],
+          pendingOccurrences: [
+            for (final p in file.pendingOccurrences)
+              PendingOccurrenceDto.fromEntity(p).toRow(),
           ],
           settings: [
             for (final MapEntry(:key, :value) in file.settings.entries)

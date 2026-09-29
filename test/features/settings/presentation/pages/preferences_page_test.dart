@@ -86,16 +86,11 @@ void main() {
     await pump(tester, const MorePage());
     expect(find.text('Money'), findsOneWidget);
     expect(find.text('1.0.0 (1)'), findsOneWidget);
-    final recurring = tester.widget<ListTile>(
-      find.widgetWithText(ListTile, 'Recurring'),
-    );
-    expect(recurring.enabled, isFalse);
-    expect(
-      tester
-          .widget<ListTile>(find.widgetWithText(ListTile, 'Categories'))
-          .enabled,
-      isTrue,
-    );
+    bool enabled(String title) =>
+        tester.widget<ListTile>(find.widgetWithText(ListTile, title)).enabled;
+    expect(enabled('Export CSV'), isFalse);
+    expect(enabled('Categories'), isTrue);
+    expect(enabled('Recurring'), isTrue);
     await dispose(tester);
   });
 

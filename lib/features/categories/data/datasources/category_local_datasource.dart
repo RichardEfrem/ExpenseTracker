@@ -67,14 +67,16 @@ class CategoryLocalDataSource {
     _db.categories,
   )..where((c) => c.id.equals(id))).write(rawValues(json));
 
+  /// Transactions and recurring rules that use the category.
   Future<int> countUsage(String id) async {
-    final count = _db.transactions.id.count();
-    final row =
-        await (_db.selectOnly(_db.transactions)
-              ..addColumns([count])
-              ..where(_db.transactions.categoryId.equals(id)))
-            .getSingle();
-    return row.read(count)!;
+    final row = await _db
+        .customSelect(
+          'SELECT (SELECT COUNT(*) FROM transactions WHERE category_id = ?1) + '
+          '(SELECT COUNT(*) FROM recurring_rules WHERE category_id = ?1) AS n',
+          variables: [Variable<String>(id)],
+        )
+        .getSingle();
+    return row.read<int>('n');
   }
 
   Future<int> delete(String id) =>
@@ -90,6 +92,21 @@ class CategoryLocalDataSource {
         _db.transactions,
       )..where((t) => t.categoryId.equals(fromId))).write(
         TransactionsCompanion(
+          categoryId: Value(intoId),
+          updatedAt: Value(updatedAt),
+        ),
+      );
+
+  /// Points every recurring rule of [fromId] at [intoId].
+  Future<int> reassignRules(
+    String fromId,
+    String intoId, {
+    required int updatedAt,
+  }) =>
+      (_db.update(
+        _db.recurringRules,
+      )..where((r) => r.categoryId.equals(fromId))).write(
+        RecurringRulesCompanion(
           categoryId: Value(intoId),
           updatedAt: Value(updatedAt),
         ),

@@ -205,7 +205,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validation_category_in_use =>
-      'This category has transactions. Archive it instead.';
+      'This category is used by transactions or recurring rules. Archive it instead.';
 
   @override
   String get validation_category_type_mismatch =>
@@ -346,7 +346,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String categories_in_use_body(String name) {
-    return '\"$name\" has transactions, so it can\'t be deleted. Archive it to hide it from pickers; it stays in reports.';
+    return '\"$name\" is used by transactions or recurring rules, so it can\'t be deleted. Archive it to hide it from pickers; it stays in reports.';
   }
 
   @override
@@ -936,10 +936,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validation_account_in_use =>
-      'This account has transactions. Archive it instead.';
+      'This account is used by transactions or recurring rules. Archive it instead.';
 
   @override
   String get validation_last_account => 'Keep at least one active account.';
+
+  @override
+  String get validation_interval => 'Choose a repeat interval from 1 to 365.';
+
+  @override
+  String get validation_end_before_start =>
+      'The end date can\'t be before the start date.';
 
   @override
   String get account_type_cash => 'Cash';
@@ -1031,6 +1038,190 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other: '$count accounts ▾',
       one: '1 account ▾',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get recurring_new => 'New recurring';
+
+  @override
+  String get recurring_edit => 'Edit recurring';
+
+  @override
+  String get recurring_empty =>
+      'Add rent, salary or subscriptions once and they\'ll appear automatically.';
+
+  @override
+  String get recurring_pending_header => 'To confirm';
+
+  @override
+  String get recurring_rules_header => 'Rules';
+
+  @override
+  String recurring_due(String date) {
+    return 'Due $date';
+  }
+
+  @override
+  String get recurring_confirm => 'Confirm';
+
+  @override
+  String get recurring_skip => 'Skip';
+
+  @override
+  String get recurring_confirmed => 'Added to your transactions';
+
+  @override
+  String get recurring_skipped => 'Skipped';
+
+  @override
+  String recurring_next(String date) {
+    return 'Next $date';
+  }
+
+  @override
+  String get recurring_ended => 'Ended';
+
+  @override
+  String get recurring_needs_confirm => 'Asks first';
+
+  @override
+  String recurring_daily(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count days',
+      one: 'Daily',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String recurring_weekly(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count weeks',
+      one: 'Weekly',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String recurring_monthly(int count, int day) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count months on day $day',
+      one: 'Monthly on day $day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String recurring_yearly(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count years',
+      one: 'Yearly',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get recurring_frequency_daily => 'Daily';
+
+  @override
+  String get recurring_frequency_weekly => 'Weekly';
+
+  @override
+  String get recurring_frequency_monthly => 'Monthly';
+
+  @override
+  String get recurring_frequency_yearly => 'Yearly';
+
+  @override
+  String get recurring_repeat => 'Repeat';
+
+  @override
+  String get recurring_interval => 'Repeats';
+
+  @override
+  String get recurring_day_of_month => 'Day of the month';
+
+  @override
+  String recurring_day_value(int day) {
+    return 'Day $day';
+  }
+
+  @override
+  String get recurring_day_hint =>
+      'In shorter months, days past the end fall on the last day.';
+
+  @override
+  String get recurring_less => 'Less';
+
+  @override
+  String get recurring_more => 'More';
+
+  @override
+  String recurring_starts(String date) {
+    return 'Starts $date';
+  }
+
+  @override
+  String recurring_ends(String date) {
+    return 'Ends $date';
+  }
+
+  @override
+  String get recurring_no_end => 'No end date';
+
+  @override
+  String get recurring_ask_first => 'Ask before adding';
+
+  @override
+  String get recurring_saved => 'Recurring saved';
+
+  @override
+  String get recurring_delete_title => 'Delete this rule?';
+
+  @override
+  String get recurring_delete_body =>
+      'Transactions it already added stay. Items waiting to be confirmed are removed.';
+
+  @override
+  String get recurring_deleted => 'Rule deleted';
+
+  @override
+  String recurring_pending_banner(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count recurring items to confirm',
+      one: '1 recurring item to confirm',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get recurring_review => 'Review';
+
+  @override
+  String get detail_recurring_rule => 'Recurring rule';
+
+  @override
+  String get detail_view_rule => 'View rule';
+
+  @override
+  String backup_preview_recurring(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count recurring rules',
+      one: '1 recurring rule',
     );
     return '$_temp0';
   }

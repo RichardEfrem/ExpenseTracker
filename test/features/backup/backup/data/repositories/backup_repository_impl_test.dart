@@ -36,6 +36,8 @@ void main() {
       'accounts': r.accounts.toSet(),
       'categories': r.categories.toSet(),
       'transactions': r.transactions.toSet(),
+      'recurringRules': r.recurringRules.toSet(),
+      'pendingOccurrences': r.pendingOccurrences.toSet(),
       'settings': r.settings.toSet(),
     };
   }
@@ -88,6 +90,64 @@ void main() {
         .insert(SettingsCompanion.insert(key: 'theme_mode', value: 'dark'));
   }
 
+  /// An auto rule with a generated transaction, and an ask-first rule with
+  /// a pending item.
+  Future<void> addRecurring() async {
+    final cash = (await (db.select(
+      db.accounts,
+    )..where((a) => a.name.equals('Cash'))).getSingle()).id;
+    final housing = (await db.select(db.categories).get()).first.id;
+    Future<void> rule(String id, {required bool auto}) => db
+        .into(db.recurringRules)
+        .insert(
+          RecurringRulesCompanion.insert(
+            id: id,
+            type: 'expense',
+            amount: 3000000,
+            accountId: cash,
+            categoryId: Value(housing),
+            note: const Value('Rent'),
+            frequency: 'monthly',
+            interval: const Value(2),
+            dayOfMonth: const Value(31),
+            startDate: '2026-01-31',
+            endDate: const Value('2027-01-31'),
+            autoCreate: Value(auto),
+            lastGeneratedDate: const Value('2026-09-29'),
+            createdAt: 5,
+            updatedAt: 6,
+          ),
+        );
+    await rule('rent', auto: true);
+    await rule('gym', auto: false);
+    await db
+        .into(db.transactions)
+        .insert(
+          TransactionsCompanion.insert(
+            id: 'generated',
+            type: 'expense',
+            amount: 3000000,
+            accountId: cash,
+            categoryId: Value(housing),
+            date: '2026-07-31',
+            time: '00:00',
+            recurringRuleId: const Value('rent'),
+            createdAt: 7,
+            updatedAt: 7,
+          ),
+        );
+    await db
+        .into(db.pendingOccurrences)
+        .insert(
+          PendingOccurrencesCompanion.insert(
+            id: 'p1',
+            ruleId: 'gym',
+            date: '2026-09-30',
+            createdAt: 8,
+          ),
+        );
+  }
+
   test(
     'round-trip restores 100% of records identically (PRD reliability)',
     () async {
@@ -98,10 +158,13 @@ void main() {
         seed: 7,
       );
       await addNotedTransfer();
+      await addRecurring();
       await db.customStatement(
         "UPDATE categories SET is_archived = 1 WHERE name = 'Gift'",
       );
       final before = await contents();
+      expect(before['recurringRules'], hasLength(2));
+      expect(before['pendingOccurrences'], hasLength(1));
 
       final json = await exportJson();
       expect((await repo.eraseAll()).isRight(), isTrue);
@@ -177,9 +240,12 @@ void main() {
 
   test('erase re-seeds a fresh install', () async {
     await seedRandomTransactions(db, count: 10, end: LocalDate(2026, 9, 29));
-    await repo.eraseAll();
+    await addRecurring();
+    expect((await repo.eraseAll()).isRight(), isTrue);
     final r = await rows();
     expect(r.transactions, isEmpty);
+    expect(r.recurringRules, isEmpty);
+    expect(r.pendingOccurrences, isEmpty);
     expect(r.categories, hasLength(14));
     expect(r.accounts.single.name, 'Cash');
     expect(r.settings, isEmpty);
@@ -239,7 +305,12 @@ void main() {
     });
     test('future schema version', () {
       expect(
-        problemOf(jsonEncode({...valid, 'schema_version': 2})),
+        problemOf(
+          jsonEncode({
+            ...valid,
+            'schema_version': BackupFile.currentSchemaVersion + 1,
+          }),
+        ),
         BackupProblem.unsupportedVersion,
       );
     });
@@ -266,6 +337,77 @@ void main() {
       ((broken['transactions'] as List).first as Map)['account_id'] = 'ghost';
       expect(problemOf(jsonEncode(broken)), BackupProblem.corruptFile);
     });
+
+    group('recurring (schema v2)', () {
+      late Map<String, dynamic> withRules;
+      setUp(() async {
+        await addRecurring();
+        withRules = jsonDecode(await exportJson()) as Map<String, dynamic>;
+      });
+      Map<String, dynamic> copy() =>
+          jsonDecode(jsonEncode(withRules)) as Map<String, dynamic>;
+
+      test('exports as v2 with both lists', () {
+        expect(withRules['schema_version'], 2);
+        expect(withRules['recurring_rules'], hasLength(2));
+        expect(withRules['pending_occurrences'], hasLength(1));
+        expect(failureOf(jsonEncode(withRules)), isNull);
+      });
+      test('a v2 file without the recurring lists is corrupt', () {
+        expect(
+          problemOf(jsonEncode(copy()..remove('pending_occurrences'))),
+          BackupProblem.corruptFile,
+        );
+      });
+      test('a rule pointing at a missing account is corrupt', () {
+        final broken = copy();
+        ((broken['recurring_rules'] as List).first as Map)['account_id'] =
+            'ghost';
+        expect(problemOf(jsonEncode(broken)), BackupProblem.corruptFile);
+      });
+      test('a pending item pointing at a missing rule is corrupt', () {
+        final broken = copy();
+        ((broken['pending_occurrences'] as List).first as Map)['rule_id'] =
+            'ghost';
+        expect(problemOf(jsonEncode(broken)), BackupProblem.corruptFile);
+      });
+      test('a transaction pointing at a missing rule is corrupt', () {
+        final broken = copy();
+        (broken['recurring_rules'] as List).removeWhere(
+          (r) => (r as Map)['id'] == 'rent',
+        );
+        expect(problemOf(jsonEncode(broken)), BackupProblem.corruptFile);
+      });
+      test('an unknown frequency is corrupt', () {
+        final broken = copy();
+        ((broken['recurring_rules'] as List).first as Map)['frequency'] =
+            'hourly';
+        expect(problemOf(jsonEncode(broken)), BackupProblem.corruptFile);
+      });
+    });
+  });
+
+  test('a v1 file (before recurring) still restores', () async {
+    await seedRandomTransactions(
+      db,
+      count: 25,
+      end: LocalDate(2026, 9, 29),
+      seed: 3,
+    );
+    await addNotedTransfer();
+    final before = await contents();
+    // What the Phase 6 app wrote: schema 1, no recurring lists.
+    final v1 = jsonDecode(await exportJson()) as Map<String, dynamic>
+      ..['schema_version'] = 1
+      ..remove('recurring_rules')
+      ..remove('pending_occurrences');
+    await addRecurring();
+
+    final file = decode(jsonEncode(v1));
+    expect(file.schemaVersion, 1);
+    expect(file.recurringRules, isEmpty);
+    expect((await repo.restore(file, RestoreMode.replace)).isRight(), isTrue);
+    expect(await contents(), before);
   });
 
   test('restore result is Right(unit)', () async {

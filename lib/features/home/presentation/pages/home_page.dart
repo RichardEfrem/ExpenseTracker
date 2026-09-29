@@ -11,6 +11,7 @@ import 'package:expense_tracker/core/widgets/money_text.dart';
 import 'package:expense_tracker/features/accounts/accounts_presentation.dart';
 import 'package:expense_tracker/features/categories/categories_presentation.dart';
 import 'package:expense_tracker/features/period/period_presentation.dart';
+import 'package:expense_tracker/features/recurring/recurring_presentation.dart';
 import 'package:expense_tracker/features/reports/reports_presentation.dart';
 import 'package:expense_tracker/features/transactions/transactions_presentation.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-/// The dashboard (DESIGN §8.1): net hero, income and expense, top spending,
-/// recent transactions. Reading order matches visual order.
+/// The dashboard (DESIGN §8.1): net hero, income and expense, pending
+/// recurring items, top spending, recent transactions. Reading order matches visual order.
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
@@ -86,7 +87,11 @@ class HomePage extends ConsumerWidget {
                 child: PeriodSelector(),
               ),
             ),
-            if (noData)
+            if (noData) ...[
+              const SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: Dimens.screenPadding),
+                sliver: SliverToBoxAdapter(child: PendingRecurringBanner()),
+              ),
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Center(
@@ -97,8 +102,8 @@ class HomePage extends ConsumerWidget {
                     onAction: () => context.push(AppPaths.addOfType('expense')),
                   ),
                 ),
-              )
-            else ...[
+              ),
+            ] else ...[
               SliverPadding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: Dimens.screenPadding,
@@ -160,6 +165,7 @@ class HomePage extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: Dimens.cardGap),
+                    const PendingRecurringBanner(),
                     if (top != null && top.totals.isNotEmpty)
                       _TopSpending(period: period, breakdown: top),
                     const SizedBox(height: Dimens.space4),

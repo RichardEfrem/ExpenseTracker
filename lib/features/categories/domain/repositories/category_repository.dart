@@ -27,11 +27,13 @@ abstract interface class CategoryRepository {
     required bool archived,
   });
 
-  /// Fails with [ValidationReason.categoryInUse] if any transaction uses it.
+  /// Fails with [ValidationReason.categoryInUse] if any transaction or
+  /// recurring rule uses it.
   Future<Either<Failure, Unit>> delete(String id);
 
-  /// Moves every transaction of [fromId] to [intoId], then deletes [fromId],
-  /// in one DB transaction. Both must have the same type.
+  /// Moves every transaction and recurring rule of [fromId] to [intoId],
+  /// then deletes [fromId], in one DB transaction. Both must have the same
+  /// type.
   Future<Either<Failure, Unit>> merge({
     required String fromId,
     required String intoId,

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/utils/local_date.dart';
 import 'package:expense_tracker/features/recurring/domain/entities/recurrence.dart';
+import 'package:expense_tracker/features/recurring/domain/entities/recurring_rule_input.dart';
 import 'package:expense_tracker/features/transactions/transactions_domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -28,6 +29,22 @@ abstract class RecurringRule with _$RecurringRule {
   }) = _RecurringRule;
 
   const RecurringRule._();
+
+  /// The rule's editable fields, e.g. to prefill the edit form.
+  RecurringRuleInput get input => RecurringRuleInput(
+    type: type,
+    amount: amount,
+    accountId: accountId,
+    toAccountId: toAccountId,
+    categoryId: categoryId,
+    note: note,
+    frequency: frequency,
+    interval: interval,
+    dayOfMonth: dayOfMonth,
+    startDate: startDate,
+    endDate: endDate,
+    autoCreate: autoCreate,
+  );
 
   RecurrenceSchedule get schedule => RecurrenceSchedule(
     frequency: frequency,

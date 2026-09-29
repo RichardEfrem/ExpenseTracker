@@ -153,6 +153,49 @@ void main() {
     },
   );
 
+  Future<void> addRule(String categoryId) async {
+    final account = await db.select(db.accounts).getSingle();
+    await db
+        .into(db.recurringRules)
+        .insert(
+          RecurringRulesCompanion.insert(
+            id: 'rule',
+            type: 'expense',
+            amount: 50000,
+            accountId: account.id,
+            categoryId: Value(categoryId),
+            frequency: 'weekly',
+            startDate: '2026-09-07',
+            createdAt: 0,
+            updatedAt: 0,
+          ),
+        );
+  }
+
+  test('a category used only by a recurring rule is in use', () async {
+    final gym = await byName('Health');
+    await addRule(gym.id);
+    expect(
+      (await repo.delete(gym.id)).getLeft().toNullable(),
+      const Failure.validation(ValidationReason.categoryInUse),
+    );
+  });
+
+  test('merge moves recurring rules too', () async {
+    final food = await byName('Food & Drinks');
+    final groceries = await byName('Groceries');
+    await addRule(food.id);
+    expect(
+      (await repo.merge(fromId: food.id, intoId: groceries.id)).isRight(),
+      isTrue,
+    );
+    final rule = await db.select(db.recurringRules).getSingle();
+    expect(
+      (rule.categoryId, rule.updatedAt),
+      (groceries.id, clock.current.millisecondsSinceEpoch),
+    );
+  });
+
   test('merge across types is rejected', () async {
     final food = await byName('Food & Drinks');
     final salary = await byName('Salary', CategoryType.income);

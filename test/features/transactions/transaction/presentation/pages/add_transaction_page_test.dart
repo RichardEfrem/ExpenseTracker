@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:drift/native.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/l10n/generated/app_localizations.dart';
@@ -177,6 +178,7 @@ void main() {
     // The Recent row (Top spending lists it first).
     await tester.tap(find.text('Food & Drinks').last);
     await settle(tester);
+    expect(find.text('Recurring rule'), findsNothing);
     await tester.tap(find.text('Delete'));
     await settle(tester);
     expect(await rows(tester), isEmpty);
@@ -185,6 +187,65 @@ void main() {
     await tester.tap(find.text('Undo'));
     await settle(tester);
     expect(await rows(tester), before);
+    await dispose(tester);
+  });
+
+  testWidgets('a generated transaction links to its rule in the detail', (
+    tester,
+  ) async {
+    await pumpUntilDone(tester, () async {
+      final cash = (await db.select(db.accounts).getSingle()).id;
+      final food = (await (db.select(
+        db.categories,
+      )..where((c) => c.name.equals('Food & Drinks'))).getSingle()).id;
+      await db
+          .into(db.recurringRules)
+          .insert(
+            RecurringRulesCompanion.insert(
+              id: 'lunch',
+              type: 'expense',
+              amount: 45000,
+              accountId: cash,
+              categoryId: Value(food),
+              frequency: 'daily',
+              startDate: '2026-09-29',
+              lastGeneratedDate: const Value('2026-09-29'),
+              createdAt: 1,
+              updatedAt: 1,
+            ),
+          );
+      await db
+          .into(db.transactions)
+          .insert(
+            TransactionsCompanion.insert(
+              id: 'generated',
+              type: 'expense',
+              amount: 45000,
+              accountId: cash,
+              categoryId: Value(food),
+              date: '2026-09-29',
+              time: '00:00',
+              recurringRuleId: const Value('lunch'),
+              createdAt: 1,
+              updatedAt: 1,
+            ),
+          );
+    }());
+    await pumpApp(tester);
+    // The Recent row (Top spending lists it first), with the repeat glyph.
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is Icon && w.semanticLabel == 'Recurring',
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Food & Drinks').last);
+    await settle(tester);
+    expect(find.text('Recurring rule'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('detail-rule-link')));
+    await settle(tester);
+    expect(router.state.uri.path, '/more/recurring/lunch/edit');
+    expect(find.text('Edit recurring'), findsOneWidget);
     await dispose(tester);
   });
 
