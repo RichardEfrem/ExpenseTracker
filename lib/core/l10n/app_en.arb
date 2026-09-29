@@ -1,0 +1,664 @@
+{
+  "@@locale": "en",
+  "app_title": "Expense Tracker",
+  "@app_title": {
+    "description": "App name shown in the task switcher and title bar."
+  },
+  "nav_home": "Home",
+  "nav_activity": "Activity",
+  "nav_reports": "Reports",
+  "nav_more": "More",
+  "fab_add_expense": "Add expense",
+  "common_retry": "Retry",
+  "common_cancel": "Cancel",
+  "common_save": "Save",
+  "common_close": "Close",
+  "error_title": "Something went wrong",
+  "failure_database": "Your data couldn't be read or saved. Please try again.",
+  "failure_not_found": "This item no longer exists.",
+  "failure_file": "The file couldn't be read or written.",
+  "failure_backup_corrupt": "This file isn't a valid backup.",
+  "failure_backup_version": "This backup was made by a newer version of the app.",
+  "failure_unexpected": "Something unexpected happened. Please try again.",
+  "validation_invalid_input": "Please check the values you entered.",
+  "keypad_triple_zero": "Triple zero",
+  "keypad_delete": "Delete",
+  "keypad_clear": "Clear",
+  "keypad_plus": "Plus",
+  "keypad_minus": "Minus",
+  "keypad_times": "Times",
+  "keypad_divide": "Divided by",
+  "money_spoken": "{words} rupiah",
+  "@money_spoken": {
+    "description": "Screen-reader text for an amount.",
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "money_spoken_negative": "minus {words} rupiah",
+  "@money_spoken_negative": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "money_spoken_positive": "plus {words} rupiah",
+  "@money_spoken_positive": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "money_scale_billion": "{count} billion",
+  "@money_scale_billion": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "money_scale_million": "{count} million",
+  "@money_scale_million": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "money_scale_thousand": "{count} thousand",
+  "@money_scale_thousand": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "seed_food": "Food & Drinks",
+  "seed_transport": "Transport",
+  "seed_groceries": "Groceries",
+  "seed_bills": "Bills & Utilities",
+  "seed_shopping": "Shopping",
+  "seed_health": "Health",
+  "seed_entertainment": "Entertainment",
+  "seed_education": "Education",
+  "seed_housing": "Housing / Rent",
+  "seed_other": "Other",
+  "seed_salary": "Salary",
+  "seed_freelance": "Freelance",
+  "seed_gift": "Gift",
+  "seed_cash": "Cash",
+  "common_delete": "Delete",
+  "type_expense": "Expense",
+  "type_income": "Income",
+  "theme_system": "System default",
+  "theme_light": "Light",
+  "theme_dark": "Dark",
+  "weekday_monday": "Monday",
+  "weekday_tuesday": "Tuesday",
+  "weekday_wednesday": "Wednesday",
+  "weekday_thursday": "Thursday",
+  "weekday_friday": "Friday",
+  "weekday_saturday": "Saturday",
+  "weekday_sunday": "Sunday",
+  "validation_name_empty": "Enter a name.",
+  "validation_name_too_long": "Use 40 characters or fewer.",
+  "validation_category_in_use": "This category has transactions. Archive it instead.",
+  "validation_category_type_mismatch": "You can only merge categories of the same type.",
+  "validation_merge_into_self": "Choose a different category to merge into.",
+  "validation_month_start_day": "Choose a day from 1 to 31.",
+  "validation_week_start": "Choose a day of the week.",
+  "more_coming_soon": "Coming soon",
+  "more_section_money": "Money",
+  "more_section_data": "Data",
+  "more_section_preferences": "Preferences",
+  "more_section_about": "About",
+  "more_accounts": "Accounts",
+  "more_categories": "Categories",
+  "more_recurring": "Recurring",
+  "more_backup": "Backup & restore",
+  "more_export_csv": "Export CSV",
+  "more_currency": "Currency & format",
+  "more_month_start_day": "Month start day",
+  "more_week_start": "Week start",
+  "more_theme": "Theme",
+  "more_app_lock": "App lock",
+  "more_version": "Version",
+  "more_erase_all": "Erase all data",
+  "pref_title": "Preferences",
+  "pref_section_format": "Format",
+  "pref_section_periods": "Periods",
+  "pref_section_appearance": "Appearance",
+  "pref_currency_idr": "Indonesian Rupiah (Rp)",
+  "pref_month_start_value": "Day {day}",
+  "@pref_month_start_value": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "pref_month_start_example": "Day {day} · e.g. {example}",
+  "@pref_month_start_example": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "categories_new_title": "New category",
+  "categories_edit_title": "Edit category",
+  "categories_new_short": "New",
+  "categories_name": "Name",
+  "categories_color": "Color",
+  "categories_icon": "Icon",
+  "categories_empty": "No categories yet.",
+  "categories_archive": "Archive",
+  "categories_unarchive": "Unarchive",
+  "categories_archived": "Archived ({count})",
+  "@categories_archived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categories_transaction_count": "{count, plural, =0{No transactions} =1{1 transaction} other{{count} transactions}}",
+  "@categories_transaction_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categories_in_use_title": "Category in use",
+  "categories_in_use_body": "\"{name}\" has transactions, so it can't be deleted. Archive it to hide it from pickers; it stays in reports.",
+  "@categories_in_use_body": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "categories_merge": "Merge",
+  "categories_merge_into": "Merge into…",
+  "categories_merge_title": "Merge \"{name}\" into…",
+  "@categories_merge_title": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "categories_merge_confirm_title": "Merge categories?",
+  "categories_merge_confirm_body": "All transactions in \"{from}\" move to \"{into}\", then \"{from}\" is deleted. This can't be undone.",
+  "@categories_merge_confirm_body": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "into": {
+        "type": "String"
+      }
+    }
+  },
+  "categories_reorder": "Drag to reorder",
+  "color_orange": "Orange",
+  "color_blue": "Blue",
+  "color_green": "Green",
+  "color_purple": "Purple",
+  "color_pink": "Pink",
+  "color_teal": "Teal",
+  "color_violet": "Violet",
+  "color_amber": "Amber",
+  "color_brown": "Brown",
+  "color_emerald": "Emerald",
+  "color_neutral": "Gray",
+  "common_done": "Done",
+  "common_undo": "Undo",
+  "saved": "Saved",
+  "date_today": "Today",
+  "date_yesterday": "Yesterday",
+  "type_transfer": "Transfer",
+  "type_adjustment": "Adjustment",
+  "add_note": "Add note",
+  "add_note_title": "Note",
+  "edit_transaction_title": "Edit transaction",
+  "fab_more_types": "Choose expense, income or transfer",
+  "home_empty": "No transactions yet. Add your first expense to see your month.",
+  "detail_type": "Type",
+  "detail_date_time": "Date & time",
+  "detail_account": "Account",
+  "detail_note": "Note",
+  "detail_created": "Created",
+  "transaction_deleted": "Transaction deleted",
+  "transaction_duplicate": "Duplicate",
+  "transaction_duplicated": "Transaction added again",
+  "transaction_edit": "Edit",
+  "transaction_recurring": "Recurring",
+  "validation_amount_positive": "Enter an amount greater than zero.",
+  "validation_amount_too_large": "That amount is too large.",
+  "validation_note_too_long": "Keep the note under 200 characters.",
+  "validation_category_required": "Pick a category.",
+  "validation_account_required": "Pick an account.",
+  "validation_same_account": "Choose two different accounts.",
+  "activity_search_hint": "Search notes or categories",
+  "activity_in": "In",
+  "activity_out": "Out",
+  "activity_result_count": "{count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@activity_result_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activity_no_results": "Nothing matches these filters.",
+  "activity_clear_filters": "Clear filters",
+  "activity_empty": "No transactions in {period}. Add your first expense to see it here.",
+  "@activity_empty": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "activity_period_empty": "No transactions in this period.",
+  "filter_type": "Type",
+  "filter_category": "Category",
+  "filter_account": "Account",
+  "filter_date": "Date",
+  "filter_amount": "Amount",
+  "filter_value": "{label}: {value}",
+  "@filter_value": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "filter_remove": "Remove {label} filter",
+  "@filter_remove": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "filter_from": "from {date}",
+  "@filter_from": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "filter_until": "until {date}",
+  "@filter_until": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "filter_amount_min": "Minimum",
+  "filter_amount_max": "Maximum",
+  "filter_apply": "Apply",
+  "filter_clear": "Clear",
+  "period_title": "Period",
+  "period_week": "Week",
+  "period_month": "Month",
+  "period_year": "Year",
+  "period_custom": "Custom",
+  "period_previous": "Previous period",
+  "period_next": "Next period",
+  "period_show_year": "Show {year}",
+  "@period_show_year": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "period_choose_dates": "Choose dates",
+  "period_current": "Back to current period",
+  "home_good_morning": "Good morning",
+  "home_good_afternoon": "Good afternoon",
+  "home_good_evening": "Good evening",
+  "home_net": "Net · {period}",
+  "@home_net": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "home_vs": "{change} vs {previous}",
+  "@home_vs": {
+    "placeholders": {
+      "change": {
+        "type": "String"
+      },
+      "previous": {
+        "type": "String"
+      }
+    }
+  },
+  "home_previous_period": "previous period",
+  "home_top_spending": "Top spending",
+  "home_recent": "Recent",
+  "home_see_all": "See all",
+  "reports_tab_categories": "Categories",
+  "reports_tab_trends": "Trends",
+  "reports_tab_daily": "Daily",
+  "reports_empty": "No data for {period}.",
+  "@reports_empty": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "reports_go_to_data": "Go to last month with data",
+  "reports_no_data_yet": "No earlier transactions yet.",
+  "stat_savings_rate": "Savings rate",
+  "stat_savings_rate_definition": "Income minus expense, as a share of income. Shown only when there is income.",
+  "stat_average_daily": "Avg/day",
+  "stat_average_daily_definition": "Expense divided by the days elapsed in the period (for the current period, up to today).",
+  "stat_projected": "Projected",
+  "stat_projected_definition": "Average daily spend times the days in this month: where spending ends if you keep this pace. Current month only.",
+  "stat_no_spend_days": "No-spend days",
+  "stat_no_spend_days_definition": "Days so far in this period with no expenses.",
+  "stat_days": "{count, plural, =1{1 day} other{{count} days}}",
+  "@stat_days": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stat_largest_expense": "Largest expense",
+  "stat_largest_expense_definition": "The single biggest expense in this period: {category}, {date}.",
+  "@stat_largest_expense_definition": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "stat_most_frequent": "Most frequent",
+  "stat_most_frequent_definition": "The category with the most transactions in this period ({count, plural, =1{1 transaction} other{{count} transactions}}).",
+  "@stat_most_frequent_definition": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stat_open_transaction": "Open transaction",
+  "breakdown_title_expense": "Spending by category",
+  "breakdown_title_income": "Income by category",
+  "breakdown_total": "Total",
+  "breakdown_other": "Other ({count})",
+  "@breakdown_other": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "breakdown_count": "{count, plural, =1{1 txn} other{{count} txns}}",
+  "@breakdown_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "breakdown_empty": "Nothing in this period yet.",
+  "trends_title": "Income vs expense",
+  "trends_net": "Net",
+  "trends_months": "{count} mo",
+  "@trends_months": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trends_summary_title": "Income vs expense, last {count} months.",
+  "@trends_summary_title": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trends_summary_month": "{month}: income {income}, expense {expense}, net {net}.",
+  "@trends_summary_month": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "income": {
+        "type": "String"
+      },
+      "expense": {
+        "type": "String"
+      },
+      "net": {
+        "type": "String"
+      }
+    }
+  },
+  "daily_title": "Daily spending",
+  "daily_average": "avg {amount}",
+  "@daily_average": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "daily_summary": "Daily spending, {period}. Average {average}. Highest {day}, {amount}.",
+  "@daily_summary": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      },
+      "average": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "chart_summary_title": "{title}, {period}.",
+  "@chart_summary_title": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "chart_summary_share": "{name} {percent} percent, {amount}.",
+  "@chart_summary_share": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "chart_summary_empty": "{title}, {period}: no data.",
+  "@chart_summary_empty": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "chart_tap_again": "Tap again to see transactions",
+  "failure_backup_empty": "This file is empty.",
+  "backup_never": "No backup yet. Back up so you don't lose your data when you change phones.",
+  "backup_last": "Last backup: {ago} ({when})",
+  "@backup_last": {
+    "placeholders": {
+      "ago": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_days_ago": "{days, plural, =0{today} =1{yesterday} other{{days} days ago}}",
+  "@backup_days_ago": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "backup_export": "Export backup",
+  "backup_save_to_device": "Save to a folder",
+  "backup_restore": "Restore from file",
+  "backup_hint": "A backup is one .json file with all your transactions, categories, accounts and settings. Keep it somewhere safe, like Drive.",
+  "backup_exported": "Backup exported",
+  "backup_restored": "Backup restored",
+  "backup_restore_title": "Restore backup",
+  "backup_preview_transactions": "{count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@backup_preview_transactions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backup_preview_accounts": "{count, plural, =1{1 account} other{{count} accounts}}",
+  "@backup_preview_accounts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backup_preview_categories": "{count, plural, =1{1 category} other{{count} categories}}",
+  "@backup_preview_categories": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backup_preview_exported": "Exported {date}",
+  "@backup_preview_exported": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_replace_all": "Replace all",
+  "backup_merge": "Merge",
+  "backup_merge_hint": "Merge keeps everything on this phone and adds records from the file that aren't here yet.",
+  "backup_replace_confirm_title": "Replace all data?",
+  "backup_replace_confirm_body": "Everything on this phone is deleted and replaced with the backup. This can't be undone.",
+  "backup_erase_subtitle": "Delete every transaction, category, account and setting.",
+  "backup_erase_title": "Erase all data?",
+  "backup_erase_body": "All transactions, categories, accounts and settings on this phone will be deleted. Export a backup first if you might need them.",
+  "backup_erase_continue": "Continue",
+  "backup_erase_again_title": "Are you sure?",
+  "backup_erase_again_body": "This can't be undone.",
+  "backup_erase_confirm": "Erase everything",
+  "backup_erased": "All data erased",
+  "validation_account_in_use": "This account has transactions. Archive it instead.",
+  "validation_last_account": "Keep at least one active account.",
+  "account_type_cash": "Cash",
+  "account_type_bank": "Bank",
+  "account_type_ewallet": "E-wallet",
+  "account_type_other": "Other",
+  "accounts_new": "New account",
+  "accounts_edit": "Edit account",
+  "accounts_opening_balance": "Opening balance",
+  "accounts_total": "Total balance",
+  "accounts_balance_over_time": "Balance over time",
+  "accounts_transfer": "Transfer between accounts",
+  "accounts_adjust": "Adjust balance",
+  "accounts_adjust_title": "Adjust {name}",
+  "@accounts_adjust_title": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accounts_adjust_body": "Enter the real balance. The difference is recorded as an adjustment and left out of income and expense.",
+  "accounts_actual_balance": "Actual balance",
+  "accounts_adjust_none": "Balance already matches",
+  "accounts_adjusted": "Adjusted by {amount}",
+  "@accounts_adjusted": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "accounts_delete_title": "Delete {name}?",
+  "@accounts_delete_title": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accounts_delete_body": "Only accounts without transactions can be deleted; archive the others to hide them.",
+  "accounts_chart_summary": "Balance over time, last {count} months. Now:",
+  "@accounts_chart_summary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transfer_from": "From",
+  "transfer_to": "To",
+  "transfer_needs_accounts": "Add a second account to move money between accounts.",
+  "home_balance_all": "Balance (all accounts)",
+  "reports_all_accounts": "All accounts ▾",
+  "reports_some_accounts": "{count, plural, =1{1 account ▾} other{{count} accounts ▾}}",
+  "@reports_some_accounts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

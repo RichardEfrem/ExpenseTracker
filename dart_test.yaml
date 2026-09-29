@@ -1,0 +1,5 @@
+tags:
+  # Performance budgets at 10k/100k rows (PRD §8). Run alone with
+  # `flutter test --tags perf`.
+  perf:
+    timeout: 3x
