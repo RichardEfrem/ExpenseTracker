@@ -85,14 +85,12 @@ class ReportsLocalDataSource {
     ];
   }
 
-  /// Income and expense per consecutive period in [periods] (index =
-  /// bucket), in one GROUP BY over a CASE bucket. Periods without data are
-  /// absent.
-  Future<List<BucketRow>> byPeriods(
+  /// `CASE … END` mapping a row's date to its index in [periods], with its
+  /// variables, plus the WHERE clause spanning all of them. Dates between
+  /// non-consecutive periods get a NULL bucket.
+  (String, List<Variable<Object>>, String, List<Variable<Object>>) _buckets(
     List<Period> periods,
-    Set<String> accountIds,
-  ) async {
-    if (periods.isEmpty) return const [];
+  ) {
     final cases = StringBuffer('CASE');
     final vars = <Variable<Object>>[];
     for (final (i, p) in periods.indexed) {
@@ -102,6 +100,26 @@ class ReportsLocalDataSource {
         ..add(Variable<String>(p.end.toIso()));
     }
     cases.write(' END');
+    return (
+      cases.toString(),
+      vars,
+      't.date BETWEEN ? AND ?',
+      [
+        Variable<String>(periods.first.start.toIso()),
+        Variable<String>(periods.last.end.toIso()),
+      ],
+    );
+  }
+
+  /// Income and expense per consecutive period in [periods] (index =
+  /// bucket), in one GROUP BY over a CASE bucket. Periods without data are
+  /// absent.
+  Future<List<BucketRow>> byPeriods(
+    List<Period> periods,
+    Set<String> accountIds,
+  ) async {
+    if (periods.isEmpty) return const [];
+    final (cases, caseVars, span, spanVars) = _buckets(periods);
     final (accounts, accountVars) = _accounts(accountIds);
     final rows = await _db
         .customSelect(
@@ -109,14 +127,9 @@ class ReportsLocalDataSource {
           "COALESCE(SUM(CASE WHEN t.type = 'income' THEN t.amount END), 0) AS income, "
           "COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount END), 0) AS expense "
           'FROM transactions t '
-          'WHERE $_moneyTypes AND t.date BETWEEN ? AND ?$accounts '
+          'WHERE $_moneyTypes AND $span$accounts '
           'GROUP BY bucket ORDER BY bucket',
-          variables: [
-            ...vars,
-            Variable<String>(periods.first.start.toIso()),
-            Variable<String>(periods.last.end.toIso()),
-            ...accountVars,
-          ],
+          variables: [...caseVars, ...spanVars, ...accountVars],
         )
         .get();
     return [
@@ -126,6 +139,44 @@ class ReportsLocalDataSource {
             bucket: bucket,
             income: row.read<int>('income'),
             expense: row.read<int>('expense'),
+          ),
+    ];
+  }
+
+  /// Total per category per period in [periods] (index = bucket), in one
+  /// GROUP BY; only [type] (`income`/`expense`) when given. Pairs without
+  /// data are absent.
+  Future<List<CategoryBucketRow>> byCategoryPerPeriod(
+    List<Period> periods,
+    Set<String> accountIds, {
+    String? type,
+  }) async {
+    if (periods.isEmpty) return const [];
+    final (cases, caseVars, span, spanVars) = _buckets(periods);
+    final (accounts, accountVars) = _accounts(accountIds);
+    final rows = await _db
+        .customSelect(
+          'SELECT $cases AS bucket, c.*, SUM(t.amount) AS total '
+          'FROM transactions t JOIN categories c ON c.id = t.category_id '
+          'WHERE $_moneyTypes AND $span$accounts'
+          '${type == null ? '' : ' AND t.type = ?'} '
+          'GROUP BY bucket, t.category_id ORDER BY bucket, total DESC',
+          variables: [
+            ...caseVars,
+            ...spanVars,
+            ...accountVars,
+            if (type != null) Variable<String>(type),
+          ],
+          readsFrom: {_db.transactions, _db.categories},
+        )
+        .get();
+    return [
+      for (final row in rows)
+        if (row.readNullable<int>('bucket') case final bucket?)
+          (
+            bucket: bucket,
+            category: await _db.categories.mapFromRow(row),
+            amount: row.read<int>('total'),
           ),
     ];
   }
@@ -143,6 +194,23 @@ class ReportsLocalDataSource {
     return {
       for (final row in rows)
         LocalDate.parse(row.read<String>('day')): row.read<int>('total'),
+    };
+  }
+
+  /// Income minus expense per day with any income or expense.
+  Future<Map<LocalDate, int>> dailyNet(ReportScope scope) async {
+    final (where, vars) = _scopeWhere(scope);
+    final rows = await _db
+        .customSelect(
+          'SELECT t.date AS day, '
+          "SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE -t.amount END) "
+          'AS net FROM transactions t WHERE $where GROUP BY t.date',
+          variables: vars,
+        )
+        .get();
+    return {
+      for (final row in rows)
+        LocalDate.parse(row.read<String>('day')): row.read<int>('net'),
     };
   }
 

@@ -45,6 +45,16 @@ void main() {
             'largest': (s) => s.largestExpense(year),
             'most frequent': (s) => s.mostFrequentCategory(year),
             'expense days': (s) => s.expenseDayCount(year, today),
+            'category trend, 12 months': (s) => s.byCategoryPerPeriod(
+              WatchTrends.monthsEnding(month.period, 12, 1),
+              const {},
+            ),
+            'compare with previous year': (s) => s.byCategoryPerPeriod(
+              [year.previous.period, year.period],
+              const {},
+              type: 'expense',
+            ),
+            'daily net (calendar)': (s) => s.dailyNet(year),
           };
       for (final MapEntry(key: name, value: query) in queries.entries) {
         test(name, () async {

@@ -39,4 +39,5 @@ String validationMessage(AppLocalizations l10n, ValidationReason reason) =>
       ValidationReason.intervalOutOfRange => l10n.validation_interval,
       ValidationReason.dayOfMonthOutOfRange => l10n.validation_month_start_day,
       ValidationReason.endBeforeStart => l10n.validation_end_before_start,
+      ValidationReason.pinInvalid => l10n.validation_pin,
     };

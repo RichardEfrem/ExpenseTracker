@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/utils/local_date.dart';
 import 'package:expense_tracker/core/utils/period.dart';
 import 'package:expense_tracker/features/reports/shared/data/datasources/reports_local_datasource.dart';
+import 'package:expense_tracker/features/reports/shared/data/models/report_rows.dart';
 import 'package:expense_tracker/features/reports/shared/domain/entities/report_scope.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -139,6 +140,97 @@ void main() {
       (bucket: 1, income: 1000000, expense: 200000),
       (bucket: 2, income: 8500000, expense: 515000),
     ]);
+  });
+
+  group('by category per period (RPT-04, RPT-05)', () {
+    List<(int, String, int)> named(List<CategoryBucketRow> rows) => [
+      for (final r in rows) (r.bucket, r.category.name, r.amount),
+    ];
+    final calendar = [
+      Period.monthContaining(LocalDate(2026, 8, 1)),
+      Period.monthContaining(LocalDate(2026, 9, 1)),
+    ];
+    final start25 = [
+      Period.monthContaining(LocalDate(2026, 8, 1), startDay: 25),
+      Period.monthContaining(LocalDate(2026, 9, 1), startDay: 25),
+    ];
+
+    test('calendar months, expense only, largest first per bucket', () async {
+      expect(
+        named(
+          await source.byCategoryPerPeriod(calendar, const {}, type: 'expense'),
+        ),
+        [
+          (0, 'Shopping', 200000),
+          (1, 'Groceries', 300000),
+          (1, 'Food & Drinks', 115000),
+          (1, 'Transport', 100000),
+        ],
+      );
+    });
+
+    test(
+      'start day 25 moves the edges (25 Jul – 24 Aug, 25 Aug – 24 Sep)',
+      () async {
+        expect(start25.last.start, LocalDate(2026, 8, 25));
+        expect(
+          named(
+            await source.byCategoryPerPeriod(
+              start25,
+              const {},
+              type: 'expense',
+            ),
+          ),
+          [
+            (0, 'Shopping', 200000),
+            (1, 'Groceries', 300000),
+            (1, 'Transport', 100000),
+            (1, 'Food & Drinks', 65000),
+          ],
+        );
+      },
+    );
+
+    test('both types without a type; never transfers or adjustments', () async {
+      final rows = named(await source.byCategoryPerPeriod(start25, const {}));
+      expect(rows, contains((1, 'Salary', 8500000)));
+      expect(rows, contains((1, 'Freelance', 1000000)));
+      expect(rows, hasLength(6));
+    });
+
+    test('account scope', () async {
+      expect(named(await source.byCategoryPerPeriod(calendar, {bank})), [
+        (1, 'Transport', 100000),
+      ]);
+    });
+  });
+
+  group('daily net (RPT-06)', () {
+    test('income minus expense per day; transfers never count', () async {
+      expect(await source.dailyNet(sep), {
+        LocalDate(2026, 9, 1): 8500000,
+        LocalDate(2026, 9, 5): -65000,
+        LocalDate(2026, 9, 10): -100000,
+        LocalDate(2026, 9, 24): -300000,
+        LocalDate(2026, 9, 25): -50000,
+      });
+    });
+
+    test('start day 25', () async {
+      expect(await source.dailyNet(sep25), {
+        LocalDate(2026, 8, 26): 1000000,
+        LocalDate(2026, 9, 1): 8500000,
+        LocalDate(2026, 9, 5): -65000,
+        LocalDate(2026, 9, 10): -100000,
+        LocalDate(2026, 9, 24): -300000,
+      });
+    });
+
+    test('a day with equal income and expense nets to zero', () async {
+      await add('income', '2026-09-26', 40000, category: 'Salary');
+      await add('expense', '2026-09-26', 40000, category: 'Food & Drinks');
+      expect((await source.dailyNet(sep))[LocalDate(2026, 9, 26)], 0);
+    });
   });
 
   test('daily expense per day', () async {

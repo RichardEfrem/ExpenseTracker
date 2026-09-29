@@ -783,5 +783,166 @@
         "type": "int"
       }
     }
-  }
+  },
+  "reports_tab_compare": "Compare",
+  "reports_tab_calendar": "Calendar",
+  "category_trend_title": "Category trend",
+  "category_trend_pick": "Pick up to {count} categories.",
+  "@category_trend_pick": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "category_trend_summary_title": "Category trend, last {count} months.",
+  "@category_trend_summary_title": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "category_trend_summary_series": "{name}: {points}.",
+  "@category_trend_summary_series": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "category_trend_summary_point": "{month} {amount}",
+  "@category_trend_summary_point": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "compare_title": "Against the period before",
+  "compare_category": "Category",
+  "compare_this": "This",
+  "compare_previous": "Before",
+  "compare_change": "Change",
+  "compare_total": "Total",
+  "compare_new": "New",
+  "compare_change_up": "up {percent}",
+  "@compare_change_up": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "compare_change_down": "down {percent}",
+  "@compare_change_down": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "compare_change_same": "unchanged",
+  "compare_change_new": "new this period",
+  "compare_row_label": "{name}: {current} this period, {previous} the period before. Change {delta}, {change}.",
+  "@compare_row_label": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "previous": {
+        "type": "String"
+      },
+      "delta": {
+        "type": "String"
+      },
+      "change": {
+        "type": "String"
+      }
+    }
+  },
+  "calendar_title": "Cash-flow calendar",
+  "calendar_day_label": "{date}, net {amount}",
+  "@calendar_day_label": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "calendar_day_empty": "{date}, nothing recorded",
+  "@calendar_day_empty": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_pin": "Use 4 to 6 digits.",
+  "lock_title": "Unlock",
+  "lock_enter_pin": "Enter your PIN",
+  "lock_wrong_pin": "{count, plural, =0{Wrong PIN.} =1{Wrong PIN. 1 more try before a short wait.} other{Wrong PIN. {count} more tries before a short wait.}}",
+  "@lock_wrong_pin": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lock_wait": "Too many tries. Try again in {seconds} s.",
+  "@lock_wait": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "lock_biometric": "Unlock with fingerprint or face",
+  "lock_biometric_reason": "Unlock Expense Tracker",
+  "lock_forgot": "Forgot PIN?",
+  "lock_forgot_body": "The PIN can't be recovered: the app has no account and stores nothing online. If fingerprint or face unlock is on, use it. Otherwise, clearing the app's storage in Android Settings removes the lock and all data; restore a backup afterwards.",
+  "lock_pin_progress": "{count} of {length} digits entered",
+  "@lock_pin_progress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "lock_switch": "Lock with a PIN",
+  "lock_switch_hint": "Asks for your PIN when you open the app. The app is hidden in recent apps and screenshots are blocked.",
+  "lock_change_pin": "Change PIN",
+  "lock_biometric_switch": "Unlock with fingerprint or face",
+  "lock_biometric_unavailable": "Set up fingerprint or face in Android Settings first.",
+  "lock_timeout": "Lock after",
+  "lock_timeout_immediately": "Immediately",
+  "lock_timeout_seconds30": "30 seconds away",
+  "lock_timeout_minute1": "1 minute away",
+  "lock_timeout_minutes5": "5 minutes away",
+  "lock_on": "On",
+  "lock_off": "Off",
+  "lock_enabled": "App lock is on",
+  "lock_disabled": "App lock is off",
+  "pin_new": "Choose a PIN",
+  "pin_new_hint": "4 to 6 digits",
+  "pin_confirm": "Enter the PIN again",
+  "pin_mismatch": "The PINs don't match. Choose a PIN again.",
+  "pin_current": "Enter your current PIN",
+  "pin_continue": "Continue",
+  "pin_changed": "PIN changed"
 }

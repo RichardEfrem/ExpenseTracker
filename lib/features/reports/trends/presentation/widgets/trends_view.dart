@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/dimens.dart';
 import 'package:expense_tracker/core/l10n/generated/app_localizations.dart';
 import 'package:expense_tracker/core/utils/date_format.dart';
 import 'package:expense_tracker/core/utils/money_format.dart';
+import 'package:expense_tracker/core/utils/period.dart';
 import 'package:expense_tracker/core/widgets/money_semantics.dart';
 import 'package:expense_tracker/features/reports/shared/domain/entities/report_scope.dart';
 import 'package:expense_tracker/core/widgets/chart_style.dart';
@@ -17,16 +18,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Label for a month bucket: `Sep`, or `25 Aug` for custom start days.
-String monthBucketLabel(MonthTotals month) => month.period.isCalendarMonth
-    ? AppDateFormat.monthShort(month.period.start)
-    : AppDateFormat.dayMonth(month.period.start);
+String monthBucketLabel(Period month) => month.isCalendarMonth
+    ? AppDateFormat.monthShort(month.start)
+    : AppDateFormat.dayMonth(month.start);
 
 /// "Income vs expense, last 6 months. Apr: income …, expense …, net …."
 String trendsSummary(AppLocalizations l10n, List<MonthTotals> months) {
   final parts = [
     for (final m in months)
       l10n.trends_summary_month(
-        monthBucketLabel(m),
+        monthBucketLabel(m.period),
         moneySemantics(l10n, m.income),
         moneySemantics(l10n, m.expense),
         moneySemantics(l10n, m.net),
@@ -35,18 +36,25 @@ String trendsSummary(AppLocalizations l10n, List<MonthTotals> months) {
   return '${l10n.trends_summary_title(months.length)} ${parts.join(' ')}';
 }
 
-/// Income vs expense per month with the net as a line (PRD RPT-02).
+/// Income vs expense per month with the net as a line (PRD RPT-02). The
+/// caller owns the 6/12-month choice, which the category trend shares.
 class TrendsView extends ConsumerStatefulWidget {
-  const TrendsView({required this.scope, super.key});
+  const TrendsView({
+    required this.scope,
+    required this.monthCount,
+    required this.onMonthCount,
+    super.key,
+  });
 
   final ReportScope scope;
+  final int monthCount;
+  final ValueChanged<int> onMonthCount;
 
   @override
   ConsumerState<TrendsView> createState() => _TrendsViewState();
 }
 
 class _TrendsViewState extends ConsumerState<TrendsView> {
-  var _months = 6;
   int? _selected;
 
   void _tap(int index, List<MonthTotals> months) {
@@ -60,7 +68,9 @@ class _TrendsViewState extends ConsumerState<TrendsView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final months = ref.watch(trendsProvider(widget.scope, _months)).value;
+    final months = ref
+        .watch(trendsProvider(widget.scope, widget.monthCount))
+        .value;
     return ReportCard(
       title: l10n.trends_title,
       trailing: SegmentedButton<int>(
@@ -70,11 +80,11 @@ class _TrendsViewState extends ConsumerState<TrendsView> {
           ButtonSegment(value: 6, label: Text(l10n.trends_months(6))),
           ButtonSegment(value: 12, label: Text(l10n.trends_months(12))),
         ],
-        selected: {_months},
-        onSelectionChanged: (s) => setState(() {
-          _months = s.single;
-          _selected = null;
-        }),
+        selected: {widget.monthCount},
+        onSelectionChanged: (s) {
+          setState(() => _selected = null);
+          widget.onMonthCount(s.single);
+        },
       ),
       child: months == null
           ? const SizedBox(
@@ -153,7 +163,10 @@ class _Chart extends StatelessWidget {
           }
           return SideTitleWidget(
             meta: meta,
-            child: Text(monthBucketLabel(months[i]), style: style.axisText),
+            child: Text(
+              monthBucketLabel(months[i].period),
+              style: style.axisText,
+            ),
           );
         },
       ),

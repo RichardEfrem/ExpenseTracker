@@ -38,6 +38,7 @@ enum ValidationReason {
   intervalOutOfRange,
   dayOfMonthOutOfRange,
   endBeforeStart,
+  pinInvalid,
 }
 
 /// Why a backup file could not be read or restored.

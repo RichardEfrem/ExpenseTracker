@@ -15,6 +15,11 @@ abstract final class AppPaths {
   static const recurring = '/more/recurring';
   static const newRecurring = '/more/recurring/new';
   static const editRecurring = '/more/recurring/:id/edit';
+  static const appLock = '/more/lock';
+  static const pinSetup = '/more/lock/pin';
+
+  /// The lock screen, above everything while the app is locked.
+  static const lock = '/lock';
 
   /// The four tab roots in navigation-bar order.
   static const tabs = [home, activity, reports, more];
@@ -31,6 +36,14 @@ abstract final class AppPaths {
   /// `/transactions/<id>/edit`.
   static String editTransactionOf(String id) =>
       '/transactions/${Uri.encodeComponent(id)}/edit';
+
+  /// `/lock?from=<location>`: where to return after unlocking.
+  static String lockReturningTo(String location) =>
+      Uri(path: lock, queryParameters: {'from': location}).toString();
+
+  /// `/more/lock/pin?mode=<mode>`.
+  static String pinSetupFor(String mode) =>
+      Uri(path: pinSetup, queryParameters: {'mode': mode}).toString();
 
   /// `/more/recurring/<id>/edit`.
   static String editRecurringOf(String id) =>

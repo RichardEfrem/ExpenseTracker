@@ -1225,4 +1225,203 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get reports_tab_compare => 'Compare';
+
+  @override
+  String get reports_tab_calendar => 'Calendar';
+
+  @override
+  String get category_trend_title => 'Category trend';
+
+  @override
+  String category_trend_pick(int count) {
+    return 'Pick up to $count categories.';
+  }
+
+  @override
+  String category_trend_summary_title(int count) {
+    return 'Category trend, last $count months.';
+  }
+
+  @override
+  String category_trend_summary_series(String name, String points) {
+    return '$name: $points.';
+  }
+
+  @override
+  String category_trend_summary_point(String month, String amount) {
+    return '$month $amount';
+  }
+
+  @override
+  String get compare_title => 'Against the period before';
+
+  @override
+  String get compare_category => 'Category';
+
+  @override
+  String get compare_this => 'This';
+
+  @override
+  String get compare_previous => 'Before';
+
+  @override
+  String get compare_change => 'Change';
+
+  @override
+  String get compare_total => 'Total';
+
+  @override
+  String get compare_new => 'New';
+
+  @override
+  String compare_change_up(String percent) {
+    return 'up $percent';
+  }
+
+  @override
+  String compare_change_down(String percent) {
+    return 'down $percent';
+  }
+
+  @override
+  String get compare_change_same => 'unchanged';
+
+  @override
+  String get compare_change_new => 'new this period';
+
+  @override
+  String compare_row_label(
+    String name,
+    String current,
+    String previous,
+    String delta,
+    String change,
+  ) {
+    return '$name: $current this period, $previous the period before. Change $delta, $change.';
+  }
+
+  @override
+  String get calendar_title => 'Cash-flow calendar';
+
+  @override
+  String calendar_day_label(String date, String amount) {
+    return '$date, net $amount';
+  }
+
+  @override
+  String calendar_day_empty(String date) {
+    return '$date, nothing recorded';
+  }
+
+  @override
+  String get validation_pin => 'Use 4 to 6 digits.';
+
+  @override
+  String get lock_title => 'Unlock';
+
+  @override
+  String get lock_enter_pin => 'Enter your PIN';
+
+  @override
+  String lock_wrong_pin(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Wrong PIN. $count more tries before a short wait.',
+      one: 'Wrong PIN. 1 more try before a short wait.',
+      zero: 'Wrong PIN.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lock_wait(int seconds) {
+    return 'Too many tries. Try again in $seconds s.';
+  }
+
+  @override
+  String get lock_biometric => 'Unlock with fingerprint or face';
+
+  @override
+  String get lock_biometric_reason => 'Unlock Expense Tracker';
+
+  @override
+  String get lock_forgot => 'Forgot PIN?';
+
+  @override
+  String get lock_forgot_body =>
+      'The PIN can\'t be recovered: the app has no account and stores nothing online. If fingerprint or face unlock is on, use it. Otherwise, clearing the app\'s storage in Android Settings removes the lock and all data; restore a backup afterwards.';
+
+  @override
+  String lock_pin_progress(int count, int length) {
+    return '$count of $length digits entered';
+  }
+
+  @override
+  String get lock_switch => 'Lock with a PIN';
+
+  @override
+  String get lock_switch_hint =>
+      'Asks for your PIN when you open the app. The app is hidden in recent apps and screenshots are blocked.';
+
+  @override
+  String get lock_change_pin => 'Change PIN';
+
+  @override
+  String get lock_biometric_switch => 'Unlock with fingerprint or face';
+
+  @override
+  String get lock_biometric_unavailable =>
+      'Set up fingerprint or face in Android Settings first.';
+
+  @override
+  String get lock_timeout => 'Lock after';
+
+  @override
+  String get lock_timeout_immediately => 'Immediately';
+
+  @override
+  String get lock_timeout_seconds30 => '30 seconds away';
+
+  @override
+  String get lock_timeout_minute1 => '1 minute away';
+
+  @override
+  String get lock_timeout_minutes5 => '5 minutes away';
+
+  @override
+  String get lock_on => 'On';
+
+  @override
+  String get lock_off => 'Off';
+
+  @override
+  String get lock_enabled => 'App lock is on';
+
+  @override
+  String get lock_disabled => 'App lock is off';
+
+  @override
+  String get pin_new => 'Choose a PIN';
+
+  @override
+  String get pin_new_hint => '4 to 6 digits';
+
+  @override
+  String get pin_confirm => 'Enter the PIN again';
+
+  @override
+  String get pin_mismatch => 'The PINs don\'t match. Choose a PIN again.';
+
+  @override
+  String get pin_current => 'Enter your current PIN';
+
+  @override
+  String get pin_continue => 'Continue';
+
+  @override
+  String get pin_changed => 'PIN changed';
 }

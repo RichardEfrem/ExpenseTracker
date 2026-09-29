@@ -12,6 +12,7 @@ abstract final class AppDateFormat {
   static final _monthShort = DateFormat('MMM', 'en_US');
   static final _dayMonthLong = DateFormat('d MMMM', 'en_US');
   static final _time = DateFormat('HH:mm', 'en_US');
+  static final _weekdayShort = DateFormat('EEE', 'en_US');
 
   /// `25 Aug`.
   static String dayMonth(LocalDate date) => _dayMonth.format(date.toDateTime());
@@ -35,6 +36,10 @@ abstract final class AppDateFormat {
   /// `Sep`.
   static String monthShort(LocalDate date) =>
       _monthShort.format(date.toDateTime());
+
+  /// `Mon` for [weekday] 1 … `Sun` for 7.
+  static String weekdayShort(int weekday) =>
+      _weekdayShort.format(LocalDate(2024, 1, weekday).toDateTime());
 
   /// `21:04`.
   static String time(DateTime dateTime) => _time.format(dateTime);

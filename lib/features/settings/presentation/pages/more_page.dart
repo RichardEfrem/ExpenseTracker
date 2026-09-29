@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/l10n/generated/app_localizations.dart';
 import 'package:expense_tracker/core/router/app_paths.dart';
 import 'package:expense_tracker/core/utils/app_info_provider.dart';
 import 'package:expense_tracker/core/utils/money_format.dart';
+import 'package:expense_tracker/features/lock/lock_presentation.dart';
 import 'package:expense_tracker/features/settings/domain/entities/app_settings.dart';
 import 'package:expense_tracker/features/settings/presentation/providers/settings_notifier.dart';
 import 'package:expense_tracker/features/settings/presentation/widgets/preference_labels.dart';
@@ -21,6 +22,8 @@ class MorePage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final settings = ref.watch(settingsProvider).value ?? const AppSettings();
     final version = ref.watch(appVersionProvider).value;
+    final lockEnabled =
+        ref.watch(appLockProvider).value?.settings.enabled ?? false;
 
     Widget item(
       IconData icon,
@@ -87,7 +90,12 @@ class MorePage extends ConsumerWidget {
             path: AppPaths.preferences,
             subtitle: themeModeLabel(l10n, settings.themeMode),
           ),
-          item(Symbols.lock_rounded, l10n.more_app_lock),
+          item(
+            Symbols.lock_rounded,
+            l10n.more_app_lock,
+            path: AppPaths.appLock,
+            subtitle: lockEnabled ? l10n.lock_on : l10n.lock_off,
+          ),
           SectionHeader(l10n.more_section_about),
           ListTile(
             leading: const Icon(Symbols.info_rounded),

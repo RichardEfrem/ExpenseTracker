@@ -5,7 +5,10 @@ import 'package:expense_tracker/core/widgets/empty_state.dart';
 import 'package:expense_tracker/core/widgets/multi_select_sheet.dart';
 import 'package:expense_tracker/features/accounts/accounts_presentation.dart';
 import 'package:expense_tracker/features/period/period_presentation.dart';
+import 'package:expense_tracker/features/reports/calendar/presentation/widgets/calendar_view.dart';
 import 'package:expense_tracker/features/reports/category_breakdown/presentation/widgets/category_breakdown_view.dart';
+import 'package:expense_tracker/features/reports/category_trend/presentation/widgets/category_trend_view.dart';
+import 'package:expense_tracker/features/reports/compare/presentation/widgets/compare_view.dart';
 import 'package:expense_tracker/features/reports/daily/presentation/widgets/daily_view.dart';
 import 'package:expense_tracker/features/reports/shared/domain/entities/report_scope.dart';
 import 'package:expense_tracker/features/reports/shared/presentation/providers/report_scope_notifier.dart';
@@ -17,7 +20,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 /// Reports and statistics (DESIGN §8.5): period, stat cards, and one tab
-/// per report.
+/// per report: Categories, Trends, Daily, Compare, Calendar.
 class ReportsPage extends ConsumerWidget {
   const ReportsPage({super.key});
 
@@ -31,8 +34,10 @@ class ReportsPage extends ConsumerWidget {
         l10n.reports_tab_categories,
         (ReportScope s) => CategoryBreakdownView(scope: s),
       ),
-      (l10n.reports_tab_trends, (ReportScope s) => TrendsView(scope: s)),
+      (l10n.reports_tab_trends, (ReportScope s) => _TrendsTab(scope: s)),
       (l10n.reports_tab_daily, (ReportScope s) => DailyView(scope: s)),
+      (l10n.reports_tab_compare, (ReportScope s) => CompareView(scope: s)),
+      (l10n.reports_tab_calendar, (ReportScope s) => CalendarView(scope: s)),
     ];
 
     return DefaultTabController(
@@ -92,6 +97,35 @@ class ReportsPage extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Income vs expense, then the category trend over the same months
+/// (DESIGN §8.5): one 6/12-month choice drives both.
+class _TrendsTab extends StatefulWidget {
+  const _TrendsTab({required this.scope});
+
+  final ReportScope scope;
+
+  @override
+  State<_TrendsTab> createState() => _TrendsTabState();
+}
+
+class _TrendsTabState extends State<_TrendsTab> {
+  var _months = 6;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      TrendsView(
+        scope: widget.scope,
+        monthCount: _months,
+        onMonthCount: (months) => setState(() => _months = months),
+      ),
+      const SizedBox(height: Dimens.cardGap),
+      CategoryTrendView(scope: widget.scope, monthCount: _months),
+    ],
+  );
 }
 
 class _EmptyPeriod extends ConsumerWidget {

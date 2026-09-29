@@ -10,6 +10,7 @@ import 'package:expense_tracker/features/settings/domain/entities/app_settings.d
 import 'package:expense_tracker/features/settings/presentation/providers/settings_notifier.dart';
 import 'package:expense_tracker/features/settings/presentation/widgets/preference_labels.dart';
 import 'package:expense_tracker/features/settings/presentation/widgets/section_header.dart';
+import 'package:expense_tracker/core/widgets/choice_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -73,7 +74,7 @@ class PreferencesPage extends ConsumerWidget {
             title: Text(l10n.more_week_start),
             subtitle: Text(weekdayLabel(l10n, settings.weekStart)),
             onTap: () async {
-              final day = await _pickOne<int>(
+              final day = await showChoiceDialog<int>(
                 context,
                 title: l10n.more_week_start,
                 values: weekStartChoices,
@@ -89,7 +90,7 @@ class PreferencesPage extends ConsumerWidget {
             title: Text(l10n.more_theme),
             subtitle: Text(themeModeLabel(l10n, settings.themeMode)),
             onTap: () async {
-              final mode = await _pickOne<AppThemeMode>(
+              final mode = await showChoiceDialog<AppThemeMode>(
                 context,
                 title: l10n.more_theme,
                 values: AppThemeMode.values,
@@ -98,34 +99,6 @@ class PreferencesPage extends ConsumerWidget {
               );
               if (mode != null) await apply(() => notifier.setThemeMode(mode));
             },
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Future<T?> _pickOne<T>(
-    BuildContext context, {
-    required String title,
-    required List<T> values,
-    required T current,
-    required String Function(T) label,
-  }) {
-    return showDialog<T>(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: Text(title),
-        children: [
-          RadioGroup<T>(
-            groupValue: current,
-            onChanged: (value) => Navigator.pop(context, value),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final value in values)
-                  RadioListTile<T>(value: value, title: Text(label(value))),
-              ],
-            ),
           ),
         ],
       ),

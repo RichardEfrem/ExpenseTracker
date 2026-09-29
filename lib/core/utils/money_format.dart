@@ -86,6 +86,11 @@ abstract final class MoneyFormat {
     throw StateError('unreachable');
   }
 
+  /// Compact number with its sign, no currency: `+300K`, `−128K`, `0`.
+  /// For dense cells (compare table, calendar).
+  static String compactSigned(int value) =>
+      '${value > 0 ? '+' : ''}${compactNumber(value)}';
+
   /// `▲ 12,4%` / `▼ 2,1%` / `0,0%`; null when [previous] is zero (no base).
   static String? change(int current, int previous) {
     if (previous == 0) return null;

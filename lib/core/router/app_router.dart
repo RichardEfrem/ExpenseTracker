@@ -5,6 +5,7 @@ import 'package:expense_tracker/features/accounts/accounts_routes.dart';
 import 'package:expense_tracker/features/backup/backup_routes.dart';
 import 'package:expense_tracker/features/categories/categories_routes.dart';
 import 'package:expense_tracker/features/home/home_routes.dart';
+import 'package:expense_tracker/features/lock/lock_routes.dart';
 import 'package:expense_tracker/features/period/period_routes.dart';
 import 'package:expense_tracker/features/recurring/recurring_routes.dart';
 import 'package:expense_tracker/features/reports/reports_routes.dart';
@@ -25,6 +26,7 @@ List<ModuleRoutes> _modules() => [
   categoriesRoutes(),
   accountsRoutes(),
   recurringRoutes(),
+  lockRoutes(),
   periodRoutes(),
   backupRoutes(),
 ];
@@ -33,6 +35,13 @@ GoRouter createAppRouter({String initialLocation = AppPaths.home}) {
   final modules = _modules();
   return GoRouter(
     initialLocation: initialLocation,
+    // The first module redirect that applies wins.
+    redirect: (context, state) {
+      for (final module in modules) {
+        if (module.redirect?.call(context, state) case final to?) return to;
+      }
+      return null;
+    },
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) =>

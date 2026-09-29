@@ -2041,6 +2041,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 recurring rule} other{{count} recurring rules}}'**
   String backup_preview_recurring(int count);
+
+  /// No description provided for @reports_tab_compare.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get reports_tab_compare;
+
+  /// No description provided for @reports_tab_calendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get reports_tab_calendar;
+
+  /// No description provided for @category_trend_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Category trend'**
+  String get category_trend_title;
+
+  /// No description provided for @category_trend_pick.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick up to {count} categories.'**
+  String category_trend_pick(int count);
+
+  /// No description provided for @category_trend_summary_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Category trend, last {count} months.'**
+  String category_trend_summary_title(int count);
+
+  /// No description provided for @category_trend_summary_series.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {points}.'**
+  String category_trend_summary_series(String name, String points);
+
+  /// No description provided for @category_trend_summary_point.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} {amount}'**
+  String category_trend_summary_point(String month, String amount);
+
+  /// No description provided for @compare_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Against the period before'**
+  String get compare_title;
+
+  /// No description provided for @compare_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get compare_category;
+
+  /// No description provided for @compare_this.
+  ///
+  /// In en, this message translates to:
+  /// **'This'**
+  String get compare_this;
+
+  /// No description provided for @compare_previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Before'**
+  String get compare_previous;
+
+  /// No description provided for @compare_change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get compare_change;
+
+  /// No description provided for @compare_total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get compare_total;
+
+  /// No description provided for @compare_new.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get compare_new;
+
+  /// No description provided for @compare_change_up.
+  ///
+  /// In en, this message translates to:
+  /// **'up {percent}'**
+  String compare_change_up(String percent);
+
+  /// No description provided for @compare_change_down.
+  ///
+  /// In en, this message translates to:
+  /// **'down {percent}'**
+  String compare_change_down(String percent);
+
+  /// No description provided for @compare_change_same.
+  ///
+  /// In en, this message translates to:
+  /// **'unchanged'**
+  String get compare_change_same;
+
+  /// No description provided for @compare_change_new.
+  ///
+  /// In en, this message translates to:
+  /// **'new this period'**
+  String get compare_change_new;
+
+  /// No description provided for @compare_row_label.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {current} this period, {previous} the period before. Change {delta}, {change}.'**
+  String compare_row_label(
+    String name,
+    String current,
+    String previous,
+    String delta,
+    String change,
+  );
+
+  /// No description provided for @calendar_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash-flow calendar'**
+  String get calendar_title;
+
+  /// No description provided for @calendar_day_label.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}, net {amount}'**
+  String calendar_day_label(String date, String amount);
+
+  /// No description provided for @calendar_day_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}, nothing recorded'**
+  String calendar_day_empty(String date);
+
+  /// No description provided for @validation_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 4 to 6 digits.'**
+  String get validation_pin;
+
+  /// No description provided for @lock_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get lock_title;
+
+  /// No description provided for @lock_enter_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN'**
+  String get lock_enter_pin;
+
+  /// No description provided for @lock_wrong_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Wrong PIN.} =1{Wrong PIN. 1 more try before a short wait.} other{Wrong PIN. {count} more tries before a short wait.}}'**
+  String lock_wrong_pin(int count);
+
+  /// No description provided for @lock_wait.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Try again in {seconds} s.'**
+  String lock_wait(int seconds);
+
+  /// No description provided for @lock_biometric.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock with fingerprint or face'**
+  String get lock_biometric;
+
+  /// No description provided for @lock_biometric_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Expense Tracker'**
+  String get lock_biometric_reason;
+
+  /// No description provided for @lock_forgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot PIN?'**
+  String get lock_forgot;
+
+  /// No description provided for @lock_forgot_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The PIN can\'t be recovered: the app has no account and stores nothing online. If fingerprint or face unlock is on, use it. Otherwise, clearing the app\'s storage in Android Settings removes the lock and all data; restore a backup afterwards.'**
+  String get lock_forgot_body;
+
+  /// No description provided for @lock_pin_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {length} digits entered'**
+  String lock_pin_progress(int count, int length);
+
+  /// No description provided for @lock_switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock with a PIN'**
+  String get lock_switch;
+
+  /// No description provided for @lock_switch_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Asks for your PIN when you open the app. The app is hidden in recent apps and screenshots are blocked.'**
+  String get lock_switch_hint;
+
+  /// No description provided for @lock_change_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Change PIN'**
+  String get lock_change_pin;
+
+  /// No description provided for @lock_biometric_switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock with fingerprint or face'**
+  String get lock_biometric_switch;
+
+  /// No description provided for @lock_biometric_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up fingerprint or face in Android Settings first.'**
+  String get lock_biometric_unavailable;
+
+  /// No description provided for @lock_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock after'**
+  String get lock_timeout;
+
+  /// No description provided for @lock_timeout_immediately.
+  ///
+  /// In en, this message translates to:
+  /// **'Immediately'**
+  String get lock_timeout_immediately;
+
+  /// No description provided for @lock_timeout_seconds30.
+  ///
+  /// In en, this message translates to:
+  /// **'30 seconds away'**
+  String get lock_timeout_seconds30;
+
+  /// No description provided for @lock_timeout_minute1.
+  ///
+  /// In en, this message translates to:
+  /// **'1 minute away'**
+  String get lock_timeout_minute1;
+
+  /// No description provided for @lock_timeout_minutes5.
+  ///
+  /// In en, this message translates to:
+  /// **'5 minutes away'**
+  String get lock_timeout_minutes5;
+
+  /// No description provided for @lock_on.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get lock_on;
+
+  /// No description provided for @lock_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get lock_off;
+
+  /// No description provided for @lock_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock is on'**
+  String get lock_enabled;
+
+  /// No description provided for @lock_disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock is off'**
+  String get lock_disabled;
+
+  /// No description provided for @pin_new.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a PIN'**
+  String get pin_new;
+
+  /// No description provided for @pin_new_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'4 to 6 digits'**
+  String get pin_new_hint;
+
+  /// No description provided for @pin_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the PIN again'**
+  String get pin_confirm;
+
+  /// No description provided for @pin_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The PINs don\'t match. Choose a PIN again.'**
+  String get pin_mismatch;
+
+  /// No description provided for @pin_current.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current PIN'**
+  String get pin_current;
+
+  /// No description provided for @pin_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get pin_continue;
+
+  /// No description provided for @pin_changed.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN changed'**
+  String get pin_changed;
 }
 
 class _AppLocalizationsDelegate

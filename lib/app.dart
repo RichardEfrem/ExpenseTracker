@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/l10n/generated/app_localizations.dart';
 import 'package:expense_tracker/core/router/app_router.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
+import 'package:expense_tracker/features/lock/lock_presentation.dart';
 import 'package:expense_tracker/features/recurring/recurring_presentation.dart';
 import 'package:expense_tracker/features/settings/settings_presentation.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,12 @@ class _AppState extends ConsumerState<App> {
     // return to the app; there is no background service (PRD REC-02).
     ref.read(recurringGenerationProvider);
     _lifecycle = AppLifecycleListener(
-      onResume: () => ref.read(recurringGenerationProvider.notifier).run(),
+      // Leaving the app starts the lock timeout; coming back checks it.
+      onHide: () => ref.read(appLockProvider.notifier).onHidden(),
+      onResume: () {
+        ref.read(appLockProvider.notifier).onResumed();
+        ref.read(recurringGenerationProvider.notifier).run();
+      },
     );
   }
 
@@ -35,6 +41,11 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
+    // Locking and unlocking re-run the router's redirect (lock screen).
+    ref.listen(
+      appLockProvider.select((lock) => lock.value?.status),
+      (_, _) => ref.read(appRouterProvider).refresh(),
+    );
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).app_title,
       theme: AppTheme.light,

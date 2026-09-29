@@ -81,6 +81,13 @@ void main() {
     });
   });
 
+  test('compactSigned', () {
+    expect(MoneyFormat.compactSigned(300000), '+300K');
+    expect(MoneyFormat.compactSigned(-128000), '−128K');
+    expect(MoneyFormat.compactSigned(0), '0');
+    expect(MoneyFormat.compactSigned(-1250000), '−1,3M');
+  });
+
   group('change', () {
     for (final (current, previous, expected) in [
       (1124, 1000, '▲ 12,4%'),
