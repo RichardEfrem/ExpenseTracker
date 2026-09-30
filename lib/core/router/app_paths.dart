@@ -11,12 +11,16 @@ abstract final class AppPaths {
   static const categories = '/more/categories';
   static const preferences = '/more/preferences';
   static const backup = '/more/backup';
+  static const csvExport = '/more/backup/csv';
   static const accounts = '/more/accounts';
   static const recurring = '/more/recurring';
   static const newRecurring = '/more/recurring/new';
   static const editRecurring = '/more/recurring/:id/edit';
   static const appLock = '/more/lock';
   static const pinSetup = '/more/lock/pin';
+
+  /// First-launch onboarding, above everything until finished or skipped.
+  static const welcome = '/welcome';
 
   /// The lock screen, above everything while the app is locked.
   static const lock = '/lock';

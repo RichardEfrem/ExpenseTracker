@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/backup/backup_routes.dart';
 import 'package:expense_tracker/features/categories/categories_routes.dart';
 import 'package:expense_tracker/features/home/home_routes.dart';
 import 'package:expense_tracker/features/lock/lock_routes.dart';
+import 'package:expense_tracker/features/onboarding/onboarding_routes.dart';
 import 'package:expense_tracker/features/period/period_routes.dart';
 import 'package:expense_tracker/features/recurring/recurring_routes.dart';
 import 'package:expense_tracker/features/reports/reports_routes.dart';
@@ -27,6 +28,8 @@ List<ModuleRoutes> _modules() => [
   accountsRoutes(),
   recurringRoutes(),
   lockRoutes(),
+  // After the lock: a locked app unlocks before anything else.
+  onboardingRoutes(),
   periodRoutes(),
   backupRoutes(),
 ];

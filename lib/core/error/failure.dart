@@ -39,10 +39,19 @@ enum ValidationReason {
   dayOfMonthOutOfRange,
   endBeforeStart,
   pinInvalid,
+  passwordTooShort,
 }
 
 /// Why a backup file could not be read or restored.
-enum BackupProblem { corruptFile, unsupportedVersion, emptyFile }
+enum BackupProblem {
+  corruptFile,
+  unsupportedVersion,
+  emptyFile,
+
+  /// An encrypted backup didn't open: the password is wrong or the file
+  /// was changed (AES-GCM can't tell these apart).
+  wrongPassword,
+}
 
 /// Carries a [Failure] through code that has to throw (e.g. inside a DB
 /// transaction callback, so the transaction rolls back). [guard] unwraps it.

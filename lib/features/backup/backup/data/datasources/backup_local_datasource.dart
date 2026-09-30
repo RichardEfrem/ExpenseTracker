@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/database/seed.dart';
+import 'package:expense_tracker/core/database/watch_computed.dart';
 
 typedef AllRows = ({
   List<AccountRow> accounts,
@@ -69,4 +70,36 @@ class BackupLocalDataSource {
   Future<void> putSetting(String key, String value) => _db
       .into(_db.settings)
       .insertOnConflictUpdate(SettingsCompanion.insert(key: key, value: value));
+
+  Future<void> deleteSettings(Iterable<String> keys) =>
+      (_db.delete(_db.settings)..where((s) => s.key.isIn(keys))).go();
+
+  /// Several settings in one DB transaction.
+  Future<void> putSettings(Map<String, String> values) => _db.transaction(
+    () => _db.batch(
+      (b) => b.insertAllOnConflictUpdate(_db.settings, [
+        for (final MapEntry(:key, :value) in values.entries)
+          SettingsCompanion.insert(key: key, value: value),
+      ]),
+    ),
+  );
+
+  /// Settings rows and the oldest transaction's `created_at`, for the
+  /// backup status.
+  Future<({Map<String, String> settings, int? firstRecordMs})>
+  readStatusRows() => _db.transaction(() async {
+    final settings = await _db.select(_db.settings).get();
+    final min = _db.transactions.createdAt.min();
+    final first = await (_db.selectOnly(
+      _db.transactions,
+    )..addColumns([min])).getSingle();
+    return (
+      settings: {for (final r in settings) r.key: r.value},
+      firstRecordMs: first.read(min),
+    );
+  });
+
+  Stream<({Map<String, String> settings, int? firstRecordMs})>
+  watchStatusRows() =>
+      watchComputed(_db, [_db.settings, _db.transactions], readStatusRows);
 }

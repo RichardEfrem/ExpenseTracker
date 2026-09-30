@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:isolate';
-import 'dart:math';
 
-import 'package:cryptography/cryptography.dart';
+import 'package:expense_tracker/core/utils/key_derivation.dart';
 import 'package:expense_tracker/features/lock/data/models/pin_hash_model.dart';
 
 /// Hashes and checks PINs (PRD §6.4: salted hash). Key derivation runs in a
@@ -16,7 +14,6 @@ class PinHasher {
   /// PBKDF2 rounds for new PINs. Stored per hash, so it can change later.
   static const defaultIterations = 100000;
   static const _saltBytes = 16;
-  static const _bits = 256;
 
   final int iterations;
 
@@ -24,8 +21,7 @@ class PinHasher {
   final bool inBackground;
 
   Future<PinHashModel> hash(String pin) async {
-    final random = Random.secure();
-    final salt = [for (var i = 0; i < _saltBytes; i++) random.nextInt(256)];
+    final salt = secureRandomBytes(_saltBytes);
     return PinHashModel(
       iterations: iterations,
       salt: base64Encode(salt),
@@ -44,17 +40,13 @@ class PinHasher {
     return _constantTimeEquals(expected, actual);
   }
 
-  Future<List<int>> _derive(String pin, List<int> salt, int iterations) {
-    Future<List<int>> derive() async {
-      final key = await Pbkdf2.hmacSha256(
+  Future<List<int>> _derive(String pin, List<int> salt, int iterations) =>
+      pbkdf2Sha256(
+        password: pin,
+        salt: salt,
         iterations: iterations,
-        bits: _bits,
-      ).deriveKeyFromPassword(password: pin, nonce: salt);
-      return key.extractBytes();
-    }
-
-    return inBackground ? Isolate.run(derive) : derive();
-  }
+        inBackground: inBackground,
+      );
 
   /// Compares every byte, so timing doesn't reveal how much matched.
   static bool _constantTimeEquals(List<int> a, List<int> b) {

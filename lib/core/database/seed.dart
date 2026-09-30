@@ -104,8 +104,13 @@ final List<SeedCategory> defaultCategories = [
   ),
 ];
 
-/// Inserts the default categories and the "Cash" account (PRD ACC-02).
-/// Runs on first launch and after "erase all data".
+/// Settings key set to `true` by the seed, so a fresh install (or erased
+/// data) shows onboarding once; `false` after it is finished or skipped.
+/// Databases from before onboarding existed have no key and never show it.
+const onboardingPendingKey = 'onboarding_pending';
+
+/// Inserts the default categories, the "Cash" account (PRD ACC-02) and the
+/// onboarding flag. Runs on first launch and after "erase all data".
 Future<void> seedDefaults(
   AppDatabase db, {
   required Clock clock,
@@ -143,6 +148,10 @@ Future<void> seedDefaults(
         createdAt: now,
         updatedAt: now,
       ),
+    );
+    batch.insert(
+      db.settings,
+      SettingsCompanion.insert(key: onboardingPendingKey, value: 'true'),
     );
   });
 }

@@ -2365,6 +2365,360 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PIN changed'**
   String get pin_changed;
+
+  /// No description provided for @failure_backup_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong password, or the file was changed after it was exported.'**
+  String get failure_backup_password;
+
+  /// No description provided for @validation_password_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 8 characters.'**
+  String get validation_password_short;
+
+  /// No description provided for @backup_password_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The passwords don\'t match.'**
+  String get backup_password_mismatch;
+
+  /// No description provided for @backup_password_show.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get backup_password_show;
+
+  /// No description provided for @backup_password_hide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get backup_password_hide;
+
+  /// No description provided for @backup_password_set_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup password'**
+  String get backup_password_set_title;
+
+  /// No description provided for @backup_password_set_body.
+  ///
+  /// In en, this message translates to:
+  /// **'New backups are encrypted with this password. You\'ll need it to restore them, on this phone or another. If you forget it, those backups can\'t be opened.'**
+  String get backup_password_set_body;
+
+  /// No description provided for @backup_password_enter_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted backup'**
+  String get backup_password_enter_title;
+
+  /// No description provided for @backup_password_enter_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the password this backup was made with.'**
+  String get backup_password_enter_body;
+
+  /// No description provided for @backup_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get backup_password_label;
+
+  /// No description provided for @backup_password_again_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Password again'**
+  String get backup_password_again_label;
+
+  /// No description provided for @backup_password_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get backup_password_open;
+
+  /// No description provided for @backup_reminder_never.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t backed up yet'**
+  String get backup_reminder_never;
+
+  /// No description provided for @backup_reminder_days.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Last backup 1 day ago} other{Last backup {days} days ago}}'**
+  String backup_reminder_days(int days);
+
+  /// No description provided for @backup_reminder_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get backup_reminder_later;
+
+  /// No description provided for @backup_reminder_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up now'**
+  String get backup_reminder_now;
+
+  /// No description provided for @backup_reminder_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me if no backup for 30 days'**
+  String get backup_reminder_setting;
+
+  /// No description provided for @backup_encrypt.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypt backups with a password'**
+  String get backup_encrypt;
+
+  /// No description provided for @backup_encrypt_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Protects the file if someone else gets it.'**
+  String get backup_encrypt_hint;
+
+  /// No description provided for @backup_encrypt_hint_on.
+  ///
+  /// In en, this message translates to:
+  /// **'New backups need the password to restore.'**
+  String get backup_encrypt_hint_on;
+
+  /// No description provided for @backup_encrypt_on.
+  ///
+  /// In en, this message translates to:
+  /// **'Backups will be encrypted'**
+  String get backup_encrypt_on;
+
+  /// No description provided for @backup_encrypt_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Backups will no longer be encrypted'**
+  String get backup_encrypt_off;
+
+  /// No description provided for @backup_auto.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly auto-backup to folder'**
+  String get backup_auto;
+
+  /// No description provided for @backup_auto_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves a backup to a folder you choose, once a week, when you open the app.'**
+  String get backup_auto_hint;
+
+  /// No description provided for @backup_auto_folder.
+  ///
+  /// In en, this message translates to:
+  /// **'To {folder}'**
+  String backup_auto_folder(String folder);
+
+  /// No description provided for @backup_auto_last.
+  ///
+  /// In en, this message translates to:
+  /// **'To {folder} · last {date}'**
+  String backup_auto_last(String folder, String date);
+
+  /// No description provided for @backup_auto_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save to {folder}. Choose the folder again.'**
+  String backup_auto_failed(String folder);
+
+  /// No description provided for @backup_auto_change_folder.
+  ///
+  /// In en, this message translates to:
+  /// **'Change folder'**
+  String get backup_auto_change_folder;
+
+  /// No description provided for @backup_auto_on.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-backup is on'**
+  String get backup_auto_on;
+
+  /// No description provided for @csv_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions as a spreadsheet file'**
+  String get csv_subtitle;
+
+  /// No description provided for @csv_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Date range'**
+  String get csv_range;
+
+  /// No description provided for @csv_this_month.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get csv_this_month;
+
+  /// No description provided for @csv_last_month.
+  ///
+  /// In en, this message translates to:
+  /// **'Last month'**
+  String get csv_last_month;
+
+  /// No description provided for @csv_this_year.
+  ///
+  /// In en, this message translates to:
+  /// **'This year'**
+  String get csv_this_year;
+
+  /// No description provided for @csv_last_year.
+  ///
+  /// In en, this message translates to:
+  /// **'Last year'**
+  String get csv_last_year;
+
+  /// No description provided for @csv_all_time.
+  ///
+  /// In en, this message translates to:
+  /// **'All time'**
+  String get csv_all_time;
+
+  /// No description provided for @csv_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom…'**
+  String get csv_custom;
+
+  /// No description provided for @csv_range_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All transactions'**
+  String get csv_range_all;
+
+  /// No description provided for @csv_range_between.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} – {to}'**
+  String csv_range_between(String from, String to);
+
+  /// No description provided for @csv_export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export CSV'**
+  String get csv_export;
+
+  /// No description provided for @csv_exported.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Exported 1 transaction} other{Exported {count} transactions}}'**
+  String csv_exported(int count);
+
+  /// No description provided for @csv_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions in this date range.'**
+  String get csv_empty;
+
+  /// No description provided for @csv_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Columns: date, time, type, amount, category, account, to account, note. Amounts are whole rupiah.'**
+  String get csv_hint;
+
+  /// No description provided for @onboarding_step.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String onboarding_step(int step, int total);
+
+  /// No description provided for @onboarding_skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboarding_skip;
+
+  /// No description provided for @onboarding_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get onboarding_back;
+
+  /// No description provided for @onboarding_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboarding_next;
+
+  /// No description provided for @onboarding_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get onboarding_start;
+
+  /// No description provided for @onboarding_welcome_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get onboarding_welcome_title;
+
+  /// No description provided for @onboarding_welcome_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your money privately. Everything stays on this phone.'**
+  String get onboarding_welcome_body;
+
+  /// No description provided for @onboarding_currency_idr.
+  ///
+  /// In en, this message translates to:
+  /// **'Indonesian Rupiah (Rp)'**
+  String get onboarding_currency_idr;
+
+  /// No description provided for @onboarding_currency_preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Amounts look like {example}'**
+  String onboarding_currency_preview(String example);
+
+  /// No description provided for @onboarding_currency_only.
+  ///
+  /// In en, this message translates to:
+  /// **'Rupiah is the only currency for now.'**
+  String get onboarding_currency_only;
+
+  /// No description provided for @onboarding_moving.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving from another phone?'**
+  String get onboarding_moving;
+
+  /// No description provided for @onboarding_restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore a backup'**
+  String get onboarding_restore;
+
+  /// No description provided for @onboarding_categories_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get onboarding_categories_title;
+
+  /// No description provided for @onboarding_categories_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Untick any you won\'t use. You can add, edit and remove categories later.'**
+  String get onboarding_categories_body;
+
+  /// No description provided for @onboarding_cash_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting cash'**
+  String get onboarding_cash_title;
+
+  /// No description provided for @onboarding_cash_body.
+  ///
+  /// In en, this message translates to:
+  /// **'How much cash do you have right now? Leave it at zero to skip.'**
+  String get onboarding_cash_body;
 }
 
 class _AppLocalizationsDelegate

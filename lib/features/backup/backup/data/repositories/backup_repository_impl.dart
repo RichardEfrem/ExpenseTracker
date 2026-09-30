@@ -5,10 +5,15 @@ import 'package:expense_tracker/core/error/failure.dart';
 import 'package:expense_tracker/core/error/guard.dart';
 import 'package:expense_tracker/core/utils/clock.dart';
 import 'package:expense_tracker/features/accounts/accounts_data.dart';
+import 'package:cryptography/cryptography.dart';
+import 'package:expense_tracker/features/backup/backup/data/datasources/backup_cipher.dart';
 import 'package:expense_tracker/features/backup/backup/data/datasources/backup_file_datasource.dart';
+import 'package:expense_tracker/features/backup/backup/data/datasources/backup_folder_datasource.dart';
 import 'package:expense_tracker/features/backup/backup/data/datasources/backup_local_datasource.dart';
 import 'package:expense_tracker/features/backup/backup/data/models/backup_dto.dart';
+import 'package:expense_tracker/features/backup/backup/data/models/encrypted_backup_dto.dart';
 import 'package:expense_tracker/features/backup/backup/domain/entities/backup_file.dart';
+import 'package:expense_tracker/features/backup/backup/domain/entities/backup_status.dart';
 import 'package:expense_tracker/features/backup/backup/domain/repositories/backup_repository.dart';
 import 'package:expense_tracker/features/categories/categories_data.dart';
 import 'package:expense_tracker/features/recurring/recurring_data.dart';
@@ -17,11 +22,19 @@ import 'package:expense_tracker/features/transactions/transactions_data.dart';
 import 'package:fpdart/fpdart.dart';
 
 class BackupRepositoryImpl implements BackupRepository {
-  const BackupRepositoryImpl(this._local, this._files, this._clock);
+  const BackupRepositoryImpl(
+    this._local,
+    this._files,
+    this._clock, {
+    this._cipher = const BackupCipher(),
+    this._folders = const BackupFolderDataSource(),
+  });
 
   final BackupLocalDataSource _local;
   final BackupFileDataSource _files;
   final Clock _clock;
+  final BackupCipher _cipher;
+  final BackupFolderDataSource _folders;
 
   static Never _corrupt([Object? detail]) => throw FailureException(
     Failure.backup(BackupProblem.corruptFile, detail?.toString()),
@@ -208,6 +221,90 @@ class BackupRepositoryImpl implements BackupRepository {
 
   @override
   Future<Either<Failure, String?>> pickFile() => guard(_files.pick);
+
+  /// The envelope of an encrypted backup, or null for anything else.
+  static Map<String, dynamic>? _envelope(String contents) {
+    // Cheap check first: a plain backup can be many megabytes.
+    if (!contents.contains(encryptedBackupFormat)) return null;
+    try {
+      final json = jsonDecode(contents);
+      return json is Map<String, dynamic> &&
+              json['format'] == encryptedBackupFormat
+          ? json
+          : null;
+    } on FormatException {
+      return null;
+    }
+  }
+
+  @override
+  bool isEncrypted(String contents) => _envelope(contents) != null;
+
+  @override
+  Future<Either<Failure, String>> encrypt(String contents, String password) =>
+      guard(
+        () async =>
+            jsonEncode((await _cipher.encrypt(contents, password)).toJson()),
+      );
+
+  @override
+  Future<Either<Failure, String>> decrypt(String contents, String password) =>
+      guard(() async {
+        final json = _envelope(contents) ?? _corrupt('not encrypted');
+        final EncryptedBackupDto file;
+        try {
+          file = EncryptedBackupDto.fromJson(json);
+        } catch (e) {
+          _corrupt(e);
+        }
+        if (file.version > EncryptedBackupDto.currentVersion) {
+          throw FailureException(
+            Failure.backup(BackupProblem.unsupportedVersion, '${file.version}'),
+          );
+        }
+        if (file.kdf != EncryptedBackupDto.pbkdf2Sha256 ||
+            file.cipher != EncryptedBackupDto.aes256Gcm) {
+          _corrupt('${file.kdf}/${file.cipher}');
+        }
+        try {
+          return await _cipher.decrypt(file, password);
+        } on SecretBoxAuthenticationError {
+          throw const FailureException(
+            Failure.backup(BackupProblem.wrongPassword),
+          );
+        } on FormatException catch (e) {
+          // Bad base64 or bytes that aren't UTF-8 text.
+          _corrupt(e);
+        } on ArgumentError catch (e) {
+          // Wrong nonce or tag length.
+          _corrupt(e);
+        }
+      });
+
+  @override
+  Future<Either<Failure, BackupFolder?>> pickFolder() => guard(() async {
+    final folder = await _folders.pick();
+    return folder == null
+        ? null
+        : BackupFolder(uri: folder.uri, name: folder.name);
+  });
+
+  @override
+  Future<Either<Failure, Unit>> releaseFolder(BackupFolder folder) =>
+      guard(() async {
+        await _folders.release(folder.uri);
+        return unit;
+      });
+
+  @override
+  Future<Either<Failure, Unit>> writeToFolder(
+    BackupFolder folder,
+    String fileName,
+    String contents,
+  ) => guard(() async {
+    await _folders.write(folder.uri, fileName, contents);
+    return unit;
+  });
 
   @override
   Future<Either<Failure, Unit>> recordBackup(DateTime at) => guard(() async {

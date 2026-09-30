@@ -8,15 +8,18 @@ part of 'backup_actions.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Backup, restore and erase. Each returns its result for the page to show.
+/// Backup, restore, erase and backup preferences. Each returns its result
+/// for the page to show; the watched status updates itself.
 
 @ProviderFor(BackupActions)
 final backupActionsProvider = BackupActionsProvider._();
 
-/// Backup, restore and erase. Each returns its result for the page to show.
+/// Backup, restore, erase and backup preferences. Each returns its result
+/// for the page to show; the watched status updates itself.
 final class BackupActionsProvider
     extends $NotifierProvider<BackupActions, void> {
-  /// Backup, restore and erase. Each returns its result for the page to show.
+  /// Backup, restore, erase and backup preferences. Each returns its result
+  /// for the page to show; the watched status updates itself.
   BackupActionsProvider._()
     : super(
         from: null,
@@ -44,9 +47,10 @@ final class BackupActionsProvider
   }
 }
 
-String _$backupActionsHash() => r'3bd694edcd28a10b7d1e14d08b165af857a0c2d8';
+String _$backupActionsHash() => r'd852864ac5debec5292746935335d7d049f207a4';
 
-/// Backup, restore and erase. Each returns its result for the page to show.
+/// Backup, restore, erase and backup preferences. Each returns its result
+/// for the page to show; the watched status updates itself.
 
 abstract class _$BackupActions extends $Notifier<void> {
   void build();

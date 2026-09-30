@@ -1,7 +1,9 @@
 import 'package:expense_tracker/core/l10n/generated/app_localizations.dart';
 import 'package:expense_tracker/core/router/app_router.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
+import 'package:expense_tracker/features/backup/backup_presentation.dart';
 import 'package:expense_tracker/features/lock/lock_presentation.dart';
+import 'package:expense_tracker/features/onboarding/onboarding_presentation.dart';
 import 'package:expense_tracker/features/recurring/recurring_presentation.dart';
 import 'package:expense_tracker/features/settings/settings_presentation.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +25,15 @@ class _AppState extends ConsumerState<App> {
     // Due recurring occurrences are generated on app open and on every
     // return to the app; there is no background service (PRD REC-02).
     ref.read(recurringGenerationProvider);
+    // Likewise the weekly auto-backup to the chosen folder (PRD BAK-05).
+    ref.read(autoBackupRunnerProvider);
     _lifecycle = AppLifecycleListener(
       // Leaving the app starts the lock timeout; coming back checks it.
       onHide: () => ref.read(appLockProvider.notifier).onHidden(),
       onResume: () {
         ref.read(appLockProvider.notifier).onResumed();
         ref.read(recurringGenerationProvider.notifier).run();
+        ref.read(autoBackupRunnerProvider.notifier).run();
       },
     );
   }
@@ -44,6 +49,11 @@ class _AppState extends ConsumerState<App> {
     // Locking and unlocking re-run the router's redirect (lock screen).
     ref.listen(
       appLockProvider.select((lock) => lock.value?.status),
+      (_, _) => ref.read(appRouterProvider).refresh(),
+    );
+    // So does finishing or skipping onboarding.
+    ref.listen(
+      onboardingGateProvider,
       (_, _) => ref.read(appRouterProvider).refresh(),
     );
     return MaterialApp.router(

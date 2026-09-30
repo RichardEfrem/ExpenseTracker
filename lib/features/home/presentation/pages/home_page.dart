@@ -9,6 +9,7 @@ import 'package:expense_tracker/core/utils/period.dart';
 import 'package:expense_tracker/core/widgets/empty_state.dart';
 import 'package:expense_tracker/core/widgets/money_text.dart';
 import 'package:expense_tracker/features/accounts/accounts_presentation.dart';
+import 'package:expense_tracker/features/backup/backup_presentation.dart';
 import 'package:expense_tracker/features/categories/categories_presentation.dart';
 import 'package:expense_tracker/features/period/period_presentation.dart';
 import 'package:expense_tracker/features/recurring/recurring_presentation.dart';
@@ -90,7 +91,14 @@ class HomePage extends ConsumerWidget {
             if (noData) ...[
               const SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: Dimens.screenPadding),
-                sliver: SliverToBoxAdapter(child: PendingRecurringBanner()),
+                sliver: SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      PendingRecurringBanner(),
+                      BackupReminderBanner(),
+                    ],
+                  ),
+                ),
               ),
               SliverFillRemaining(
                 hasScrollBody: false,
@@ -166,6 +174,7 @@ class HomePage extends ConsumerWidget {
                     ),
                     const SizedBox(height: Dimens.cardGap),
                     const PendingRecurringBanner(),
+                    const BackupReminderBanner(),
                     if (top != null && top.totals.isNotEmpty)
                       _TopSpending(period: period, breakdown: top),
                     const SizedBox(height: Dimens.space4),

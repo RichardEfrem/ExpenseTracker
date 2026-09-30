@@ -944,5 +944,129 @@
   "pin_mismatch": "The PINs don't match. Choose a PIN again.",
   "pin_current": "Enter your current PIN",
   "pin_continue": "Continue",
-  "pin_changed": "PIN changed"
+  "pin_changed": "PIN changed",
+  "failure_backup_password": "Wrong password, or the file was changed after it was exported.",
+  "validation_password_short": "Use at least 8 characters.",
+  "backup_password_mismatch": "The passwords don't match.",
+  "backup_password_show": "Show password",
+  "backup_password_hide": "Hide password",
+  "backup_password_set_title": "Backup password",
+  "backup_password_set_body": "New backups are encrypted with this password. You'll need it to restore them, on this phone or another. If you forget it, those backups can't be opened.",
+  "backup_password_enter_title": "Encrypted backup",
+  "backup_password_enter_body": "Enter the password this backup was made with.",
+  "backup_password_label": "Password",
+  "backup_password_again_label": "Password again",
+  "backup_password_open": "Open",
+  "backup_reminder_never": "You haven't backed up yet",
+  "backup_reminder_days": "{days, plural, =1{Last backup 1 day ago} other{Last backup {days} days ago}}",
+  "@backup_reminder_days": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "backup_reminder_later": "Later",
+  "backup_reminder_now": "Back up now",
+  "backup_reminder_setting": "Remind me if no backup for 30 days",
+  "backup_encrypt": "Encrypt backups with a password",
+  "backup_encrypt_hint": "Protects the file if someone else gets it.",
+  "backup_encrypt_hint_on": "New backups need the password to restore.",
+  "backup_encrypt_on": "Backups will be encrypted",
+  "backup_encrypt_off": "Backups will no longer be encrypted",
+  "backup_auto": "Weekly auto-backup to folder",
+  "backup_auto_hint": "Saves a backup to a folder you choose, once a week, when you open the app.",
+  "backup_auto_folder": "To {folder}",
+  "@backup_auto_folder": {
+    "placeholders": {
+      "folder": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_auto_last": "To {folder} · last {date}",
+  "@backup_auto_last": {
+    "placeholders": {
+      "folder": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_auto_failed": "Couldn't save to {folder}. Choose the folder again.",
+  "@backup_auto_failed": {
+    "placeholders": {
+      "folder": {
+        "type": "String"
+      }
+    }
+  },
+  "backup_auto_change_folder": "Change folder",
+  "backup_auto_on": "Auto-backup is on",
+  "csv_subtitle": "Transactions as a spreadsheet file",
+  "csv_range": "Date range",
+  "csv_this_month": "This month",
+  "csv_last_month": "Last month",
+  "csv_this_year": "This year",
+  "csv_last_year": "Last year",
+  "csv_all_time": "All time",
+  "csv_custom": "Custom…",
+  "csv_range_all": "All transactions",
+  "csv_range_between": "{from} – {to}",
+  "@csv_range_between": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "csv_export": "Export CSV",
+  "csv_exported": "{count, plural, =1{Exported 1 transaction} other{Exported {count} transactions}}",
+  "@csv_exported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "csv_empty": "No transactions in this date range.",
+  "csv_hint": "Columns: date, time, type, amount, category, account, to account, note. Amounts are whole rupiah.",
+  "onboarding_step": "Step {step} of {total}",
+  "@onboarding_step": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboarding_skip": "Skip",
+  "onboarding_back": "Back",
+  "onboarding_next": "Next",
+  "onboarding_start": "Start",
+  "onboarding_welcome_title": "Welcome",
+  "onboarding_welcome_body": "Track your money privately. Everything stays on this phone.",
+  "onboarding_currency_idr": "Indonesian Rupiah (Rp)",
+  "onboarding_currency_preview": "Amounts look like {example}",
+  "@onboarding_currency_preview": {
+    "placeholders": {
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "onboarding_currency_only": "Rupiah is the only currency for now.",
+  "onboarding_moving": "Moving from another phone?",
+  "onboarding_restore": "Restore a backup",
+  "onboarding_categories_title": "Categories",
+  "onboarding_categories_body": "Untick any you won't use. You can add, edit and remove categories later.",
+  "onboarding_cash_title": "Starting cash",
+  "onboarding_cash_body": "How much cash do you have right now? Leave it at zero to skip."
 }

@@ -82,13 +82,13 @@ void main() {
       row.key: row.value,
   };
 
-  testWidgets('More shows sections, unbuilt items disabled', (tester) async {
+  testWidgets('More shows sections, every item enabled', (tester) async {
     await pump(tester, const MorePage());
     expect(find.text('Money'), findsOneWidget);
     expect(find.text('1.0.0 (1)'), findsOneWidget);
     bool enabled(String title) =>
         tester.widget<ListTile>(find.widgetWithText(ListTile, title)).enabled;
-    expect(enabled('Export CSV'), isFalse);
+    expect(enabled('Export CSV'), isTrue);
     expect(enabled('Categories'), isTrue);
     expect(enabled('Recurring'), isTrue);
     await dispose(tester);

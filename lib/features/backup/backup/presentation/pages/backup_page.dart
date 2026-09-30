@@ -1,19 +1,27 @@
 import 'package:expense_tracker/core/constants/dimens.dart';
 import 'package:expense_tracker/core/error/failure_message.dart';
 import 'package:expense_tracker/core/l10n/generated/app_localizations.dart';
+import 'package:expense_tracker/core/router/app_paths.dart';
 import 'package:expense_tracker/core/theme/finance_colors.dart';
 import 'package:expense_tracker/core/utils/clock_provider.dart';
 import 'package:expense_tracker/core/utils/date_format.dart';
 import 'package:expense_tracker/core/utils/local_date.dart';
+import 'package:expense_tracker/core/error/failure.dart';
+import 'package:expense_tracker/features/backup/backup/domain/entities/backup_file.dart';
+import 'package:expense_tracker/features/backup/backup/domain/entities/backup_status.dart';
+import 'package:expense_tracker/features/backup/backup/domain/entities/picked_backup.dart';
 import 'package:expense_tracker/features/backup/backup/domain/repositories/backup_repository.dart';
 import 'package:expense_tracker/features/backup/backup/presentation/providers/backup_actions.dart';
+import 'package:expense_tracker/features/backup/backup/presentation/providers/backup_status_notifiers.dart';
+import 'package:expense_tracker/features/backup/backup/presentation/widgets/password_dialog.dart';
 import 'package:expense_tracker/features/backup/backup/presentation/widgets/restore_preview_sheet.dart';
-import 'package:expense_tracker/features/settings/settings_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-/// Backup & data (DESIGN §8.10, MVP subset): export, restore, erase.
+/// Backup & data (DESIGN §8.10): export, restore, encryption, weekly
+/// auto-backup, the reminder, CSV export and erase.
 class BackupPage extends ConsumerStatefulWidget {
   const BackupPage({super.key});
 
@@ -56,11 +64,16 @@ class _BackupPageState extends ConsumerState<BackupPage> {
     final l10n = AppLocalizations.of(context);
     final picked = await _actions.pick();
     if (!mounted) return;
-    final file = picked.match((failure) {
+    final backup = picked.match((failure) {
       _toast(failureMessage(l10n, failure));
       return null;
-    }, (file) => file);
-    if (file == null) return;
+    }, (backup) => backup);
+    final file = switch (backup) {
+      null => null,
+      ReadableBackup(:final file) => file,
+      final LockedBackup locked => await _unlock(locked),
+    };
+    if (file == null || !mounted) return;
     final mode = await showRestorePreviewSheet(context, file.preview);
     if (mode == null || !mounted) return;
     await _run(() async {
@@ -69,6 +82,72 @@ class _BackupPageState extends ConsumerState<BackupPage> {
         failure == null ? l10n.backup_restored : failureMessage(l10n, failure),
       );
     });
+  }
+
+  /// Asks for the password until it opens the file or the user cancels.
+  Future<BackupFile?> _unlock(LockedBackup backup) async {
+    final l10n = AppLocalizations.of(context);
+    var wrong = false;
+    while (true) {
+      if (!mounted) return null;
+      final password = await showEnterBackupPasswordDialog(
+        context,
+        wrong: wrong,
+      );
+      if (password == null || !mounted) return null;
+      BackupFile? file;
+      await _run(() async {
+        final opened = await _actions.unlock(backup, password);
+        opened.match((failure) {
+          wrong =
+              failure is BackupFailure &&
+              failure.problem == BackupProblem.wrongPassword;
+          if (!wrong) _toast(failureMessage(l10n, failure));
+        }, (opened) => file = opened);
+      });
+      if (file != null || !wrong) return file;
+    }
+  }
+
+  Future<void> _setEncryption(bool on) async {
+    final l10n = AppLocalizations.of(context);
+    final password = on ? await showSetBackupPasswordDialog(context) : null;
+    if (on && password == null) return;
+    if (!mounted) return;
+    final failure = await ref
+        .read(backupEncryptionProvider.notifier)
+        .setPassword(password);
+    _toast(
+      failure != null
+          ? failureMessage(l10n, failure)
+          : on
+          ? l10n.backup_encrypt_on
+          : l10n.backup_encrypt_off,
+    );
+  }
+
+  Future<void> _setAutoBackup(bool on) async {
+    final l10n = AppLocalizations.of(context);
+    if (!on) {
+      final failure = await _actions.turnOffAutoBackup();
+      if (failure != null) _toast(failureMessage(l10n, failure));
+      return;
+    }
+    await _run(() async {
+      final chosen = await _actions.chooseAutoBackupFolder();
+      chosen.match((failure) => _toast(failureMessage(l10n, failure)), (
+        chosen,
+      ) {
+        if (chosen) _toast(l10n.backup_auto_on);
+      });
+    });
+  }
+
+  Future<void> _setReminder(bool on) async {
+    final failure = await _actions.setReminder(enabled: on);
+    if (failure != null && mounted) {
+      _toast(failureMessage(AppLocalizations.of(context), failure));
+    }
   }
 
   Future<void> _erase() async {
@@ -135,7 +214,10 @@ class _BackupPageState extends ConsumerState<BackupPage> {
     final theme = Theme.of(context);
     // Keeps the actions alive across their async work.
     ref.watch(backupActionsProvider);
-    final lastBackup = ref.watch(settingsProvider).value?.lastBackupAt;
+    final status =
+        ref.watch(backupStatusProvider).value ?? const BackupStatus();
+    final encrypted = ref.watch(backupEncryptionProvider).value ?? false;
+    final lastBackup = status.lastBackupAt;
     final today = LocalDate.today(ref.watch(clockProvider));
 
     String lastBackupLabel() {
@@ -190,7 +272,56 @@ class _BackupPageState extends ConsumerState<BackupPage> {
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: Dimens.space8),
+            const SizedBox(height: Dimens.space4),
+            SwitchListTile(
+              key: const ValueKey('encrypt'),
+              contentPadding: EdgeInsets.zero,
+              secondary: const Icon(Symbols.encrypted_rounded),
+              title: Text(l10n.backup_encrypt),
+              subtitle: Text(
+                encrypted
+                    ? l10n.backup_encrypt_hint_on
+                    : l10n.backup_encrypt_hint,
+              ),
+              value: encrypted,
+              onChanged: _setEncryption,
+            ),
+            SwitchListTile(
+              key: const ValueKey('auto-backup'),
+              contentPadding: EdgeInsets.zero,
+              secondary: const Icon(Symbols.folder_rounded),
+              title: Text(l10n.backup_auto),
+              subtitle: Text(_autoBackupLabel(l10n, status)),
+              value: status.autoBackupFolder != null,
+              onChanged: _setAutoBackup,
+            ),
+            if (status.autoBackupFolder != null)
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton(
+                  key: const ValueKey('auto-backup-folder'),
+                  onPressed: () => _setAutoBackup(true),
+                  child: Text(l10n.backup_auto_change_folder),
+                ),
+              ),
+            SwitchListTile(
+              key: const ValueKey('reminder'),
+              contentPadding: EdgeInsets.zero,
+              secondary: const Icon(Symbols.notifications_rounded),
+              title: Text(l10n.backup_reminder_setting),
+              value: status.reminderEnabled,
+              onChanged: _setReminder,
+            ),
+            const Divider(),
+            ListTile(
+              key: const ValueKey('export-csv'),
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Symbols.table_view_rounded),
+              title: Text(l10n.more_export_csv),
+              subtitle: Text(l10n.csv_subtitle),
+              trailing: const Icon(Symbols.chevron_right_rounded),
+              onTap: () => context.push(AppPaths.csvExport),
+            ),
             const Divider(),
             ListTile(
               key: const ValueKey('erase'),
@@ -209,6 +340,18 @@ class _BackupPageState extends ConsumerState<BackupPage> {
           ],
         ),
       ),
+    );
+  }
+
+  String _autoBackupLabel(AppLocalizations l10n, BackupStatus status) {
+    final folder = status.autoBackupFolder;
+    if (folder == null) return l10n.backup_auto_hint;
+    if (status.autoBackupFailed) return l10n.backup_auto_failed(folder.name);
+    final last = status.lastAutoBackupAt;
+    if (last == null) return l10n.backup_auto_folder(folder.name);
+    return l10n.backup_auto_last(
+      folder.name,
+      AppDateFormat.dayMonth(LocalDate.fromDateTime(last.toLocal())),
     );
   }
 }

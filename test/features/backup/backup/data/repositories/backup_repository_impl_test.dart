@@ -248,7 +248,10 @@ void main() {
     expect(r.pendingOccurrences, isEmpty);
     expect(r.categories, hasLength(14));
     expect(r.accounts.single.name, 'Cash');
-    expect(r.settings, isEmpty);
+    // Only the fresh-install flag that shows onboarding again.
+    expect(r.settings, [
+      const SettingRow(key: onboardingPendingKey, value: 'true'),
+    ]);
   });
 
   test('preview counts and date range', () async {

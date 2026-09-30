@@ -1424,4 +1424,219 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pin_changed => 'PIN changed';
+
+  @override
+  String get failure_backup_password =>
+      'Wrong password, or the file was changed after it was exported.';
+
+  @override
+  String get validation_password_short => 'Use at least 8 characters.';
+
+  @override
+  String get backup_password_mismatch => 'The passwords don\'t match.';
+
+  @override
+  String get backup_password_show => 'Show password';
+
+  @override
+  String get backup_password_hide => 'Hide password';
+
+  @override
+  String get backup_password_set_title => 'Backup password';
+
+  @override
+  String get backup_password_set_body =>
+      'New backups are encrypted with this password. You\'ll need it to restore them, on this phone or another. If you forget it, those backups can\'t be opened.';
+
+  @override
+  String get backup_password_enter_title => 'Encrypted backup';
+
+  @override
+  String get backup_password_enter_body =>
+      'Enter the password this backup was made with.';
+
+  @override
+  String get backup_password_label => 'Password';
+
+  @override
+  String get backup_password_again_label => 'Password again';
+
+  @override
+  String get backup_password_open => 'Open';
+
+  @override
+  String get backup_reminder_never => 'You haven\'t backed up yet';
+
+  @override
+  String backup_reminder_days(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Last backup $days days ago',
+      one: 'Last backup 1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get backup_reminder_later => 'Later';
+
+  @override
+  String get backup_reminder_now => 'Back up now';
+
+  @override
+  String get backup_reminder_setting => 'Remind me if no backup for 30 days';
+
+  @override
+  String get backup_encrypt => 'Encrypt backups with a password';
+
+  @override
+  String get backup_encrypt_hint =>
+      'Protects the file if someone else gets it.';
+
+  @override
+  String get backup_encrypt_hint_on =>
+      'New backups need the password to restore.';
+
+  @override
+  String get backup_encrypt_on => 'Backups will be encrypted';
+
+  @override
+  String get backup_encrypt_off => 'Backups will no longer be encrypted';
+
+  @override
+  String get backup_auto => 'Weekly auto-backup to folder';
+
+  @override
+  String get backup_auto_hint =>
+      'Saves a backup to a folder you choose, once a week, when you open the app.';
+
+  @override
+  String backup_auto_folder(String folder) {
+    return 'To $folder';
+  }
+
+  @override
+  String backup_auto_last(String folder, String date) {
+    return 'To $folder · last $date';
+  }
+
+  @override
+  String backup_auto_failed(String folder) {
+    return 'Couldn\'t save to $folder. Choose the folder again.';
+  }
+
+  @override
+  String get backup_auto_change_folder => 'Change folder';
+
+  @override
+  String get backup_auto_on => 'Auto-backup is on';
+
+  @override
+  String get csv_subtitle => 'Transactions as a spreadsheet file';
+
+  @override
+  String get csv_range => 'Date range';
+
+  @override
+  String get csv_this_month => 'This month';
+
+  @override
+  String get csv_last_month => 'Last month';
+
+  @override
+  String get csv_this_year => 'This year';
+
+  @override
+  String get csv_last_year => 'Last year';
+
+  @override
+  String get csv_all_time => 'All time';
+
+  @override
+  String get csv_custom => 'Custom…';
+
+  @override
+  String get csv_range_all => 'All transactions';
+
+  @override
+  String csv_range_between(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String get csv_export => 'Export CSV';
+
+  @override
+  String csv_exported(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Exported $count transactions',
+      one: 'Exported 1 transaction',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get csv_empty => 'No transactions in this date range.';
+
+  @override
+  String get csv_hint =>
+      'Columns: date, time, type, amount, category, account, to account, note. Amounts are whole rupiah.';
+
+  @override
+  String onboarding_step(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get onboarding_skip => 'Skip';
+
+  @override
+  String get onboarding_back => 'Back';
+
+  @override
+  String get onboarding_next => 'Next';
+
+  @override
+  String get onboarding_start => 'Start';
+
+  @override
+  String get onboarding_welcome_title => 'Welcome';
+
+  @override
+  String get onboarding_welcome_body =>
+      'Track your money privately. Everything stays on this phone.';
+
+  @override
+  String get onboarding_currency_idr => 'Indonesian Rupiah (Rp)';
+
+  @override
+  String onboarding_currency_preview(String example) {
+    return 'Amounts look like $example';
+  }
+
+  @override
+  String get onboarding_currency_only => 'Rupiah is the only currency for now.';
+
+  @override
+  String get onboarding_moving => 'Moving from another phone?';
+
+  @override
+  String get onboarding_restore => 'Restore a backup';
+
+  @override
+  String get onboarding_categories_title => 'Categories';
+
+  @override
+  String get onboarding_categories_body =>
+      'Untick any you won\'t use. You can add, edit and remove categories later.';
+
+  @override
+  String get onboarding_cash_title => 'Starting cash';
+
+  @override
+  String get onboarding_cash_body =>
+      'How much cash do you have right now? Leave it at zero to skip.';
 }

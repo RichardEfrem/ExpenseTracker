@@ -12,6 +12,7 @@ String failureMessage(AppLocalizations l10n, Failure failure) =>
         BackupProblem.corruptFile => l10n.failure_backup_corrupt,
         BackupProblem.unsupportedVersion => l10n.failure_backup_version,
         BackupProblem.emptyFile => l10n.failure_backup_empty,
+        BackupProblem.wrongPassword => l10n.failure_backup_password,
       },
       UnexpectedFailure() => l10n.failure_unexpected,
     };
@@ -40,4 +41,5 @@ String validationMessage(AppLocalizations l10n, ValidationReason reason) =>
       ValidationReason.dayOfMonthOutOfRange => l10n.validation_month_start_day,
       ValidationReason.endBeforeStart => l10n.validation_end_before_start,
       ValidationReason.pinInvalid => l10n.validation_pin,
+      ValidationReason.passwordTooShort => l10n.validation_password_short,
     };

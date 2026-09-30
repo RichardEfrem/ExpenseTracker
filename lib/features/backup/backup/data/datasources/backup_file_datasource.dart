@@ -10,16 +10,21 @@ import 'package:share_plus/share_plus.dart';
 class BackupFileDataSource {
   const BackupFileDataSource();
 
-  static const _mimeType = 'application/json';
+  static const jsonMimeType = 'application/json';
+  static const csvMimeType = 'text/csv';
 
   /// False when the user dismissed the share sheet.
-  Future<bool> share(String contents, String fileName) async {
+  Future<bool> share(
+    String contents,
+    String fileName, {
+    String mimeType = jsonMimeType,
+  }) async {
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/$fileName');
     await file.writeAsString(contents, flush: true);
     final result = await SharePlus.instance.share(
       ShareParams(
-        files: [XFile(file.path, mimeType: _mimeType)],
+        files: [XFile(file.path, mimeType: mimeType)],
         fileNameOverrides: [fileName],
       ),
     );
@@ -27,11 +32,15 @@ class BackupFileDataSource {
   }
 
   /// Save dialog; false when cancelled.
-  Future<bool> save(String contents, String fileName) async =>
+  Future<bool> save(
+    String contents,
+    String fileName, {
+    String mimeType = jsonMimeType,
+  }) async =>
       await FilePicker.saveFile(
         fileName: fileName,
         bytes: utf8.encode(contents),
-        mimeType: _mimeType,
+        mimeType: mimeType,
       ) !=
       null;
 

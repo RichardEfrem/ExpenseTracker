@@ -10,8 +10,11 @@ import 'package:expense_tracker/core/utils/clock.dart';
 import 'package:expense_tracker/core/utils/clock_provider.dart';
 import 'package:expense_tracker/core/utils/local_date.dart';
 import 'package:expense_tracker/features/backup/backup/data/backup_providers.dart';
+import 'package:expense_tracker/features/backup/backup/data/datasources/backup_cipher.dart';
 import 'package:expense_tracker/features/backup/backup/data/datasources/backup_file_datasource.dart';
+import 'package:expense_tracker/features/backup/backup/data/datasources/backup_folder_datasource.dart';
 import 'package:expense_tracker/features/backup/backup/presentation/pages/backup_page.dart';
+import 'package:expense_tracker/features/backup/backup/data/datasources/backup_secret_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -56,26 +59,64 @@ class _FakeFiles implements BackupFileDataSource {
   String? toPick;
 
   @override
-  Future<bool> share(String contents, String fileName) async {
+  Future<bool> share(
+    String contents,
+    String fileName, {
+    String mimeType = BackupFileDataSource.jsonMimeType,
+  }) async {
     lastExport = contents;
     return true;
   }
 
   @override
-  Future<bool> save(String contents, String fileName) =>
-      share(contents, fileName);
+  Future<bool> save(
+    String contents,
+    String fileName, {
+    String mimeType = BackupFileDataSource.jsonMimeType,
+  }) => share(contents, fileName);
 
   @override
   Future<String?> pick() async => toPick;
 }
 
+/// Keeps the backup password in memory instead of the Keystore.
+class _FakeSecrets implements BackupSecretDataSource {
+  String? password;
+
+  @override
+  Future<String?> readPassword() async => password;
+
+  @override
+  Future<void> writePassword(String? value) async => password = value;
+}
+
+/// Stands in for the Storage Access Framework folder picker.
+class _FakeFolders implements BackupFolderDataSource {
+  final written = <String, String>{};
+
+  @override
+  Future<({String name, String uri})?> pick() async =>
+      (uri: 'content://tree/backups', name: 'Backups');
+
+  @override
+  Future<void> write(String uri, String fileName, String contents) async =>
+      written[fileName] = contents;
+
+  @override
+  Future<void> release(String uri) async {}
+}
+
 void main() {
   late AppDatabase db;
   late _FakeFiles files;
+  late _FakeSecrets secrets;
+  late _FakeFolders folders;
 
   setUp(() {
     db = AppDatabase(NativeDatabase.memory());
     files = _FakeFiles();
+    secrets = _FakeSecrets();
+    folders = _FakeFolders();
   });
 
   Future<void> pumpPage(WidgetTester tester) async {
@@ -87,6 +128,12 @@ void main() {
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
           backupFileDataSourceProvider.overrideWithValue(files),
+          backupSecretDataSourceProvider.overrideWithValue(secrets),
+          backupFolderDataSourceProvider.overrideWithValue(folders),
+          // Few rounds, no isolate: isolates can't finish under fake time.
+          backupCipherProvider.overrideWithValue(
+            const BackupCipher(iterations: 1000, inBackground: false),
+          ),
           appVersionProvider.overrideWith((ref) async => '1.0.0 (1)'),
           clockProvider.overrideWithValue(
             FixedClock(DateTime(2026, 9, 29, 21, 4)),
@@ -159,6 +206,9 @@ void main() {
       seedRandomTransactions(db, count: 5, end: LocalDate(2026, 9, 29)),
     );
     await pumpPage(tester);
+    await tester.scrollUntilVisible(find.byKey(const ValueKey('erase')), 200);
+    await tester.ensureVisible(find.byKey(const ValueKey('erase')));
+    await settle(tester);
     await tester.tap(find.byKey(const ValueKey('erase')));
     await settle(tester);
     await tester.tap(find.byKey(const ValueKey('erase-1')));
@@ -168,6 +218,98 @@ void main() {
     await settle(tester);
     expect(await transactionCount(tester), 0);
     expect(find.text('All data erased'), findsOneWidget);
+    await dispose(tester);
+  });
+
+  testWidgets('encrypted backup: export, then restore with the password', (
+    tester,
+  ) async {
+    await pumpUntilDone(
+      tester,
+      seedRandomTransactions(db, count: 3, end: LocalDate(2026, 9, 29)),
+    );
+    await pumpPage(tester);
+
+    // Turn encryption on: the password must be entered twice.
+    await tester.tap(find.byKey(const ValueKey('encrypt')));
+    await settle(tester);
+    await tester.enterText(
+      find.byKey(const ValueKey('backup-password')),
+      'pass',
+    );
+    await tester.tap(find.byKey(const ValueKey('backup-password-ok')));
+    await settle(tester);
+    expect(find.text('Use at least 8 characters.'), findsOneWidget);
+    await tester.enterText(
+      find.byKey(const ValueKey('backup-password')),
+      'pass1234',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('backup-password-again')),
+      'pass1234',
+    );
+    await tester.tap(find.byKey(const ValueKey('backup-password-ok')));
+    await settle(tester);
+    expect(secrets.password, 'pass1234');
+
+    await tester.tap(find.byKey(const ValueKey('export')));
+    await settle(tester);
+    expect(files.lastExport, contains('expense_tracker_backup_encrypted'));
+    expect(files.lastExport, isNot(contains('Cash')));
+
+    // Restore: a wrong password asks again, the right one opens it.
+    files.toPick = files.lastExport;
+    await tester.tap(find.byKey(const ValueKey('restore')));
+    await settle(tester);
+    await tester.enterText(
+      find.byKey(const ValueKey('backup-password')),
+      'wrong pass',
+    );
+    await tester.tap(find.byKey(const ValueKey('backup-password-ok')));
+    await settle(tester);
+    expect(
+      find.text(
+        'Wrong password, or the file was changed after it was exported.',
+      ),
+      findsOneWidget,
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('backup-password')),
+      'pass1234',
+    );
+    await tester.tap(find.byKey(const ValueKey('backup-password-ok')));
+    await settle(tester);
+    expect(find.textContaining('3 transactions'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('restore-merge')));
+    await settle(tester);
+    expect(find.text('Backup restored'), findsOneWidget);
+    await dispose(tester);
+  });
+
+  testWidgets('choosing a folder writes the first auto-backup at once', (
+    tester,
+  ) async {
+    await pumpPage(tester);
+    await tester.tap(find.byKey(const ValueKey('auto-backup')));
+    await settle(tester);
+    expect(folders.written.keys, ['expense-tracker-backup-2026-09-29.json']);
+    expect(find.text('To Backups · last 29 Sep'), findsOneWidget);
+    expect(find.text('Last backup: today (29 Sep, 21:04)'), findsOneWidget);
+    await dispose(tester);
+  });
+
+  testWidgets('the reminder can be turned off', (tester) async {
+    await pumpPage(tester);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('reminder')),
+      200,
+    );
+    await tester.ensureVisible(find.byKey(const ValueKey('reminder')));
+    await settle(tester);
+    await tester.tap(find.byKey(const ValueKey('reminder')));
+    await settle(tester);
+    final rows = await pumpUntilDone(tester, db.select(db.settings).get());
+    expect(rows.where((r) => r.key == 'backup_reminder').single.value, 'false');
     await dispose(tester);
   });
 }
