@@ -30,6 +30,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
   @override
   Future<Either<Failure, Transaction>> add(TransactionInput input) => guard(
     () => _dataSource.transaction(() async {
+      final before = await _dataSource.balancesOf(_accountsOf(input));
       final id = _ids.newId();
       final now = _now;
       await _dataSource.insert({
@@ -39,6 +40,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
         'updated_at': now,
       });
       await _dataSource.setTags(id, input.tags, newId: _ids.newId, nowMs: now);
+      await _ensureNotOverdrawn(before);
       await _writeLastUsed(
         input.type,
         LastUsed(categoryId: input.categoryId, accountId: input.accountId),
@@ -51,21 +53,46 @@ class TransactionRepositoryImpl implements TransactionRepository {
   Future<Either<Failure, Unit>> update(String id, TransactionInput input) =>
       guard(
         () => _dataSource.transaction(() async {
-          final now = _now;
-          final changed = await _dataSource.update(id, {
-            ...input.toJson(),
-            'updated_at': now,
+          final old = await _dataSource.findById(id);
+          if (old == null) _notFound();
+          // The old accounts too: moving an income away lowers its account.
+          final before = await _dataSource.balancesOf({
+            ..._accountsOf(input),
+            old.accountId,
+            ?old.toAccountId,
           });
-          if (changed == 0) _notFound();
+          final now = _now;
+          await _dataSource.update(id, {...input.toJson(), 'updated_at': now});
           await _dataSource.setTags(
             id,
             input.tags,
             newId: _ids.newId,
             nowMs: now,
           );
+          await _ensureNotOverdrawn(before);
           return unit;
         }),
       );
+
+  static Set<String> _accountsOf(TransactionInput input) => {
+    input.accountId,
+    ?input.toAccountId,
+  };
+
+  /// Rejects a write that leaves an account below zero and lower than
+  /// [before] (account id → balance before the write), so no one spends
+  /// money an account doesn't hold. Throwing rolls the write back. An
+  /// account already below zero may still go up.
+  Future<void> _ensureNotOverdrawn(Map<String, int> before) async {
+    final after = await _dataSource.balancesOf(before.keys.toSet());
+    for (final MapEntry(key: id, value: balance) in after.entries) {
+      if (balance < 0 && balance < before[id]!) {
+        throw const FailureException(
+          Failure.validation(ValidationReason.insufficientBalance),
+        );
+      }
+    }
+  }
 
   @override
   Future<Either<Failure, Transaction>> delete(String id) => guard(

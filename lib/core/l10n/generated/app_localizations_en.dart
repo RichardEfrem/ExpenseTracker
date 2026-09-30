@@ -87,6 +87,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get keypad_divide => 'Divided by';
 
   @override
+  String get keypad_hide => 'Hide keypad';
+
+  @override
+  String get keypad_show => 'Show keypad';
+
+  @override
   String money_spoken(String words) {
     return '$words rupiah';
   }
@@ -488,6 +494,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validation_same_account => 'Choose two different accounts.';
+
+  @override
+  String get validation_insufficient_balance =>
+      'Not enough balance in this account.';
 
   @override
   String get activity_search_hint => 'Search notes or categories';
@@ -1024,9 +1034,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get transfer_needs_accounts =>
       'Add a second account to move money between accounts.';
-
-  @override
-  String get home_balance_all => 'Balance (all accounts)';
 
   @override
   String get reports_all_accounts => 'All accounts ▾';

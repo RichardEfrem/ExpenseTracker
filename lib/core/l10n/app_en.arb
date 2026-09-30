@@ -28,6 +28,8 @@
   "keypad_minus": "Minus",
   "keypad_times": "Times",
   "keypad_divide": "Divided by",
+  "keypad_hide": "Hide keypad",
+  "keypad_show": "Show keypad",
   "money_spoken": "{words} rupiah",
   "@money_spoken": {
     "description": "Screen-reader text for an amount.",
@@ -248,6 +250,7 @@
   "validation_category_required": "Pick a category.",
   "validation_account_required": "Pick an account.",
   "validation_same_account": "Choose two different accounts.",
+  "validation_insufficient_balance": "Not enough balance in this account.",
   "activity_search_hint": "Search notes or categories",
   "activity_in": "In",
   "activity_out": "Out",
@@ -653,7 +656,6 @@
   "transfer_from": "From",
   "transfer_to": "To",
   "transfer_needs_accounts": "Add a second account to move money between accounts.",
-  "home_balance_all": "Balance (all accounts)",
   "reports_all_accounts": "All accounts ▾",
   "reports_some_accounts": "{count, plural, =1{1 account ▾} other{{count} accounts ▾}}",
   "@reports_some_accounts": {

@@ -17,31 +17,33 @@ String failureMessage(AppLocalizations l10n, Failure failure) =>
       UnexpectedFailure() => l10n.failure_unexpected,
     };
 
-String validationMessage(AppLocalizations l10n, ValidationReason reason) =>
-    switch (reason) {
-      ValidationReason.invalidInput => l10n.validation_invalid_input,
-      ValidationReason.nameEmpty => l10n.validation_name_empty,
-      ValidationReason.nameTooLong => l10n.validation_name_too_long,
-      ValidationReason.categoryInUse => l10n.validation_category_in_use,
-      ValidationReason.categoryTypeMismatch =>
-        l10n.validation_category_type_mismatch,
-      ValidationReason.mergeIntoSelf => l10n.validation_merge_into_self,
-      ValidationReason.monthStartDayOutOfRange =>
-        l10n.validation_month_start_day,
-      ValidationReason.weekStartOutOfRange => l10n.validation_week_start,
-      ValidationReason.amountNotPositive => l10n.validation_amount_positive,
-      ValidationReason.amountTooLarge => l10n.validation_amount_too_large,
-      ValidationReason.noteTooLong => l10n.validation_note_too_long,
-      ValidationReason.categoryRequired => l10n.validation_category_required,
-      ValidationReason.accountRequired => l10n.validation_account_required,
-      ValidationReason.sameAccount => l10n.validation_same_account,
-      ValidationReason.accountInUse => l10n.validation_account_in_use,
-      ValidationReason.lastActiveAccount => l10n.validation_last_account,
-      ValidationReason.intervalOutOfRange => l10n.validation_interval,
-      ValidationReason.dayOfMonthOutOfRange => l10n.validation_month_start_day,
-      ValidationReason.endBeforeStart => l10n.validation_end_before_start,
-      ValidationReason.pinInvalid => l10n.validation_pin,
-      ValidationReason.passwordTooShort => l10n.validation_password_short,
-      ValidationReason.tagTooLong => l10n.validation_tag_too_long,
-      ValidationReason.tooManyTags => l10n.validation_too_many_tags,
-    };
+String validationMessage(
+  AppLocalizations l10n,
+  ValidationReason reason,
+) => switch (reason) {
+  ValidationReason.invalidInput => l10n.validation_invalid_input,
+  ValidationReason.nameEmpty => l10n.validation_name_empty,
+  ValidationReason.nameTooLong => l10n.validation_name_too_long,
+  ValidationReason.categoryInUse => l10n.validation_category_in_use,
+  ValidationReason.categoryTypeMismatch =>
+    l10n.validation_category_type_mismatch,
+  ValidationReason.mergeIntoSelf => l10n.validation_merge_into_self,
+  ValidationReason.monthStartDayOutOfRange => l10n.validation_month_start_day,
+  ValidationReason.weekStartOutOfRange => l10n.validation_week_start,
+  ValidationReason.amountNotPositive => l10n.validation_amount_positive,
+  ValidationReason.amountTooLarge => l10n.validation_amount_too_large,
+  ValidationReason.noteTooLong => l10n.validation_note_too_long,
+  ValidationReason.categoryRequired => l10n.validation_category_required,
+  ValidationReason.accountRequired => l10n.validation_account_required,
+  ValidationReason.sameAccount => l10n.validation_same_account,
+  ValidationReason.accountInUse => l10n.validation_account_in_use,
+  ValidationReason.lastActiveAccount => l10n.validation_last_account,
+  ValidationReason.intervalOutOfRange => l10n.validation_interval,
+  ValidationReason.dayOfMonthOutOfRange => l10n.validation_month_start_day,
+  ValidationReason.endBeforeStart => l10n.validation_end_before_start,
+  ValidationReason.pinInvalid => l10n.validation_pin,
+  ValidationReason.passwordTooShort => l10n.validation_password_short,
+  ValidationReason.tagTooLong => l10n.validation_tag_too_long,
+  ValidationReason.tooManyTags => l10n.validation_too_many_tags,
+  ValidationReason.insufficientBalance => l10n.validation_insufficient_balance,
+};

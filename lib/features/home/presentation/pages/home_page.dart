@@ -20,8 +20,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-/// The dashboard (DESIGN §8.1): net hero, income and expense, pending
-/// recurring items, top spending, recent transactions. Reading order matches visual order.
+/// The dashboard (DESIGN §8.1): account balances, net hero, income and
+/// expense, pending recurring items, top spending, recent transactions. Reading order matches visual order.
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
@@ -82,6 +82,22 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                Dimens.screenPadding,
+                Dimens.space2,
+                Dimens.screenPadding,
+                0,
+              ),
+              sliver: SliverToBoxAdapter(
+                child: AccountBalancesCard(
+                  onAccountTap: (account) => drillDown(
+                    context,
+                    TransactionFilter(accountIds: {account.id}),
+                  ),
+                ),
+              ),
+            ),
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Dimens.space2),
@@ -118,17 +134,7 @@ class HomePage extends ConsumerWidget {
                 ),
                 sliver: SliverList.list(
                   children: [
-                    _NetCard(
-                      period: period,
-                      stats: stats,
-                      balance: multipleAccounts
-                          ? ref
-                                .watch(accountBalancesProvider)
-                                .value
-                                ?.where((b) => !b.account.isArchived)
-                                .fold<int>(0, (sum, b) => sum + b.balance)
-                          : null,
-                    ),
+                    _NetCard(period: period, stats: stats),
                     const SizedBox(height: Dimens.cardGap),
                     IntrinsicHeight(
                       child: Row(
@@ -239,17 +245,10 @@ String? changeLabel(
 }
 
 class _NetCard extends StatelessWidget {
-  const _NetCard({
-    required this.period,
-    required this.stats,
-    required this.balance,
-  });
+  const _NetCard({required this.period, required this.stats});
 
   final Period period;
   final PeriodStatistics? stats;
-
-  /// Total across accounts; shown only with more than one account.
-  final int? balance;
 
   @override
   Widget build(BuildContext context) {
@@ -286,23 +285,6 @@ class _NetCard extends StatelessWidget {
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-              if (balance case final balance?) ...[
-                const SizedBox(height: Dimens.space2),
-                Wrap(
-                  key: const ValueKey('home-balance'),
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: Dimens.space2,
-                  children: [
-                    Text(
-                      l10n.home_balance_all,
-                      style: theme.textTheme.bodyMedium!.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    MoneyText(balance, style: theme.textTheme.bodyMedium),
-                  ],
-                ),
-              ],
             ],
           ),
         ),

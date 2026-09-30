@@ -163,6 +163,11 @@ void main() {
 
   testWidgets('swipe right duplicates', (tester) async {
     await seed(tester);
+    // Enough in Cash for the copy.
+    await pumpUntilDone(
+      tester,
+      db.customStatement('UPDATE accounts SET opening_balance = 1000000'),
+    );
     await pumpApp(tester, '/activity');
     await tester.drag(find.text('Transport'), const Offset(600, 0));
     await settle(tester);
@@ -189,6 +194,43 @@ void main() {
     await tester.tap(find.text('Clear filters'));
     await settle(tester);
     expect(find.text('Food & Drinks'), findsOneWidget);
+    await dispose(tester);
+  });
+
+  testWidgets('balances card: tapping an account filters the list to it', (
+    tester,
+  ) async {
+    await seed(tester);
+    await pumpUntilDone(
+      tester,
+      db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion.insert(
+              id: 'bank',
+              name: 'Bank',
+              type: 'bank',
+              icon: 'account_balance',
+              color: 'blue',
+              openingBalance: const Value(1000000),
+              sortOrder: 1,
+              createdAt: 0,
+              updatedAt: 0,
+            ),
+          ),
+    );
+    await pumpApp(tester, '/activity');
+    final card = find.byKey(const ValueKey('account-balances'));
+    expect(
+      find.descendant(of: card, matching: find.text('Rp 836.000')),
+      findsOneWidget,
+      reason: '1.000.000 − 164.000 spent from Cash',
+    );
+    await tester.tap(find.byKey(const ValueKey('account-balance-bank')));
+    await settle(tester);
+    expect(find.byKey(const ValueKey('result-bar')), findsOneWidget);
+    expect(find.text('Food & Drinks'), findsNothing);
+    expect(find.text('Nothing matches these filters.'), findsOneWidget);
     await dispose(tester);
   });
 }

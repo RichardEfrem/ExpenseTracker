@@ -26,7 +26,7 @@ abstract final class Dimens {
   static const radiusSmall = 12.0;
   static const radiusMedium = 16.0;
   static const radiusLarge = 28.0;
-  static const radiusFab = 20.0;
+  static const radiusFab = 16.0;
   static const outlineWidth = 1.0;
   static const selectedRingWidth = 2.0;
 }

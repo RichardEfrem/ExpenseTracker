@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:expense_tracker/core/database/balance_sql.dart';
 import 'package:expense_tracker/core/database/raw_values.dart';
 import 'package:expense_tracker/core/database/watch_computed.dart';
 import 'package:expense_tracker/core/utils/local_date.dart';
@@ -9,23 +10,6 @@ class AccountLocalDataSource {
   const AccountLocalDataSource(this._db);
 
   final AppDatabase _db;
-
-  /// Every balance movement as (account, day, signed delta): a transfer
-  /// leaves one account and enters another; an adjustment enters its
-  /// account when `to_account_id` is set, else leaves it (PRD ACC-03/05).
-  static const _moves = '''
-WITH moves(acct, day, delta) AS (
-  SELECT account_id, date, CASE type
-    WHEN 'income' THEN amount
-    WHEN 'expense' THEN -amount
-    WHEN 'transfer' THEN -amount
-    WHEN 'adjustment' THEN CASE WHEN to_account_id IS NULL THEN -amount ELSE 0 END
-    ELSE 0 END
-  FROM transactions
-  UNION ALL
-  SELECT to_account_id, date, amount FROM transactions
-  WHERE to_account_id IS NOT NULL AND type IN ('transfer', 'adjustment')
-)''';
 
   Future<T> transaction<T>(Future<T> Function() action) =>
       _db.transaction(action);
@@ -105,7 +89,7 @@ WITH moves(acct, day, delta) AS (
   Future<Map<String, int>> movementTotals(LocalDate asOf) async {
     final rows = await _db
         .customSelect(
-          '$_moves SELECT acct, SUM(delta) AS total FROM moves '
+          '$balanceMovesCte SELECT acct, SUM(delta) AS total FROM moves '
           'WHERE day <= ? GROUP BY acct',
           variables: [Variable<String>(asOf.toIso())],
         )
@@ -126,7 +110,7 @@ WITH moves(acct, day, delta) AS (
     cases.write(' END');
     final rows = await _db
         .customSelect(
-          '$_moves SELECT acct, $cases AS bucket, SUM(delta) AS total FROM moves '
+          '$balanceMovesCte SELECT acct, $cases AS bucket, SUM(delta) AS total FROM moves '
           'WHERE day <= ? GROUP BY acct, bucket',
           variables: [Variable<String>(dates.last.toIso())],
         )

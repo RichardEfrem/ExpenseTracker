@@ -46,6 +46,10 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   /// Shows the check on Save for a moment before closing.
   var _justSaved = false;
 
+  /// Opens with the keypad active (DESIGN §8.2); the user can hide it to see
+  /// more of the category grid.
+  var _keypadOpen = true;
+
   TransactionFormNotifierProvider get _provider =>
       transactionFormProvider(widget.initialType, editId: widget.editId);
 
@@ -140,6 +144,8 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
         AsyncData(:final value) => _Body(
           state: value,
           justSaved: _justSaved,
+          keypadOpen: _keypadOpen,
+          onKeypadOpenChanged: (open) => setState(() => _keypadOpen = open),
           onKey: ref.read(_provider.notifier).onKey,
           onType: ref.read(_provider.notifier).setType,
           onCategory: ref.read(_provider.notifier).selectCategory,
@@ -171,6 +177,8 @@ class _Body extends ConsumerWidget {
   const _Body({
     required this.state,
     required this.justSaved,
+    required this.keypadOpen,
+    required this.onKeypadOpenChanged,
     required this.onKey,
     required this.onType,
     required this.onCategory,
@@ -185,6 +193,8 @@ class _Body extends ConsumerWidget {
 
   final TransactionFormState state;
   final bool justSaved;
+  final bool keypadOpen;
+  final ValueChanged<bool> onKeypadOpenChanged;
   final ValueChanged<KeypadKey> onKey;
   final ValueChanged<TransactionType> onType;
   final ValueChanged<String> onCategory;
@@ -223,10 +233,15 @@ class _Body extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: Dimens.space6),
-                  AmountHero(
-                    type: state.type,
-                    expression: state.expression,
-                    amount: state.amount,
+                  // Tapping the amount brings a hidden keypad back.
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: keypadOpen ? null : () => onKeypadOpenChanged(true),
+                    child: AmountHero(
+                      type: state.type,
+                      expression: state.expression,
+                      amount: state.amount,
+                    ),
                   ),
                   const SizedBox(height: Dimens.space4),
                   Padding(
@@ -305,15 +320,33 @@ class _Body extends ConsumerWidget {
               ),
             ),
           ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              Dimens.screenPadding,
-              Dimens.space2,
-              Dimens.screenPadding,
-              0,
+          const Divider(height: 1),
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              key: const ValueKey('keypad-toggle'),
+              visualDensity: VisualDensity.compact,
+              tooltip: keypadOpen ? l10n.keypad_hide : l10n.keypad_show,
+              icon: Icon(
+                keypadOpen
+                    ? Symbols.keyboard_arrow_down_rounded
+                    : Symbols.dialpad_rounded,
+              ),
+              onPressed: () => onKeypadOpenChanged(!keypadOpen),
             ),
-            child: AmountKeypad(onKey: onKey),
+          ),
+          AnimatedSize(
+            duration: motionDuration(context, Motion.sheet),
+            curve: Motion.emphasized,
+            alignment: Alignment.topCenter,
+            child: keypadOpen
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.screenPadding,
+                    ),
+                    child: AmountKeypad(onKey: onKey),
+                  )
+                : const SizedBox(width: double.infinity),
           ),
           Padding(
             padding: const EdgeInsets.all(Dimens.screenPadding),

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand teal gradient (around AppPalette.light.primary), shared by
+         the launcher icon and the launch screen. -->
+    <color name="brand_gradient_start">#FF1A8FA8</color>
+    <color name="brand_gradient_end">#FF005466</color>
+    <!-- Launch screen background: AppPalette.light.background. -->
+    <color name="launch_background">#FFF4F7F8</color>
+</resources>

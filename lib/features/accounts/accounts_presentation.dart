@@ -12,6 +12,8 @@ export 'package:expense_tracker/features/accounts/presentation/providers/account
         defaultAccountProvider,
         AccountBalancesNotifier,
         accountBalancesProvider;
+export 'package:expense_tracker/features/accounts/presentation/widgets/account_balances_card.dart'
+    show AccountBalancesCard;
 export 'package:expense_tracker/features/accounts/presentation/widgets/account_icon.dart'
     show AccountIcon;
 export 'package:expense_tracker/features/accounts/presentation/widgets/account_picker_sheet.dart'

@@ -167,6 +167,20 @@ class _ActivityPageState extends ConsumerState<ActivityPage> {
         controller: _scroll,
         slivers: [
           SliverAppBar(title: Text(l10n.nav_activity), floating: true),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              Dimens.screenPadding,
+              0,
+              Dimens.screenPadding,
+              Dimens.space2,
+            ),
+            sliver: SliverToBoxAdapter(
+              child: AccountBalancesCard(
+                onAccountTap: (account) =>
+                    _setFilter(_filter.copyWith(accountIds: {account.id})),
+              ),
+            ),
+          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(

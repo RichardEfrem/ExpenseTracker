@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:drift/native.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/error/failure.dart';
@@ -22,6 +23,11 @@ void main() {
   late String food;
   late String salary;
 
+  Future<void> setOpening(String accountId, int balance) =>
+      (db.update(db.accounts)..where((a) => a.id.equals(accountId))).write(
+        AccountsCompanion(openingBalance: Value(balance)),
+      );
+
   setUp(() async {
     clock = FixedClock(DateTime.utc(2026, 9, 29, 5));
     db = AppDatabase(NativeDatabase.memory(), clock: clock);
@@ -31,6 +37,7 @@ void main() {
       const UuidGenerator(),
     );
     cash = (await db.select(db.accounts).getSingle()).id;
+    await setOpening(cash, 1000000);
     final categories = await db.select(db.categories).get();
     food = categories.firstWhere((c) => c.name == 'Food & Drinks').id;
     salary = categories.firstWhere((c) => c.name == 'Salary').id;
@@ -174,6 +181,118 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     await repo.delete(t.id);
     await expectation;
+  });
+
+  group('balance guard', () {
+    const insufficient = Failure.validation(
+      ValidationReason.insufficientBalance,
+    );
+
+    Future<String> addBank() async {
+      await db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion.insert(
+              id: 'bank',
+              name: 'BCA',
+              type: 'bank',
+              icon: 'account_balance',
+              color: 'blue',
+              sortOrder: 1,
+              createdAt: 0,
+              updatedAt: 0,
+            ),
+          );
+      return 'bank';
+    }
+
+    test('an expense over the balance is rejected and not saved', () async {
+      await setOpening(cash, 40000);
+      final result = await repo.add(expense(amount: 40001));
+      expect(result.getLeft().toNullable(), insufficient);
+      expect(await count(), 0);
+      expect(
+        (await repo.getLastUsed(TransactionType.expense)).toNullable(),
+        const LastUsed(),
+      );
+    });
+
+    test('an expense of exactly the balance is allowed', () async {
+      await setOpening(cash, 45000);
+      expect((await repo.add(expense())).isRight(), isTrue);
+    });
+
+    test('income recorded earlier funds the expense', () async {
+      await setOpening(cash, 0);
+      await add(
+        expense().copyWith(
+          type: TransactionType.income,
+          categoryId: salary,
+          amount: 50000,
+        ),
+      );
+      expect((await repo.add(expense())).isRight(), isTrue);
+      expect(
+        (await repo.add(expense(amount: 5001))).getLeft().toNullable(),
+        insufficient,
+      );
+    });
+
+    test('a transfer over the source balance is rejected', () async {
+      await setOpening(cash, 10000);
+      final bank = await addBank();
+      final result = await repo.add(
+        expense(
+          amount: 10001,
+        ).copyWith(type: TransactionType.transfer, toAccountId: bank),
+      );
+      expect(result.getLeft().toNullable(), insufficient);
+      expect(await count(), 0);
+    });
+
+    test('raising an expense past the balance is rejected, row kept', () async {
+      await setOpening(cash, 50000);
+      final t = await add(expense());
+      final result = await repo.update(t.id, expense(amount: 50001));
+      expect(result.getLeft().toNullable(), insufficient);
+      expect((await repo.get(t.id)).getOrElse((f) => fail('$f')).amount, 45000);
+    });
+
+    test('an edit may use the amount it already spent', () async {
+      await setOpening(cash, 50000);
+      final t = await add(expense());
+      expect((await repo.update(t.id, expense(amount: 50000))).isRight(), true);
+    });
+
+    test('moving an income that funded spending away is rejected', () async {
+      await setOpening(cash, 0);
+      final bank = await addBank();
+      final income = await add(
+        expense().copyWith(
+          type: TransactionType.income,
+          categoryId: salary,
+          amount: 50000,
+        ),
+      );
+      await add(expense());
+      final result = await repo.update(
+        income.id,
+        expense().copyWith(
+          type: TransactionType.income,
+          categoryId: salary,
+          amount: 50000,
+          accountId: bank,
+        ),
+      );
+      expect(result.getLeft().toNullable(), insufficient);
+    });
+
+    test('an account already below zero may still go up', () async {
+      await setOpening(cash, 50000);
+      final t = await add(expense());
+      await setOpening(cash, 0); // now -45000
+      expect((await repo.update(t.id, expense(amount: 30000))).isRight(), true);
+    });
   });
 
   group('tags', () {

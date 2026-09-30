@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:expense_tracker/core/database/balance_sql.dart';
 import 'package:expense_tracker/core/database/raw_values.dart';
 import 'package:expense_tracker/features/transactions/transaction/data/models/transaction_model.dart';
 
@@ -26,6 +27,23 @@ class TransactionLocalDataSource {
 
   Future<int> delete(String id) =>
       (_db.delete(_db.transactions)..where((t) => t.id.equals(id))).go();
+
+  /// Account id → current balance for each of [accountIds]: opening balance
+  /// plus every recorded movement, future-dated ones included.
+  Future<Map<String, int>> balancesOf(Set<String> accountIds) async {
+    if (accountIds.isEmpty) return {};
+    final placeholders = List.filled(accountIds.length, '?').join(', ');
+    final rows = await _db
+        .customSelect(
+          '$balanceMovesCte SELECT a.id, a.opening_balance + COALESCE('
+          '(SELECT SUM(delta) FROM moves WHERE acct = a.id), 0) AS balance '
+          'FROM accounts a WHERE a.id IN ($placeholders)',
+          variables: [for (final id in accountIds) Variable<String>(id)],
+          readsFrom: {_db.accounts, _db.transactions},
+        )
+        .get();
+    return {for (final r in rows) r.read<String>('id'): r.read<int>('balance')};
+  }
 
   /// The transaction's tag names, sorted.
   Future<List<String>> tagsOf(String id) async {

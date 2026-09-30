@@ -120,14 +120,10 @@ class _AddFab extends StatelessWidget {
       onLongPressHint: l10n.fab_more_types,
       child: GestureDetector(
         onLongPress: () => _showMenu(context),
-        child: FloatingActionButton.large(
+        child: FloatingActionButton(
           key: const ValueKey('add-fab'),
           onPressed: () => context.push(AppPaths.addOfType('expense')),
-          child: Icon(
-            Symbols.add_rounded,
-            size: 36,
-            semanticLabel: l10n.fab_add_expense,
-          ),
+          child: Icon(Symbols.add_rounded, semanticLabel: l10n.fab_add_expense),
         ),
       ),
     );

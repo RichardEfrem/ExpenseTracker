@@ -6,7 +6,7 @@
 
 ## 1. Design direction in one paragraph
 
-**Calm, neutral surfaces; numbers as the hero; color only where it means something.** The app uses stock Material 3 components with a restrained custom theme: one indigo accent, green and red kept strictly for money direction, and category colors used only on category icons and charts. The home screen is a small grid of summary cards (bento-style) for at-a-glance status. Lists and tables stay uniform rows, because they are scanned top to bottom. Every chart pairs color with a label, and every number uses tabular figures so columns of rupiah line up.
+**Calm, neutral surfaces; numbers as the hero; color only where it means something.** The app uses stock Material 3 components with a restrained custom theme: one teal accent, green and red kept strictly for money direction, and category colors used only on category icons and charts. The home screen is a small grid of summary cards (bento-style) for at-a-glance status. Lists and tables stay uniform rows, because they are scanned top to bottom. Every chart pairs color with a label, and every number uses tabular figures so columns of rupiah line up.
 
 ---
 
@@ -33,7 +33,7 @@ Research from current (2026) finance-app and UI-trend write-ups, filtered for a 
 ## 3. Design principles
 
 1. **The number is the interface.** Amounts are the largest, highest-contrast element on any screen that shows them.
-2. **Color = meaning.** Green = money in, red = money out, indigo = interactive/brand, category color = category. Nothing else gets color.
+2. **Color = meaning.** Green = money in, red = money out, teal = interactive/brand, category color = category. Nothing else gets color.
 3. **One thumb.** Primary actions sit in the bottom half: FAB, keypad, Save, bottom sheets. The top bar holds only titles and secondary actions.
 4. **Summary → detail → record.** Every summary number can be tapped to reach the transactions behind it.
 5. **Uniform where scanned, grouped where glanced.** Lists and tables are uniform rows; the dashboard is cards.
@@ -49,35 +49,35 @@ All tokens live in `lib/core/theme/` as a Flutter `ThemeData` plus one `ThemeExt
 
 | Token | Hex | Use | Contrast |
 | --- | --- | --- | --- |
-| `background` | `#F6F7F9` | Scaffold | — |
+| `background` | `#F4F7F8` | Scaffold (cool gray tint) | — |
 | `surface` | `#FFFFFF` | Cards, sheets, list backgrounds | — |
-| `surfaceContainer` | `#EEF0F4` | Chips, keypad keys, input fills, selected rows | — |
-| `outline` | `#DDE1E7` | 1 px dividers and card borders | — |
-| `onSurface` (text) | `#14171C` | Primary text, amounts | 17.9:1 on surface |
-| `onSurfaceVariant` (text2) | `#5C6370` | Labels, dates, captions | 6.0:1 on surface |
-| `primary` | `#4353D6` | FAB, selected tab, buttons, links | 6.1:1 on surface |
-| `onPrimary` | `#FFFFFF` | Text/icons on primary | 6.1:1 |
-| `income` | `#0B7552` | Income amounts, income arrow | 5.7:1 on surface, 5.0:1 on surfaceContainer |
+| `surfaceContainer` | `#EBF1F3` | Chips, keypad keys, input fills, selected rows | — |
+| `outline` | `#D9E2E6` | 1 px dividers and card borders | — |
+| `onSurface` (text) | `#121A1E` | Primary text, amounts | 17.6:1 on surface |
+| `onSurfaceVariant` (text2) | `#56646B` | Labels, dates, captions | 6.1:1 on surface |
+| `primary` | `#00718A` | FAB, selected tab, buttons, links | 5.6:1 on surface |
+| `onPrimary` | `#FFFFFF` | Text/icons on primary | 5.6:1 |
+| `income` | `#067550` | Income amounts, income arrow | 5.7:1 on surface, 5.0:1 on surfaceContainer |
 | `expense` | `#C8372D` | Expense accents (arrow, chart bars, over-average markers) | 5.2:1 on surface |
-| `transfer` | `#5C6370` | Transfer amounts and icon | 6.0:1 on surface |
-| `warning` | `#9A5B00` | Backup reminder, pending recurring | 5.4:1 on surface |
+| `transfer` | `#56646B` | Transfer amounts and icon | 6.1:1 on surface |
+| `warning` | `#965800` | Backup reminder, pending recurring | 5.7:1 on surface |
 
 ### 4.2 Color — dark
 
 | Token | Hex | Contrast |
 | --- | --- | --- |
-| `background` | `#0F1115` | — |
-| `surface` | `#181B21` | — |
-| `surfaceContainer` | `#20242C` | — |
-| `outline` | `#2C313B` | — |
-| `onSurface` | `#ECEEF2` | 14.9:1 on surface |
-| `onSurfaceVariant` | `#A0A6B1` | 7.1:1 on surface |
-| `primary` | `#A9B4FF` | 8.8:1 on surface |
-| `onPrimary` | `#101A5C` | 8.1:1 on primary |
-| `income` | `#4CC99A` | 8.3:1 on surface |
-| `expense` | `#FF8A7E` | 7.6:1 on surface |
-| `transfer` | `#A0A6B1` | 7.1:1 on surface |
-| `warning` | `#F2B84B` | 9.6:1 on surface |
+| `background` | `#0D1316` | — |
+| `surface` | `#151D21` | — |
+| `surfaceContainer` | `#1D272C` | — |
+| `outline` | `#2E3B42` | — |
+| `onSurface` | `#E8EFF1` | 14.7:1 on surface |
+| `onSurfaceVariant` | `#9FAEB5` | 7.5:1 on surface |
+| `primary` | `#6FD0E6` | 9.6:1 on surface |
+| `onPrimary` | `#00333F` | 7.7:1 on primary |
+| `income` | `#4CC99A` | 8.2:1 on surface |
+| `expense` | `#FF8A7E` | 7.5:1 on surface |
+| `transfer` | `#9FAEB5` | 7.5:1 on surface |
+| `warning` | `#F2B84B` | 9.5:1 on surface |
 
 All text pairs pass WCAG AA (≥ 4.5:1) on every surface they appear on. Dark mode uses lighter, desaturated accents instead of the light-mode hues, and separates layers by surface tone rather than shadows.
 
@@ -104,7 +104,7 @@ Used for category icon circles, donut slices, and trend lines. Each color is ≥
 | Gift | `redeem` | `#C2255C` | `#F57FA8` |
 
 - The color picker for custom categories offers exactly these 10 hues (plus the neutral), so every user-made category stays legible in both themes.
-- Category icon = 20 dp glyph in white/`#0F1115` on a 36 dp circle of the category color at 100% (light) or 24% tint with colored glyph (dark).
+- Category icon = 20 dp glyph in white/`#0D1316` on a 36 dp circle of the category color at 100% (light) or 24% tint with colored glyph (dark).
 - Donut charts show at most **6 slices**: the top 5 categories + "Other (n)". Beyond 6 hues, colors stop being distinguishable.
 
 ### 4.4 Typography
@@ -140,7 +140,7 @@ Text scales with the system font size up to 200% (PRD NFR). Hero amounts use `Fi
 | Radius — small (chips, keys) | 12 dp |
 | Radius — medium (cards, inputs) | 16 dp |
 | Radius — large (bottom sheets, dialogs) | 28 dp top corners |
-| Radius — FAB | 20 dp (large rounded square, M3 Expressive feel) |
+| Radius — FAB | 16 dp (standard 56 dp FAB) |
 | Elevation | Cards: 0 with 1 dp `outline` border. Sheets and FAB: M3 level 3. No other shadows. |
 
 ### 4.6 Motion and haptics
@@ -190,7 +190,7 @@ Four destinations in a bottom `NavigationBar` (Budgets removed), plus a floating
 │              (screen content)           │
 │                                         │
 │                                  ╭────╮ │
-│                                  │ ＋ │ │  ← Large FAB, 20 dp radius
+│                                  │ ＋ │ │  ← Standard FAB, 16 dp radius
 │                                  ╰────╯ │
 ├─────────────────────────────────────────┤
 │  ⌂ Home   ≣ Activity   ◔ Reports   ⋯ More │
@@ -345,12 +345,17 @@ Bento-style: one full-width hero card, two half-width cards, then full-width sec
 ```
 ┌─────────────────────────────────────────┐
 │ Good afternoon                     🔒 ⚙ │
+│ ╭─────────────────────────────────────╮ │
+│ │ Total balance                       │ │
+│ │ Rp 14.320.000                       │ │  ← today, active accounts
+│ │ ⬤ Cash      ⬤ BCA         ⬤ GoPay   │ │  ← only with >1 account;
+│ │ Rp 820.000  Rp 12.500.000 Rp 1.000.0│ │    scrolls sideways
+│ ╰─────────────────────────────────────╯ │
 │   ‹    September 2026    ›              │
 │ ╭─────────────────────────────────────╮ │
 │ │ Net this month                      │ │
 │ │ +Rp 2.150.000                       │ │  ← hero, green/red by sign
 │ │ ▲ 12,4% vs Aug                      │ │
-│ │ Balance (all accounts) Rp 14.320.000│ │
 │ ╰─────────────────────────────────────╯ │
 │ ╭────────────────╮ ╭──────────────────╮ │
 │ │ ↓ Income       │ │ ↑ Expense        │ │
@@ -374,7 +379,7 @@ Bento-style: one full-width hero card, two half-width cards, then full-width sec
 ```
 
 - Top spending uses horizontal bars in category color, not a donut: easier to compare 3 values in a narrow card.
-- The balance line appears only when more than one account exists.
+- The balance card sits above the period selector because it doesn't follow the period: it is today's balance. The per-account row appears only when more than one active account exists. Tapping the total opens Accounts; tapping an account opens Activity filtered to it.
 
 ### 8.2 Add / edit transaction (full-screen, opened from FAB)
 
@@ -414,6 +419,9 @@ Bento-style: one full-width hero card, two half-width cards, then full-width sec
 ┌─────────────────────────────────────────┐
 │ Activity                                │
 │ ╭─────────────────────────────────────╮ │
+│ │ Total balance + per account (§8.1)  │ │
+│ ╰─────────────────────────────────────╯ │
+│ ╭─────────────────────────────────────╮ │
 │ │ 🔍 Search notes or categories       │ │
 │ ╰─────────────────────────────────────╯ │
 │ [Type ▾] [Category ▾] [Account ▾] [Date▾]│
@@ -431,6 +439,7 @@ Bento-style: one full-width hero card, two half-width cards, then full-width sec
 
 - Scrolling past the month's end loads the previous month (PRD TX-09); the period label updates to match.
 - When a search/filter is active, the period selector becomes the Date filter chip and the summary line shows the filter result instead.
+- The balance card is the same one as on Home; tapping an account sets the Account filter.
 
 ### 8.4 Transaction detail (bottom sheet, 90% height)
 

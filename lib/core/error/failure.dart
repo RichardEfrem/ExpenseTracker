@@ -42,6 +42,9 @@ enum ValidationReason {
   passwordTooShort,
   tagTooLong,
   tooManyTags,
+
+  /// The write would spend more than the account holds.
+  insufficientBalance,
 }
 
 /// Why a backup file could not be read or restored.

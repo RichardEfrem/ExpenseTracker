@@ -244,6 +244,18 @@ abstract class AppLocalizations {
   /// **'Divided by'**
   String get keypad_divide;
 
+  /// No description provided for @keypad_hide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide keypad'**
+  String get keypad_hide;
+
+  /// No description provided for @keypad_show.
+  ///
+  /// In en, this message translates to:
+  /// **'Show keypad'**
+  String get keypad_show;
+
   /// Screen-reader text for an amount.
   ///
   /// In en, this message translates to:
@@ -975,6 +987,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose two different accounts.'**
   String get validation_same_account;
+
+  /// No description provided for @validation_insufficient_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough balance in this account.'**
+  String get validation_insufficient_balance;
 
   /// No description provided for @activity_search_hint.
   ///
@@ -1777,12 +1795,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add a second account to move money between accounts.'**
   String get transfer_needs_accounts;
-
-  /// No description provided for @home_balance_all.
-  ///
-  /// In en, this message translates to:
-  /// **'Balance (all accounts)'**
-  String get home_balance_all;
 
   /// No description provided for @reports_all_accounts.
   ///

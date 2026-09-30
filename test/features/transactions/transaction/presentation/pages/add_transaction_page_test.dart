@@ -53,7 +53,11 @@ void main() {
   late GoRouter router;
   final now = DateTime(2026, 9, 29, 12, 30);
 
-  setUp(() => db = AppDatabase(NativeDatabase.memory()));
+  setUp(() async {
+    db = AppDatabase(NativeDatabase.memory());
+    // Funds the seeded Cash account so expenses don't overdraw it.
+    await db.customStatement('UPDATE accounts SET opening_balance = 10000000');
+  });
 
   Future<void> pumpApp(WidgetTester tester) async {
     tester.view.physicalSize = const Size(400, 900);
@@ -92,6 +96,29 @@ void main() {
 
   Future<List<TransactionRow>> rows(WidgetTester tester) =>
       pumpUntilDone(tester, db.select(db.transactions).get());
+
+  testWidgets('an expense over the account balance is refused', (
+    tester,
+  ) async {
+    await pumpUntilDone(
+      tester,
+      db.customStatement('UPDATE accounts SET opening_balance = 40000'),
+    );
+    await pumpApp(tester);
+    await tester.tap(find.byKey(const ValueKey('add-fab')));
+    await settle(tester);
+    await typeKeys(tester, [
+      KeypadKey.digit4,
+      KeypadKey.digit5,
+      KeypadKey.tripleZero,
+    ]);
+    await tester.tap(find.byKey(const ValueKey('save')));
+    await settle(tester);
+
+    expect(find.text('Not enough balance in this account.'), findsOneWidget);
+    expect(await rows(tester), isEmpty);
+    await dispose(tester);
+  });
 
   testWidgets('add flow: FAB → 45000 → Food preselected → Save', (
     tester,
@@ -203,6 +230,32 @@ void main() {
       KeypadKey.digit0,
     ]);
     expect(find.text('25.000 + 12.500 = Rp 37.500'), findsOneWidget);
+    await dispose(tester);
+  });
+
+  testWidgets('keypad hides, and tapping the amount shows it again', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(find.byKey(const ValueKey('add-fab')));
+    await settle(tester);
+    await typeKeys(tester, [KeypadKey.digit5]);
+    expect(find.byType(AmountKeypad), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('keypad-toggle')));
+    await settle(tester);
+    expect(find.byType(AmountKeypad), findsNothing);
+    expect(find.text('Rp 5'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('amount-hero')));
+    await settle(tester);
+    expect(find.byType(AmountKeypad), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('keypad-toggle')));
+    await settle(tester);
+    await tester.tap(find.byKey(const ValueKey('keypad-toggle')));
+    await settle(tester);
+    expect(find.byType(AmountKeypad), findsOneWidget);
     await dispose(tester);
   });
 

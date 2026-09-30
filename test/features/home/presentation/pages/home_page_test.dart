@@ -216,6 +216,98 @@ void main() {
     },
   );
 
+  Future<void> addAccount(
+    WidgetTester tester,
+    String id,
+    int opening, {
+    bool archived = false,
+  }) => pumpUntilDone(
+    tester,
+    db
+        .into(db.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            id: id,
+            name: id,
+            type: 'bank',
+            icon: 'account_balance',
+            color: 'blue',
+            openingBalance: Value(opening),
+            isArchived: Value(archived),
+            sortOrder: 1,
+            createdAt: 0,
+            updatedAt: 0,
+          ),
+        ),
+  );
+
+  testWidgets('one account: the total balance, no per-account row', (
+    tester,
+  ) async {
+    await seed(tester);
+    await pumpApp(tester);
+    final card = find.byKey(const ValueKey('account-balances'));
+    expect(
+      find.descendant(of: card, matching: find.text('Total balance')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: card, matching: find.text('Rp 4.115.000')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: card, matching: find.text('Cash')),
+      findsNothing,
+    );
+    await dispose(tester);
+  });
+
+  testWidgets(
+    'several accounts: total of active ones, each smaller; tap filters Activity',
+    (tester) async {
+      await seed(tester);
+      await addAccount(tester, 'Bank', 10000000);
+      await addAccount(tester, 'Old', 500000, archived: true);
+      await pumpApp(tester);
+      final card = find.byKey(const ValueKey('account-balances'));
+      expect(
+        find.descendant(of: card, matching: find.text('Rp 14.115.000')),
+        findsOneWidget,
+      );
+      for (final (name, amount) in [
+        ('Cash', 'Rp 4.115.000'),
+        ('Bank', 'Rp 10.000.000'),
+      ]) {
+        expect(
+          find.descendant(of: card, matching: find.text(name)),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(of: card, matching: find.text(amount)),
+          findsOneWidget,
+        );
+      }
+      expect(
+        find.descendant(of: card, matching: find.text('Old')),
+        findsNothing,
+      );
+      await tester.tap(find.byKey(const ValueKey('account-balance-Bank')));
+      await settle(tester);
+      expect(router.state.uri.path, '/activity');
+      expect(router.state.uri.queryParameters, {'account': 'Bank'});
+      await dispose(tester);
+    },
+  );
+
+  testWidgets('tapping the total opens Accounts', (tester) async {
+    await seed(tester);
+    await pumpApp(tester);
+    await tester.tap(find.byKey(const ValueKey('account-balances-total')));
+    await settle(tester);
+    expect(router.state.uri.path, '/more/accounts');
+    await dispose(tester);
+  });
+
   Future<void> addPending(WidgetTester tester, int count) =>
       pumpUntilDone(tester, () async {
         final cash = (await db.select(db.accounts).getSingle()).id;
