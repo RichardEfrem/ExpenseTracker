@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'schema.dart';
 import 'schema_v1.dart' as v1;
+import 'schema_v2.dart' as v2;
 
 /// Every schema version step gets a test here. Snapshots live in
 /// `drift_schemas/`; after changing tables run
@@ -116,6 +117,72 @@ void main() {
           ),
         );
     expect(await db.select(db.recurringRules).get(), hasLength(1));
+    await db.close();
+  });
+
+  test('v2 → v3 keeps every existing row; tags work', () async {
+    final schema = await verifier.schemaAt(2);
+    final old = v2.DatabaseAtV2(schema.newConnection());
+    await old
+        .into(old.accounts)
+        .insert(
+          v2.AccountsCompanion.insert(
+            id: 'cash',
+            name: 'Cash',
+            type: 'cash',
+            icon: 'payments',
+            color: 'emerald',
+            sortOrder: 0,
+            createdAt: 1,
+            updatedAt: 1,
+          ),
+        );
+    await old
+        .into(old.transactions)
+        .insert(
+          v2.TransactionsCompanion.insert(
+            id: 't1',
+            type: 'transfer',
+            amount: 45000,
+            accountId: 'cash',
+            date: '2026-09-29',
+            time: '12:30',
+            createdAt: 2,
+            updatedAt: 3,
+          ),
+        );
+    await old
+        .into(old.recurringRules)
+        .insert(
+          v2.RecurringRulesCompanion.insert(
+            id: 'r',
+            type: 'expense',
+            amount: 3000000,
+            accountId: 'cash',
+            frequency: 'monthly',
+            startDate: '2026-09-25',
+            createdAt: 4,
+            updatedAt: 4,
+          ),
+        );
+    await old.close();
+
+    final db = AppDatabase(schema.newConnection());
+    await verifier.migrateAndValidate(db, 3);
+    expect((await db.select(db.transactions).getSingle()).amount, 45000);
+    expect(await db.select(db.recurringRules).get(), hasLength(1));
+    expect(await db.select(db.tags).get(), isEmpty);
+    await db
+        .into(db.tags)
+        .insert(TagsCompanion.insert(id: 'g', name: 'trip-bali', createdAt: 5));
+    await db
+        .into(db.transactionTags)
+        .insert(
+          TransactionTagsCompanion.insert(transactionId: 't1', tagId: 'g'),
+        );
+    // Deleting the transaction takes its links with it.
+    await db.delete(db.transactions).go();
+    expect(await db.select(db.transactionTags).get(), isEmpty);
     await db.close();
   });
 }

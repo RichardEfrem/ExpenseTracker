@@ -1583,7 +1583,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get csv_hint =>
-      'Columns: date, time, type, amount, category, account, to account, note. Amounts are whole rupiah.';
+      'Columns: date, time, type, amount, category, account, to account, note, tags. Amounts are whole rupiah.';
 
   @override
   String onboarding_step(int step, int total) {
@@ -1639,4 +1639,78 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onboarding_cash_body =>
       'How much cash do you have right now? Leave it at zero to skip.';
+
+  @override
+  String get validation_tag_too_long => 'A tag can have at most 32 characters.';
+
+  @override
+  String get validation_too_many_tags =>
+      'Use at most 10 tags on one transaction.';
+
+  @override
+  String get add_tags => 'Tags';
+
+  @override
+  String get detail_tags => 'Tags';
+
+  @override
+  String get tags_title => 'Tags';
+
+  @override
+  String get tags_hint => 'Add a tag, e.g. trip-bali';
+
+  @override
+  String tags_limit(int max) {
+    return 'Up to $max tags';
+  }
+
+  @override
+  String get tags_add => 'Add tag';
+
+  @override
+  String tags_remove(String name) {
+    return 'Remove #$name';
+  }
+
+  @override
+  String get tags_suggestions => 'Your tags';
+
+  @override
+  String get filter_tag => 'Tag';
+
+  @override
+  String get reports_tab_tags => 'Tags';
+
+  @override
+  String get tag_report_title => 'By tag';
+
+  @override
+  String get tag_report_empty =>
+      'No tagged transactions in this period. Add tags on the Add screen, e.g. #trip-bali.';
+
+  @override
+  String get tag_report_overlap_hint =>
+      'A transaction with several tags counts under each.';
+
+  @override
+  String tag_report_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count transactions',
+      one: '1 transaction',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tag_report_row_label(String name, String amount, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count transactions',
+      one: '1 transaction',
+    );
+    return '$name: $amount, $_temp0';
+  }
 }

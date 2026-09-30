@@ -9,11 +9,14 @@ part 'transaction_filter.freezed.dart';
 @freezed
 abstract class TransactionFilter with _$TransactionFilter {
   const factory TransactionFilter({
-    /// Matches note or category name, case-insensitive.
+    /// Matches note, category name or tag name, case-insensitive.
     @Default('') String text,
     @Default(<TransactionType>{}) Set<TransactionType> types,
     @Default(<String>{}) Set<String> categoryIds,
     @Default(<String>{}) Set<String> accountIds,
+
+    /// Tag names; a transaction matches when it has any of them.
+    @Default(<String>{}) Set<String> tags,
     LocalDate? from,
     LocalDate? to,
     int? minAmount,

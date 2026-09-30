@@ -20,7 +20,8 @@ mixin _$TransactionFormState {
  String get expression;/// [expression] evaluated; null while empty or invalid.
  int? get amount; String? get categoryId;/// The last-used category, shown first in the grid.
  String? get firstCategoryId; String get accountId;/// Transfers only: the destination account.
- String? get toAccountId; LocalDate get date; LocalTime get time; String? get note; bool get saving; Failure? get failure;
+ String? get toAccountId; LocalDate get date; LocalTime get time; String? get note;/// Tag names (PRD US-15).
+ List<String> get tags; bool get saving; Failure? get failure;
 /// Create a copy of TransactionFormState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +32,16 @@ $TransactionFormStateCopyWith<TransactionFormState> get copyWith => _$Transactio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransactionFormState&&(identical(other.editingId, editingId) || other.editingId == editingId)&&(identical(other.type, type) || other.type == type)&&(identical(other.expression, expression) || other.expression == expression)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.firstCategoryId, firstCategoryId) || other.firstCategoryId == firstCategoryId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.toAccountId, toAccountId) || other.toAccountId == toAccountId)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.note, note) || other.note == note)&&(identical(other.saving, saving) || other.saving == saving)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransactionFormState&&(identical(other.editingId, editingId) || other.editingId == editingId)&&(identical(other.type, type) || other.type == type)&&(identical(other.expression, expression) || other.expression == expression)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.firstCategoryId, firstCategoryId) || other.firstCategoryId == firstCategoryId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.toAccountId, toAccountId) || other.toAccountId == toAccountId)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.saving, saving) || other.saving == saving)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,editingId,type,expression,amount,categoryId,firstCategoryId,accountId,toAccountId,date,time,note,saving,failure);
+int get hashCode => Object.hash(runtimeType,editingId,type,expression,amount,categoryId,firstCategoryId,accountId,toAccountId,date,time,note,const DeepCollectionEquality().hash(tags),saving,failure);
 
 @override
 String toString() {
-  return 'TransactionFormState(editingId: $editingId, type: $type, expression: $expression, amount: $amount, categoryId: $categoryId, firstCategoryId: $firstCategoryId, accountId: $accountId, toAccountId: $toAccountId, date: $date, time: $time, note: $note, saving: $saving, failure: $failure)';
+  return 'TransactionFormState(editingId: $editingId, type: $type, expression: $expression, amount: $amount, categoryId: $categoryId, firstCategoryId: $firstCategoryId, accountId: $accountId, toAccountId: $toAccountId, date: $date, time: $time, note: $note, tags: $tags, saving: $saving, failure: $failure)';
 }
 
 
@@ -51,7 +52,7 @@ abstract mixin class $TransactionFormStateCopyWith<$Res>  {
   factory $TransactionFormStateCopyWith(TransactionFormState value, $Res Function(TransactionFormState) _then) = _$TransactionFormStateCopyWithImpl;
 @useResult
 $Res call({
- String? editingId, TransactionType type, String expression, int? amount, String? categoryId, String? firstCategoryId, String accountId, String? toAccountId, LocalDate date, LocalTime time, String? note, bool saving, Failure? failure
+ String? editingId, TransactionType type, String expression, int? amount, String? categoryId, String? firstCategoryId, String accountId, String? toAccountId, LocalDate date, LocalTime time, String? note, List<String> tags, bool saving, Failure? failure
 });
 
 
@@ -68,7 +69,7 @@ class _$TransactionFormStateCopyWithImpl<$Res>
 
 /// Create a copy of TransactionFormState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? editingId = freezed,Object? type = null,Object? expression = null,Object? amount = freezed,Object? categoryId = freezed,Object? firstCategoryId = freezed,Object? accountId = null,Object? toAccountId = freezed,Object? date = null,Object? time = null,Object? note = freezed,Object? saving = null,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? editingId = freezed,Object? type = null,Object? expression = null,Object? amount = freezed,Object? categoryId = freezed,Object? firstCategoryId = freezed,Object? accountId = null,Object? toAccountId = freezed,Object? date = null,Object? time = null,Object? note = freezed,Object? tags = null,Object? saving = null,Object? failure = freezed,}) {
   return _then(TransactionFormState(
 editingId: freezed == editingId ? _self.editingId : editingId // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -81,7 +82,8 @@ as String,toAccountId: freezed == toAccountId ? _self.toAccountId : toAccountId 
 as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as LocalDate,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as LocalTime,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as String?,saving: null == saving ? _self.saving : saving // ignore: cast_nullable_to_non_nullable
+as String?,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>,saving: null == saving ? _self.saving : saving // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,
   ));
@@ -180,10 +182,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? editingId,  TransactionType type,  String expression,  int? amount,  String? categoryId,  String? firstCategoryId,  String accountId,  String? toAccountId,  LocalDate date,  LocalTime time,  String? note,  bool saving,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? editingId,  TransactionType type,  String expression,  int? amount,  String? categoryId,  String? firstCategoryId,  String accountId,  String? toAccountId,  LocalDate date,  LocalTime time,  String? note,  List<String> tags,  bool saving,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TransactionFormState() when $default != null:
-return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.categoryId,_that.firstCategoryId,_that.accountId,_that.toAccountId,_that.date,_that.time,_that.note,_that.saving,_that.failure);case _:
+return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.categoryId,_that.firstCategoryId,_that.accountId,_that.toAccountId,_that.date,_that.time,_that.note,_that.tags,_that.saving,_that.failure);case _:
   return orElse();
 
 }
@@ -201,10 +203,10 @@ return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? editingId,  TransactionType type,  String expression,  int? amount,  String? categoryId,  String? firstCategoryId,  String accountId,  String? toAccountId,  LocalDate date,  LocalTime time,  String? note,  bool saving,  Failure? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? editingId,  TransactionType type,  String expression,  int? amount,  String? categoryId,  String? firstCategoryId,  String accountId,  String? toAccountId,  LocalDate date,  LocalTime time,  String? note,  List<String> tags,  bool saving,  Failure? failure)  $default,) {final _that = this;
 switch (_that) {
 case _TransactionFormState():
-return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.categoryId,_that.firstCategoryId,_that.accountId,_that.toAccountId,_that.date,_that.time,_that.note,_that.saving,_that.failure);case _:
+return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.categoryId,_that.firstCategoryId,_that.accountId,_that.toAccountId,_that.date,_that.time,_that.note,_that.tags,_that.saving,_that.failure);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -221,10 +223,10 @@ return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? editingId,  TransactionType type,  String expression,  int? amount,  String? categoryId,  String? firstCategoryId,  String accountId,  String? toAccountId,  LocalDate date,  LocalTime time,  String? note,  bool saving,  Failure? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? editingId,  TransactionType type,  String expression,  int? amount,  String? categoryId,  String? firstCategoryId,  String accountId,  String? toAccountId,  LocalDate date,  LocalTime time,  String? note,  List<String> tags,  bool saving,  Failure? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _TransactionFormState() when $default != null:
-return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.categoryId,_that.firstCategoryId,_that.accountId,_that.toAccountId,_that.date,_that.time,_that.note,_that.saving,_that.failure);case _:
+return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.categoryId,_that.firstCategoryId,_that.accountId,_that.toAccountId,_that.date,_that.time,_that.note,_that.tags,_that.saving,_that.failure);case _:
   return null;
 
 }
@@ -236,7 +238,7 @@ return $default(_that.editingId,_that.type,_that.expression,_that.amount,_that.c
 
 
 class _TransactionFormState extends TransactionFormState {
-  const _TransactionFormState({this.editingId, required this.type, this.expression = '', this.amount, this.categoryId, this.firstCategoryId, required this.accountId, this.toAccountId, required this.date, required this.time, this.note, this.saving = false, this.failure}): super._();
+  const _TransactionFormState({this.editingId, required this.type, this.expression = '', this.amount, this.categoryId, this.firstCategoryId, required this.accountId, this.toAccountId, required this.date, required this.time, this.note,  List<String> tags = const <String>[], this.saving = false, this.failure}): _tags = tags,super._();
   
 
 /// Set when editing an existing transaction.
@@ -255,6 +257,15 @@ class _TransactionFormState extends TransactionFormState {
 @override final  LocalDate date;
 @override final  LocalTime time;
 @override final  String? note;
+/// Tag names (PRD US-15).
+ final  List<String> _tags;
+/// Tag names (PRD US-15).
+@override@JsonKey() List<String> get tags {
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_tags);
+}
+
 @override@JsonKey() final  bool saving;
 @override final  Failure? failure;
 
@@ -268,16 +279,16 @@ _$TransactionFormStateCopyWith<_TransactionFormState> get copyWith => __$Transac
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransactionFormState&&(identical(other.editingId, editingId) || other.editingId == editingId)&&(identical(other.type, type) || other.type == type)&&(identical(other.expression, expression) || other.expression == expression)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.firstCategoryId, firstCategoryId) || other.firstCategoryId == firstCategoryId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.toAccountId, toAccountId) || other.toAccountId == toAccountId)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.note, note) || other.note == note)&&(identical(other.saving, saving) || other.saving == saving)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransactionFormState&&(identical(other.editingId, editingId) || other.editingId == editingId)&&(identical(other.type, type) || other.type == type)&&(identical(other.expression, expression) || other.expression == expression)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.firstCategoryId, firstCategoryId) || other.firstCategoryId == firstCategoryId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.toAccountId, toAccountId) || other.toAccountId == toAccountId)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.saving, saving) || other.saving == saving)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,editingId,type,expression,amount,categoryId,firstCategoryId,accountId,toAccountId,date,time,note,saving,failure);
+int get hashCode => Object.hash(runtimeType,editingId,type,expression,amount,categoryId,firstCategoryId,accountId,toAccountId,date,time,note,const DeepCollectionEquality().hash(_tags),saving,failure);
 
 @override
 String toString() {
-  return 'TransactionFormState(editingId: $editingId, type: $type, expression: $expression, amount: $amount, categoryId: $categoryId, firstCategoryId: $firstCategoryId, accountId: $accountId, toAccountId: $toAccountId, date: $date, time: $time, note: $note, saving: $saving, failure: $failure)';
+  return 'TransactionFormState(editingId: $editingId, type: $type, expression: $expression, amount: $amount, categoryId: $categoryId, firstCategoryId: $firstCategoryId, accountId: $accountId, toAccountId: $toAccountId, date: $date, time: $time, note: $note, tags: $tags, saving: $saving, failure: $failure)';
 }
 
 
@@ -288,7 +299,7 @@ abstract mixin class _$TransactionFormStateCopyWith<$Res> implements $Transactio
   factory _$TransactionFormStateCopyWith(_TransactionFormState value, $Res Function(_TransactionFormState) _then) = __$TransactionFormStateCopyWithImpl;
 @override @useResult
 $Res call({
- String? editingId, TransactionType type, String expression, int? amount, String? categoryId, String? firstCategoryId, String accountId, String? toAccountId, LocalDate date, LocalTime time, String? note, bool saving, Failure? failure
+ String? editingId, TransactionType type, String expression, int? amount, String? categoryId, String? firstCategoryId, String accountId, String? toAccountId, LocalDate date, LocalTime time, String? note, List<String> tags, bool saving, Failure? failure
 });
 
 
@@ -305,7 +316,7 @@ class __$TransactionFormStateCopyWithImpl<$Res>
 
 /// Create a copy of TransactionFormState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? editingId = freezed,Object? type = null,Object? expression = null,Object? amount = freezed,Object? categoryId = freezed,Object? firstCategoryId = freezed,Object? accountId = null,Object? toAccountId = freezed,Object? date = null,Object? time = null,Object? note = freezed,Object? saving = null,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? editingId = freezed,Object? type = null,Object? expression = null,Object? amount = freezed,Object? categoryId = freezed,Object? firstCategoryId = freezed,Object? accountId = null,Object? toAccountId = freezed,Object? date = null,Object? time = null,Object? note = freezed,Object? tags = null,Object? saving = null,Object? failure = freezed,}) {
   return _then(_TransactionFormState(
 editingId: freezed == editingId ? _self.editingId : editingId // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -318,7 +329,8 @@ as String,toAccountId: freezed == toAccountId ? _self.toAccountId : toAccountId 
 as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as LocalDate,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as LocalTime,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as String?,saving: null == saving ? _self.saving : saving // ignore: cast_nullable_to_non_nullable
+as String?,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>,saving: null == saving ? _self.saving : saving // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,
   ));

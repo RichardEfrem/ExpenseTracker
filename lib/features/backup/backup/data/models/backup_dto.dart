@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/utils/local_time.dart';
 import 'package:expense_tracker/features/accounts/accounts_data.dart';
 import 'package:expense_tracker/features/categories/categories_data.dart';
 import 'package:expense_tracker/features/recurring/recurring_data.dart';
+import 'package:expense_tracker/features/tags/tags_data.dart';
 import 'package:expense_tracker/features/transactions/transactions_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,9 +15,10 @@ const backupFormat = 'expense_tracker_backup';
 
 int _ms(DateTime t) => t.toUtc().millisecondsSinceEpoch;
 
-/// The backup JSON (schema version 2). Keys are snake_case and every
+/// The backup JSON (schema version 3). Keys are snake_case and every
 /// nullable field is written as an explicit null (never omitted). v1 files
-/// have no `recurring_rules` / `pending_occurrences`; they read as empty.
+/// have no `recurring_rules` / `pending_occurrences`, v1 and v2 files no
+/// `tags` / `transaction_tags`; missing lists read as empty.
 @freezed
 abstract class BackupFileDto with _$BackupFileDto {
   const factory BackupFileDto({
@@ -31,6 +33,8 @@ abstract class BackupFileDto with _$BackupFileDto {
     required List<TransactionDto> transactions,
     @Default([]) List<RecurringRuleDto> recurringRules,
     @Default([]) List<PendingOccurrenceDto> pendingOccurrences,
+    @Default([]) List<TagDto> tags,
+    @Default([]) List<TransactionTagDto> transactionTags,
     required Map<String, String> settings,
   }) = _BackupFileDto;
 
@@ -327,4 +331,44 @@ abstract class PendingOccurrenceDto with _$PendingOccurrenceDto {
     date: date,
     createdAt: createdAt,
   );
+}
+
+@freezed
+abstract class TagDto with _$TagDto {
+  const factory TagDto({
+    required String id,
+    required String name,
+    required int createdAt,
+  }) = _TagDto;
+
+  const TagDto._();
+
+  factory TagDto.fromJson(Map<String, dynamic> json) => _$TagDtoFromJson(json);
+
+  factory TagDto.fromEntity(Tag t) =>
+      TagDto(id: t.id, name: t.name, createdAt: _ms(t.createdAt));
+
+  TagRow toRow() => TagRow(id: id, name: name, createdAt: createdAt);
+
+  Tag toEntity() => Tag(
+    id: id,
+    name: name,
+    createdAt: DateTime.fromMillisecondsSinceEpoch(createdAt, isUtc: true),
+  );
+}
+
+@freezed
+abstract class TransactionTagDto with _$TransactionTagDto {
+  const factory TransactionTagDto({
+    required String transactionId,
+    required String tagId,
+  }) = _TransactionTagDto;
+
+  const TransactionTagDto._();
+
+  factory TransactionTagDto.fromJson(Map<String, dynamic> json) =>
+      _$TransactionTagDtoFromJson(json);
+
+  TransactionTagRow toRow() =>
+      TransactionTagRow(transactionId: transactionId, tagId: tagId);
 }

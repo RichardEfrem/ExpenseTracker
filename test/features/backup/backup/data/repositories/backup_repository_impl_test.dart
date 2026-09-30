@@ -38,6 +38,8 @@ void main() {
       'transactions': r.transactions.toSet(),
       'recurringRules': r.recurringRules.toSet(),
       'pendingOccurrences': r.pendingOccurrences.toSet(),
+      'tags': r.tags.toSet(),
+      'transactionTags': r.transactionTags.toSet(),
       'settings': r.settings.toSet(),
     };
   }
@@ -148,6 +150,30 @@ void main() {
         );
   }
 
+  /// Tags `trip-bali` and `food` on transactions [ids].
+  Future<void> addTags(List<String> ids) async {
+    for (final (id, name) in [('bali', 'trip-bali'), ('food', 'food')]) {
+      await db
+          .into(db.tags)
+          .insert(TagsCompanion.insert(id: id, name: name, createdAt: 9));
+    }
+    for (final t in ids) {
+      await db
+          .into(db.transactionTags)
+          .insert(
+            TransactionTagsCompanion.insert(transactionId: t, tagId: 'bali'),
+          );
+    }
+    await db
+        .into(db.transactionTags)
+        .insert(
+          TransactionTagsCompanion.insert(
+            transactionId: ids.first,
+            tagId: 'food',
+          ),
+        );
+  }
+
   test(
     'round-trip restores 100% of records identically (PRD reliability)',
     () async {
@@ -159,11 +185,15 @@ void main() {
       );
       await addNotedTransfer();
       await addRecurring();
+      await addTags([
+        for (final t in (await db.select(db.transactions).get()).take(3)) t.id,
+      ]);
       await db.customStatement(
         "UPDATE categories SET is_archived = 1 WHERE name = 'Gift'",
       );
       final before = await contents();
       expect(before['recurringRules'], hasLength(2));
+      expect(before['transactionTags'], hasLength(4));
       expect(before['pendingOccurrences'], hasLength(1));
 
       final json = await exportJson();
@@ -350,8 +380,8 @@ void main() {
       Map<String, dynamic> copy() =>
           jsonDecode(jsonEncode(withRules)) as Map<String, dynamic>;
 
-      test('exports as v2 with both lists', () {
-        expect(withRules['schema_version'], 2);
+      test('exports as v3 with both lists', () {
+        expect(withRules['schema_version'], 3);
         expect(withRules['recurring_rules'], hasLength(2));
         expect(withRules['pending_occurrences'], hasLength(1));
         expect(failureOf(jsonEncode(withRules)), isNull);
@@ -403,7 +433,9 @@ void main() {
     final v1 = jsonDecode(await exportJson()) as Map<String, dynamic>
       ..['schema_version'] = 1
       ..remove('recurring_rules')
-      ..remove('pending_occurrences');
+      ..remove('pending_occurrences')
+      ..remove('tags')
+      ..remove('transaction_tags');
     await addRecurring();
 
     final file = decode(jsonEncode(v1));
@@ -419,5 +451,96 @@ void main() {
       await repo.restore(backup, RestoreMode.replace),
       const Right<Failure, Unit>(unit),
     );
+  });
+
+  group('tags (schema v3)', () {
+    late Map<String, dynamic> withTags;
+    setUp(() async {
+      await seedRandomTransactions(db, count: 3, end: LocalDate(2026, 9, 29));
+      await addTags([
+        for (final t in await db.select(db.transactions).get()) t.id,
+      ]);
+      withTags = jsonDecode(await exportJson()) as Map<String, dynamic>;
+    });
+    Map<String, dynamic> copy() =>
+        jsonDecode(jsonEncode(withTags)) as Map<String, dynamic>;
+    BackupProblem? problemOf(Map<String, dynamic> json) =>
+        switch (repo.decode(jsonEncode(json)).getLeft().toNullable()) {
+          BackupFailure(:final problem) => problem,
+          _ => null,
+        };
+
+    test('exports tags and links', () {
+      expect(withTags['tags'], hasLength(2));
+      expect(withTags['transaction_tags'], hasLength(4));
+      expect((withTags['tags'] as List).first, {
+        'id': isA<String>(),
+        'name': isA<String>(),
+        'created_at': 9,
+      });
+    });
+
+    test('a v3 file without the tag lists is corrupt', () {
+      expect(
+        problemOf(copy()..remove('transaction_tags')),
+        BackupProblem.corruptFile,
+      );
+    });
+
+    test('a link to a missing tag or transaction is corrupt', () {
+      final toTag = copy();
+      ((toTag['transaction_tags'] as List).first as Map)['tag_id'] = 'ghost';
+      expect(problemOf(toTag), BackupProblem.corruptFile);
+      final toTransaction = copy();
+      ((toTransaction['transaction_tags'] as List).first
+              as Map)['transaction_id'] =
+          'ghost';
+      expect(problemOf(toTransaction), BackupProblem.corruptFile);
+    });
+
+    test('two tags with one name are corrupt', () {
+      final broken = copy();
+      ((broken['tags'] as List).last as Map)['name'] = 'trip-bali';
+      expect(problemOf(broken), BackupProblem.corruptFile);
+    });
+
+    test('a v2 file (before tags) still restores, without tags', () async {
+      final v2 = copy()
+        ..['schema_version'] = 2
+        ..remove('tags')
+        ..remove('transaction_tags');
+      final file = decode(jsonEncode(v2));
+      expect(file.tags, isEmpty);
+      expect((await repo.restore(file, RestoreMode.replace)).isRight(), isTrue);
+      expect(await db.select(db.tags).get(), isEmpty);
+      expect(await db.select(db.transactions).get(), hasLength(3));
+    });
+
+    test('merge maps a tag onto the one with the same name here', () async {
+      final backup = decode(jsonEncode(withTags));
+      await repo.eraseAll();
+      // This phone already has `trip-bali`, under another id.
+      await db
+          .into(db.tags)
+          .insert(
+            TagsCompanion.insert(id: 'mine', name: 'trip-bali', createdAt: 1),
+          );
+      expect((await repo.restore(backup, RestoreMode.merge)).isRight(), isTrue);
+      final tags = await db.select(db.tags).get();
+      expect(
+        {for (final t in tags) t.name: t.id},
+        {'trip-bali': 'mine', 'food': 'food'},
+      );
+      final links = await db.select(db.transactionTags).get();
+      expect(links, hasLength(4));
+      expect(links.where((l) => l.tagId == 'mine'), hasLength(3));
+    });
+
+    test('merge leaves the tags of a transaction already here', () async {
+      final backup = decode(jsonEncode(withTags));
+      await db.delete(db.transactionTags).go();
+      expect((await repo.restore(backup, RestoreMode.merge)).isRight(), isTrue);
+      expect(await db.select(db.transactionTags).get(), isEmpty);
+    });
   });
 }

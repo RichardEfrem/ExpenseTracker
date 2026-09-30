@@ -175,4 +175,62 @@ void main() {
     await repo.delete(t.id);
     await expectation;
   });
+
+  group('tags', () {
+    Future<List<String>> tagNames() async =>
+        [for (final t in await db.select(db.tags).get()) t.name]..sort();
+
+    test('add links tags, creating only the new ones', () async {
+      final a = await add(expense().copyWith(tags: ['food', 'trip-bali']));
+      expect(a.tags, ['food', 'trip-bali']);
+      await add(expense().copyWith(tags: ['trip-bali']));
+      expect(await tagNames(), ['food', 'trip-bali'], reason: 'no duplicate');
+      expect(await db.select(db.transactionTags).get(), hasLength(3));
+    });
+
+    test('update replaces the tags and drops unused ones', () async {
+      final t = await add(expense().copyWith(tags: ['food', 'trip-bali']));
+      final updated = await repo.update(
+        t.id,
+        expense().copyWith(tags: ['work']),
+      );
+      expect(updated.isRight(), isTrue);
+      final loaded = (await repo.get(t.id)).getOrElse((f) => fail('$f'));
+      expect(loaded.tags, ['work']);
+      expect(await tagNames(), ['work']);
+    });
+
+    test('delete returns the tags, and undo puts them back', () async {
+      final t = await add(expense().copyWith(tags: ['trip-bali']));
+      final deleted = (await repo.delete(t.id)).getOrElse((f) => fail('$f'));
+      expect(deleted.tags, ['trip-bali']);
+      expect(await tagNames(), isEmpty, reason: 'unused tag removed');
+      expect((await repo.restore(deleted)).isRight(), isTrue);
+      final back = (await repo.get(t.id)).getOrElse((f) => fail('$f'));
+      expect(back.tags, ['trip-bali']);
+    });
+
+    test('duplicate copies the tags', () async {
+      final t = await add(expense().copyWith(tags: ['trip-bali']));
+      final copy = (await DuplicateTransaction(repo, clock)(
+        t.id,
+      )).getOrElse((f) => fail('$f'));
+      expect(copy.tags, ['trip-bali']);
+    });
+
+    test('AddTransaction normalizes typed tags', () async {
+      final t = (await AddTransaction(repo)(
+        expense().copyWith(tags: ['  #Trip Bali ', 'trip-bali', 'Food', '']),
+      )).getOrElse((f) => fail('$f'));
+      expect(t.tags, ['food', 'trip-bali']);
+    });
+
+    test('the detail stream carries the tags', () async {
+      final t = await add(expense().copyWith(tags: ['trip-bali']));
+      final view = await repo.watch(t.id).first;
+      expect(view.getOrElse((f) => fail('$f'))!.transaction.tags, [
+        'trip-bali',
+      ]);
+    });
+  });
 }

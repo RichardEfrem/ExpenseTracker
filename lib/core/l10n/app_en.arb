@@ -1035,7 +1035,7 @@
     }
   },
   "csv_empty": "No transactions in this date range.",
-  "csv_hint": "Columns: date, time, type, amount, category, account, to account, note. Amounts are whole rupiah.",
+  "csv_hint": "Columns: date, time, type, amount, category, account, to account, note, tags. Amounts are whole rupiah.",
   "onboarding_step": "Step {step} of {total}",
   "@onboarding_step": {
     "placeholders": {
@@ -1068,5 +1068,56 @@
   "onboarding_categories_title": "Categories",
   "onboarding_categories_body": "Untick any you won't use. You can add, edit and remove categories later.",
   "onboarding_cash_title": "Starting cash",
-  "onboarding_cash_body": "How much cash do you have right now? Leave it at zero to skip."
+  "onboarding_cash_body": "How much cash do you have right now? Leave it at zero to skip.",
+  "validation_tag_too_long": "A tag can have at most 32 characters.",
+  "validation_too_many_tags": "Use at most 10 tags on one transaction.",
+  "add_tags": "Tags",
+  "detail_tags": "Tags",
+  "tags_title": "Tags",
+  "tags_hint": "Add a tag, e.g. trip-bali",
+  "tags_limit": "Up to {max} tags",
+  "@tags_limit": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "tags_add": "Add tag",
+  "tags_remove": "Remove #{name}",
+  "@tags_remove": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tags_suggestions": "Your tags",
+  "filter_tag": "Tag",
+  "reports_tab_tags": "Tags",
+  "tag_report_title": "By tag",
+  "tag_report_empty": "No tagged transactions in this period. Add tags on the Add screen, e.g. #trip-bali.",
+  "tag_report_overlap_hint": "A transaction with several tags counts under each.",
+  "tag_report_count": "{count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@tag_report_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tag_report_row_label": "{name}: {amount}, {count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@tag_report_row_label": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

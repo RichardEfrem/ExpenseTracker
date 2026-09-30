@@ -14,13 +14,14 @@ import 'package:expense_tracker/features/reports/shared/domain/entities/report_s
 import 'package:expense_tracker/features/reports/shared/presentation/providers/report_scope_notifier.dart';
 import 'package:expense_tracker/features/reports/statistics/presentation/providers/statistics_notifier.dart';
 import 'package:expense_tracker/features/reports/statistics/presentation/widgets/stat_cards.dart';
+import 'package:expense_tracker/features/reports/tags/presentation/widgets/tag_report_view.dart';
 import 'package:expense_tracker/features/reports/trends/presentation/widgets/trends_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 /// Reports and statistics (DESIGN §8.5): period, stat cards, and one tab
-/// per report: Categories, Trends, Daily, Compare, Calendar.
+/// per report: Categories, Trends, Daily, Compare, Calendar, Tags.
 class ReportsPage extends ConsumerWidget {
   const ReportsPage({super.key});
 
@@ -38,6 +39,7 @@ class ReportsPage extends ConsumerWidget {
       (l10n.reports_tab_daily, (ReportScope s) => DailyView(scope: s)),
       (l10n.reports_tab_compare, (ReportScope s) => CompareView(scope: s)),
       (l10n.reports_tab_calendar, (ReportScope s) => CalendarView(scope: s)),
+      (l10n.reports_tab_tags, (ReportScope s) => TagReportView(scope: s)),
     ];
 
     return DefaultTabController(

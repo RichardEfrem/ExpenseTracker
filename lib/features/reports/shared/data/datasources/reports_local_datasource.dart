@@ -21,6 +21,8 @@ class ReportsLocalDataSource {
     _db.transactions,
     _db.categories,
     _db.accounts,
+    _db.tags,
+    _db.transactionTags,
   ], compute);
 
   /// `AND …` clauses for the scope's accounts, plus their variables.
@@ -57,6 +59,35 @@ class ReportsLocalDataSource {
         )
         .getSingle();
     return (income: row.read<int>('income'), expense: row.read<int>('expense'));
+  }
+
+  /// Totals per tag of [type] rows, largest first (PRD RPT-08). A
+  /// transaction with several tags counts under each of them.
+  Future<List<({String name, int amount, int count})>> byTag(
+    ReportScope scope,
+    String type,
+  ) async {
+    final (where, vars) = _scopeWhere(scope);
+    final rows = await _db
+        .customSelect(
+          'SELECT g.name, SUM(t.amount) AS total, COUNT(*) AS n '
+          'FROM transactions t '
+          'JOIN transaction_tags tt ON tt.transaction_id = t.id '
+          'JOIN tags g ON g.id = tt.tag_id '
+          'WHERE $where AND t.type = ? '
+          'GROUP BY g.id ORDER BY total DESC, g.name',
+          variables: [...vars, Variable<String>(type)],
+          readsFrom: {_db.transactions, _db.transactionTags, _db.tags},
+        )
+        .get();
+    return [
+      for (final row in rows)
+        (
+          name: row.read<String>('name'),
+          amount: row.read<int>('total'),
+          count: row.read<int>('n'),
+        ),
+    ];
   }
 
   /// Totals per category of [type], largest first.

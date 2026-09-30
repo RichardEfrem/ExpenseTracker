@@ -29,6 +29,9 @@ abstract class TransactionFormState with _$TransactionFormState {
     required LocalDate date,
     required LocalTime time,
     String? note,
+
+    /// Tag names (PRD US-15).
+    @Default(<String>[]) List<String> tags,
     @Default(false) bool saving,
     Failure? failure,
   }) = _TransactionFormState;

@@ -33,6 +33,10 @@ abstract class Transaction with _$Transaction {
     String? receiptPath,
     required DateTime createdAt,
     required DateTime updatedAt,
+
+    /// Tag names, sorted (PRD US-15). Loaded when reading one transaction
+    /// (detail, edit, duplicate, delete for undo); lists leave it empty.
+    @Default(<String>[]) List<String> tags,
   }) = _Transaction;
 
   const Transaction._();

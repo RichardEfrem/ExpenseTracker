@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/database/tables/categories.dart';
 import 'package:expense_tracker/core/database/tables/pending_occurrences.dart';
 import 'package:expense_tracker/core/database/tables/recurring_rules.dart';
 import 'package:expense_tracker/core/database/tables/settings.dart';
+import 'package:expense_tracker/core/database/tables/tags.dart';
 import 'package:expense_tracker/core/database/tables/transactions.dart';
 import 'package:expense_tracker/core/utils/clock.dart';
 import 'package:expense_tracker/core/utils/clock_provider.dart';
@@ -23,6 +24,8 @@ part 'app_database.g.dart';
     Settings,
     RecurringRules,
     PendingOccurrences,
+    Tags,
+    TransactionTags,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -37,7 +40,7 @@ class AppDatabase extends _$AppDatabase {
   final IdGenerator ids;
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration =>

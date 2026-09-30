@@ -27,6 +27,18 @@ class ActivityLocalDataSource {
     'OVER (PARTITION BY "transactions"."date")',
   );
 
+  /// A transaction has a tag matching [where].
+  Expression<bool> _hasTag(Expression<bool> Function($TagsTable g) where) {
+    final link = _db.transactionTags;
+    return existsQuery(
+      _db.selectOnly(link).join([
+          innerJoin(_db.tags, _db.tags.id.equalsExp(link.tagId)),
+        ])
+        ..addColumns([link.tagId])
+        ..where(link.transactionId.equalsExp(_t.id) & where(_db.tags)),
+    );
+  }
+
   /// The WHERE clause for [filter], restricted to [from]..[to] (inclusive)
   /// when given. Expects `categories` joined.
   Expression<bool> _where(
@@ -36,20 +48,25 @@ class ActivityLocalDataSource {
     LocalDate? before,
   }) {
     final text = filter.text.trim();
-    final pattern =
-        '%${text.replaceAllMapped(RegExp(r'[\\%_]'), (m) => '\\${m[0]}')}%';
+    String like(String s) =>
+        '%${s.replaceAllMapped(RegExp(r'[\\%_]'), (m) => '\\${m[0]}')}%';
+    final pattern = like(text);
+    // Tags are stored lowercase without `#`: "#Bali" finds `bali`.
+    final tagPattern = like(text.replaceFirst(RegExp('^#+'), '').toLowerCase());
     final lower = LocalDate.maxOrNull(filter.from, from);
     final upper = LocalDate.minOrNull(filter.to, to);
     return Expression.and([
       if (text.isNotEmpty)
         _t.note.like(pattern, escapeChar: r'\') |
-            _db.categories.name.like(pattern, escapeChar: r'\'),
+            _db.categories.name.like(pattern, escapeChar: r'\') |
+            _hasTag((g) => g.name.like(tagPattern, escapeChar: r'\')),
       if (filter.types.isNotEmpty)
         _t.type.isIn(filter.types.map((t) => t.name)),
       if (filter.categoryIds.isNotEmpty) _t.categoryId.isIn(filter.categoryIds),
       if (filter.accountIds.isNotEmpty)
         _t.accountId.isIn(filter.accountIds) |
             _t.toAccountId.isIn(filter.accountIds),
+      if (filter.tags.isNotEmpty) _hasTag((g) => g.name.isIn(filter.tags)),
       if (lower != null) _t.date.isBiggerOrEqualValue(lower.toIso()),
       if (upper != null) _t.date.isSmallerOrEqualValue(upper.toIso()),
       if (before != null) _t.date.isSmallerThanValue(before.toIso()),

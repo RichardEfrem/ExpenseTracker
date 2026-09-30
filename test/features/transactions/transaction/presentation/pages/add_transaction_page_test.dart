@@ -145,6 +145,48 @@ void main() {
     await dispose(tester);
   });
 
+  testWidgets('tags: type one, reuse one, saved with the transaction', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    Future<void> addExpense(List<String> typed, {String? suggestion}) async {
+      await tester.tap(find.byKey(const ValueKey('add-fab')));
+      await settle(tester);
+      await typeKeys(tester, [KeypadKey.digit5, KeypadKey.tripleZero]);
+      await tester.tap(find.byKey(const ValueKey('tags-chip')));
+      await settle(tester);
+      if (suggestion != null) {
+        await tester.tap(find.byKey(ValueKey('tag-suggestion-$suggestion')));
+        await tester.pump();
+      }
+      for (final tag in typed) {
+        await tester.enterText(find.byKey(const ValueKey('tag-field')), tag);
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+        await tester.pump();
+      }
+      await tester.tap(find.byKey(const ValueKey('tags-done')));
+      await settle(tester);
+      await tester.tap(find.byKey(const ValueKey('save')));
+      await settle(tester);
+    }
+
+    await addExpense(['Trip Bali', '#Food']);
+    // The chip showed the normalized tags before saving; now stored.
+    var tags = await pumpUntilDone(tester, db.select(db.tags).get());
+    expect(tags.map((t) => t.name).toSet(), {'trip-bali', 'food'});
+
+    // The second time, the existing tag is offered as a suggestion.
+    await addExpense(const [], suggestion: 'trip-bali');
+    tags = await pumpUntilDone(tester, db.select(db.tags).get());
+    expect(tags, hasLength(2), reason: 'reused, not duplicated');
+    final links = await pumpUntilDone(
+      tester,
+      db.select(db.transactionTags).get(),
+    );
+    expect(links, hasLength(3));
+    await dispose(tester);
+  });
+
   testWidgets('arithmetic shows a live result', (tester) async {
     await pumpApp(tester);
     await tester.tap(find.byKey(const ValueKey('add-fab')));

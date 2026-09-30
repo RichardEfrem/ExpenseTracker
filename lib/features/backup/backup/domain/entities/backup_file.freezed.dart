@@ -13,6 +13,266 @@ part of 'backup_file.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
+mixin _$TagLink {
+
+ String get transactionId; String get tagId;
+/// Create a copy of TagLink
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TagLinkCopyWith<TagLink> get copyWith => _$TagLinkCopyWithImpl<TagLink>(this as TagLink, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagLink&&(identical(other.transactionId, transactionId) || other.transactionId == transactionId)&&(identical(other.tagId, tagId) || other.tagId == tagId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,transactionId,tagId);
+
+@override
+String toString() {
+  return 'TagLink(transactionId: $transactionId, tagId: $tagId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TagLinkCopyWith<$Res>  {
+  factory $TagLinkCopyWith(TagLink value, $Res Function(TagLink) _then) = _$TagLinkCopyWithImpl;
+@useResult
+$Res call({
+ String transactionId, String tagId
+});
+
+
+
+
+}
+/// @nodoc
+class _$TagLinkCopyWithImpl<$Res>
+    implements $TagLinkCopyWith<$Res> {
+  _$TagLinkCopyWithImpl(this._self, this._then);
+
+  final TagLink _self;
+  final $Res Function(TagLink) _then;
+
+/// Create a copy of TagLink
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? transactionId = null,Object? tagId = null,}) {
+  return _then(TagLink(
+transactionId: null == transactionId ? _self.transactionId : transactionId // ignore: cast_nullable_to_non_nullable
+as String,tagId: null == tagId ? _self.tagId : tagId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [TagLink].
+extension TagLinkPatterns on TagLink {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TagLink value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TagLink() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TagLink value)  $default,){
+final _that = this;
+switch (_that) {
+case _TagLink():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TagLink value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TagLink() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String transactionId,  String tagId)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TagLink() when $default != null:
+return $default(_that.transactionId,_that.tagId);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String transactionId,  String tagId)  $default,) {final _that = this;
+switch (_that) {
+case _TagLink():
+return $default(_that.transactionId,_that.tagId);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String transactionId,  String tagId)?  $default,) {final _that = this;
+switch (_that) {
+case _TagLink() when $default != null:
+return $default(_that.transactionId,_that.tagId);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _TagLink implements TagLink {
+  const _TagLink({required this.transactionId, required this.tagId});
+  
+
+@override final  String transactionId;
+@override final  String tagId;
+
+/// Create a copy of TagLink
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TagLinkCopyWith<_TagLink> get copyWith => __$TagLinkCopyWithImpl<_TagLink>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagLink&&(identical(other.transactionId, transactionId) || other.transactionId == transactionId)&&(identical(other.tagId, tagId) || other.tagId == tagId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,transactionId,tagId);
+
+@override
+String toString() {
+  return 'TagLink(transactionId: $transactionId, tagId: $tagId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TagLinkCopyWith<$Res> implements $TagLinkCopyWith<$Res> {
+  factory _$TagLinkCopyWith(_TagLink value, $Res Function(_TagLink) _then) = __$TagLinkCopyWithImpl;
+@override @useResult
+$Res call({
+ String transactionId, String tagId
+});
+
+
+
+
+}
+/// @nodoc
+class __$TagLinkCopyWithImpl<$Res>
+    implements _$TagLinkCopyWith<$Res> {
+  __$TagLinkCopyWithImpl(this._self, this._then);
+
+  final _TagLink _self;
+  final $Res Function(_TagLink) _then;
+
+/// Create a copy of TagLink
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? transactionId = null,Object? tagId = null,}) {
+  return _then(_TagLink(
+transactionId: null == transactionId ? _self.transactionId : transactionId // ignore: cast_nullable_to_non_nullable
+as String,tagId: null == tagId ? _self.tagId : tagId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$BackupPreview {
 
  int get transactions; int get accounts; int get categories; int get recurringRules; LocalDate? get firstDate; LocalDate? get lastDate; DateTime get exportedAt;
@@ -291,23 +551,24 @@ as DateTime,
 mixin _$BackupFile {
 
  int get schemaVersion; String get appVersion; DateTime get exportedAt; List<Account> get accounts; List<Category> get categories; List<Transaction> get transactions;/// Schema v2 on; empty when restoring a v1 file.
- List<RecurringRule> get recurringRules; List<PendingOccurrence> get pendingOccurrences;/// Preferences and small app state, key → value.
+ List<RecurringRule> get recurringRules; List<PendingOccurrence> get pendingOccurrences;/// Schema v3 on; empty when restoring a v1 or v2 file.
+ List<Tag> get tags; List<TagLink> get tagLinks;/// Preferences and small app state, key → value.
  Map<String, String> get settings;
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BackupFile&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.exportedAt, exportedAt) || other.exportedAt == exportedAt)&&const DeepCollectionEquality().equals(other.accounts, accounts)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.transactions, transactions)&&const DeepCollectionEquality().equals(other.recurringRules, recurringRules)&&const DeepCollectionEquality().equals(other.pendingOccurrences, pendingOccurrences)&&const DeepCollectionEquality().equals(other.settings, settings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BackupFile&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.exportedAt, exportedAt) || other.exportedAt == exportedAt)&&const DeepCollectionEquality().equals(other.accounts, accounts)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.transactions, transactions)&&const DeepCollectionEquality().equals(other.recurringRules, recurringRules)&&const DeepCollectionEquality().equals(other.pendingOccurrences, pendingOccurrences)&&const DeepCollectionEquality().equals(other.tags, tags)&&const DeepCollectionEquality().equals(other.tagLinks, tagLinks)&&const DeepCollectionEquality().equals(other.settings, settings));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,schemaVersion,appVersion,exportedAt,const DeepCollectionEquality().hash(accounts),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(transactions),const DeepCollectionEquality().hash(recurringRules),const DeepCollectionEquality().hash(pendingOccurrences),const DeepCollectionEquality().hash(settings));
+int get hashCode => Object.hash(runtimeType,schemaVersion,appVersion,exportedAt,const DeepCollectionEquality().hash(accounts),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(transactions),const DeepCollectionEquality().hash(recurringRules),const DeepCollectionEquality().hash(pendingOccurrences),const DeepCollectionEquality().hash(tags),const DeepCollectionEquality().hash(tagLinks),const DeepCollectionEquality().hash(settings));
 
 @override
 String toString() {
-  return 'BackupFile(schemaVersion: $schemaVersion, appVersion: $appVersion, exportedAt: $exportedAt, accounts: $accounts, categories: $categories, transactions: $transactions, recurringRules: $recurringRules, pendingOccurrences: $pendingOccurrences, settings: $settings)';
+  return 'BackupFile(schemaVersion: $schemaVersion, appVersion: $appVersion, exportedAt: $exportedAt, accounts: $accounts, categories: $categories, transactions: $transactions, recurringRules: $recurringRules, pendingOccurrences: $pendingOccurrences, tags: $tags, tagLinks: $tagLinks, settings: $settings)';
 }
 
 
@@ -394,10 +655,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int schemaVersion,  String appVersion,  DateTime exportedAt,  List<Account> accounts,  List<Category> categories,  List<Transaction> transactions,  List<RecurringRule> recurringRules,  List<PendingOccurrence> pendingOccurrences,  Map<String, String> settings)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int schemaVersion,  String appVersion,  DateTime exportedAt,  List<Account> accounts,  List<Category> categories,  List<Transaction> transactions,  List<RecurringRule> recurringRules,  List<PendingOccurrence> pendingOccurrences,  List<Tag> tags,  List<TagLink> tagLinks,  Map<String, String> settings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BackupFile() when $default != null:
-return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.settings);case _:
+return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.tags,_that.tagLinks,_that.settings);case _:
   return orElse();
 
 }
@@ -415,10 +676,10 @@ return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.acco
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int schemaVersion,  String appVersion,  DateTime exportedAt,  List<Account> accounts,  List<Category> categories,  List<Transaction> transactions,  List<RecurringRule> recurringRules,  List<PendingOccurrence> pendingOccurrences,  Map<String, String> settings)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int schemaVersion,  String appVersion,  DateTime exportedAt,  List<Account> accounts,  List<Category> categories,  List<Transaction> transactions,  List<RecurringRule> recurringRules,  List<PendingOccurrence> pendingOccurrences,  List<Tag> tags,  List<TagLink> tagLinks,  Map<String, String> settings)  $default,) {final _that = this;
 switch (_that) {
 case _BackupFile():
-return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.settings);case _:
+return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.tags,_that.tagLinks,_that.settings);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -435,10 +696,10 @@ return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.acco
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int schemaVersion,  String appVersion,  DateTime exportedAt,  List<Account> accounts,  List<Category> categories,  List<Transaction> transactions,  List<RecurringRule> recurringRules,  List<PendingOccurrence> pendingOccurrences,  Map<String, String> settings)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int schemaVersion,  String appVersion,  DateTime exportedAt,  List<Account> accounts,  List<Category> categories,  List<Transaction> transactions,  List<RecurringRule> recurringRules,  List<PendingOccurrence> pendingOccurrences,  List<Tag> tags,  List<TagLink> tagLinks,  Map<String, String> settings)?  $default,) {final _that = this;
 switch (_that) {
 case _BackupFile() when $default != null:
-return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.settings);case _:
+return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.tags,_that.tagLinks,_that.settings);case _:
   return null;
 
 }
@@ -450,7 +711,7 @@ return $default(_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.acco
 
 
 class _BackupFile extends BackupFile {
-  const _BackupFile({required this.schemaVersion, required this.appVersion, required this.exportedAt, required  List<Account> accounts, required  List<Category> categories, required  List<Transaction> transactions,  List<RecurringRule> recurringRules = const [],  List<PendingOccurrence> pendingOccurrences = const [], required  Map<String, String> settings}): _accounts = accounts,_categories = categories,_transactions = transactions,_recurringRules = recurringRules,_pendingOccurrences = pendingOccurrences,_settings = settings,super._();
+  const _BackupFile({required this.schemaVersion, required this.appVersion, required this.exportedAt, required  List<Account> accounts, required  List<Category> categories, required  List<Transaction> transactions,  List<RecurringRule> recurringRules = const [],  List<PendingOccurrence> pendingOccurrences = const [],  List<Tag> tags = const [],  List<TagLink> tagLinks = const [], required  Map<String, String> settings}): _accounts = accounts,_categories = categories,_transactions = transactions,_recurringRules = recurringRules,_pendingOccurrences = pendingOccurrences,_tags = tags,_tagLinks = tagLinks,_settings = settings,super._();
   
 
 @override final  int schemaVersion;
@@ -493,6 +754,22 @@ class _BackupFile extends BackupFile {
   return EqualUnmodifiableListView(_pendingOccurrences);
 }
 
+/// Schema v3 on; empty when restoring a v1 or v2 file.
+ final  List<Tag> _tags;
+/// Schema v3 on; empty when restoring a v1 or v2 file.
+@override@JsonKey() List<Tag> get tags {
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_tags);
+}
+
+ final  List<TagLink> _tagLinks;
+@override@JsonKey() List<TagLink> get tagLinks {
+  if (_tagLinks is EqualUnmodifiableListView) return _tagLinks;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_tagLinks);
+}
+
 /// Preferences and small app state, key → value.
  final  Map<String, String> _settings;
 /// Preferences and small app state, key → value.
@@ -508,16 +785,16 @@ class _BackupFile extends BackupFile {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BackupFile&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.exportedAt, exportedAt) || other.exportedAt == exportedAt)&&const DeepCollectionEquality().equals(other._accounts, _accounts)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._transactions, _transactions)&&const DeepCollectionEquality().equals(other._recurringRules, _recurringRules)&&const DeepCollectionEquality().equals(other._pendingOccurrences, _pendingOccurrences)&&const DeepCollectionEquality().equals(other._settings, _settings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BackupFile&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.exportedAt, exportedAt) || other.exportedAt == exportedAt)&&const DeepCollectionEquality().equals(other._accounts, _accounts)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._transactions, _transactions)&&const DeepCollectionEquality().equals(other._recurringRules, _recurringRules)&&const DeepCollectionEquality().equals(other._pendingOccurrences, _pendingOccurrences)&&const DeepCollectionEquality().equals(other._tags, _tags)&&const DeepCollectionEquality().equals(other._tagLinks, _tagLinks)&&const DeepCollectionEquality().equals(other._settings, _settings));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,schemaVersion,appVersion,exportedAt,const DeepCollectionEquality().hash(_accounts),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_transactions),const DeepCollectionEquality().hash(_recurringRules),const DeepCollectionEquality().hash(_pendingOccurrences),const DeepCollectionEquality().hash(_settings));
+int get hashCode => Object.hash(runtimeType,schemaVersion,appVersion,exportedAt,const DeepCollectionEquality().hash(_accounts),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_transactions),const DeepCollectionEquality().hash(_recurringRules),const DeepCollectionEquality().hash(_pendingOccurrences),const DeepCollectionEquality().hash(_tags),const DeepCollectionEquality().hash(_tagLinks),const DeepCollectionEquality().hash(_settings));
 
 @override
 String toString() {
-  return 'BackupFile(schemaVersion: $schemaVersion, appVersion: $appVersion, exportedAt: $exportedAt, accounts: $accounts, categories: $categories, transactions: $transactions, recurringRules: $recurringRules, pendingOccurrences: $pendingOccurrences, settings: $settings)';
+  return 'BackupFile(schemaVersion: $schemaVersion, appVersion: $appVersion, exportedAt: $exportedAt, accounts: $accounts, categories: $categories, transactions: $transactions, recurringRules: $recurringRules, pendingOccurrences: $pendingOccurrences, tags: $tags, tagLinks: $tagLinks, settings: $settings)';
 }
 
 

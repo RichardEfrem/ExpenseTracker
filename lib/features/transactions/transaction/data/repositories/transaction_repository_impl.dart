@@ -38,11 +38,12 @@ class TransactionRepositoryImpl implements TransactionRepository {
         'created_at': now,
         'updated_at': now,
       });
+      await _dataSource.setTags(id, input.tags, newId: _ids.newId, nowMs: now);
       await _writeLastUsed(
         input.type,
         LastUsed(categoryId: input.categoryId, accountId: input.accountId),
       );
-      return (await _dataSource.findById(id))!.toEntity();
+      return _withTags((await _dataSource.findById(id))!.toEntity());
     }),
   );
 
@@ -50,11 +51,18 @@ class TransactionRepositoryImpl implements TransactionRepository {
   Future<Either<Failure, Unit>> update(String id, TransactionInput input) =>
       guard(
         () => _dataSource.transaction(() async {
+          final now = _now;
           final changed = await _dataSource.update(id, {
             ...input.toJson(),
-            'updated_at': _now,
+            'updated_at': now,
           });
           if (changed == 0) _notFound();
+          await _dataSource.setTags(
+            id,
+            input.tags,
+            newId: _ids.newId,
+            nowMs: now,
+          );
           return unit;
         }),
       );
@@ -64,28 +72,51 @@ class TransactionRepositoryImpl implements TransactionRepository {
     () => _dataSource.transaction(() async {
       final row = await _dataSource.findById(id);
       if (row == null) _notFound();
+      // With its tags, so undo puts them back.
+      final deleted = await _withTags(row.toEntity());
       await _dataSource.delete(id);
-      return row.toEntity();
+      await _dataSource.pruneTags();
+      return deleted;
     }),
   );
 
   @override
-  Future<Either<Failure, Unit>> restore(Transaction transaction) =>
-      guard(() async {
-        await _dataSource.insert(transaction.toRowJson());
-        return unit;
-      });
+  Future<Either<Failure, Unit>> restore(Transaction transaction) => guard(
+    () => _dataSource.transaction(() async {
+      await _dataSource.insert(transaction.toRowJson());
+      await _dataSource.setTags(
+        transaction.id,
+        transaction.tags,
+        newId: _ids.newId,
+        nowMs: _now,
+      );
+      return unit;
+    }),
+  );
 
   @override
   Future<Either<Failure, Transaction>> get(String id) => guard(() async {
     final row = await _dataSource.findById(id);
     if (row == null) _notFound();
-    return row.toEntity();
+    return _withTags(row.toEntity());
   });
 
+  Future<Transaction> _withTags(Transaction t) async =>
+      t.copyWith(tags: await _dataSource.tagsOf(t.id));
+
   @override
-  Stream<Either<Failure, TransactionView?>> watch(String id) =>
-      guardStream(_dataSource.watchJoined(id).map((row) => row?.toView()));
+  Stream<Either<Failure, TransactionView?>> watch(String id) => guardStream(
+    _dataSource.watchJoined(id).asyncMap((row) async {
+      if (row == null) return null;
+      final view = row.toView();
+      return TransactionView(
+        transaction: await _withTags(view.transaction),
+        category: view.category,
+        account: view.account,
+        toAccount: view.toAccount,
+      );
+    }),
+  );
 
   @override
   Stream<Either<Failure, List<TransactionView>>> watchRecent(int limit) =>

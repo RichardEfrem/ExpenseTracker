@@ -326,7 +326,55 @@ void main() {
     await dispose(tester);
   });
 
-  for (final tab in ['Trends', 'Compare', 'Calendar']) {
+  Future<void> tagAll(WidgetTester tester, String name) => pumpUntilDone(
+    tester,
+    () async {
+      await db
+          .into(db.tags)
+          .insert(TagsCompanion.insert(id: name, name: name, createdAt: 0));
+      for (final t in await db.select(db.transactions).get()) {
+        await db
+            .into(db.transactionTags)
+            .insert(
+              TransactionTagsCompanion.insert(transactionId: t.id, tagId: name),
+            );
+      }
+    }(),
+  );
+
+  testWidgets('tags: totals per tag; a tag opens Activity (RPT-08)', (
+    tester,
+  ) async {
+    await seed(tester);
+    await tagAll(tester, 'trip-bali');
+    await pumpApp(tester);
+    await openTab(tester, 'Tags');
+    expect(find.text('By tag'), findsOneWidget);
+    expect(find.text('#trip-bali'), findsOneWidget);
+    expect(find.text('Rp 65.000'), findsOneWidget);
+    expect(find.text('2 transactions'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('tag-row-trip-bali')));
+    await settle(tester);
+    expect(router.state.uri.path, '/activity');
+    expect(router.state.uri.queryParameters, {
+      'type': 'expense',
+      'tag': 'trip-bali',
+      'from': '2026-09-01',
+      'to': '2026-09-30',
+    });
+    await dispose(tester);
+  });
+
+  testWidgets('tags: nothing tagged shows the empty hint', (tester) async {
+    await seed(tester);
+    await pumpApp(tester);
+    await openTab(tester, 'Tags');
+    expect(find.byKey(const ValueKey('tag-report-empty')), findsOneWidget);
+    await dispose(tester);
+  });
+
+  for (final tab in ['Trends', 'Compare', 'Calendar', 'Tags']) {
     testWidgets('$tab fits at 360 dp and 200% font', (tester) async {
       await seedTwoMonths(tester);
       await pumpApp(tester, size: const Size(360, 720), textScale: 2);

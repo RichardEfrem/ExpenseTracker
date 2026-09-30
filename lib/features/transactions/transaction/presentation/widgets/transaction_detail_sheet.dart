@@ -12,6 +12,7 @@ import 'package:expense_tracker/features/transactions/transaction/domain/entitie
 import 'package:expense_tracker/features/transactions/transaction/presentation/providers/transaction_notifiers.dart';
 import 'package:expense_tracker/features/transactions/transaction/presentation/widgets/transaction_feedback.dart';
 import 'package:expense_tracker/features/transactions/transaction/presentation/widgets/transaction_labels.dart';
+import 'package:expense_tracker/features/tags/tags_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -125,6 +126,7 @@ class _Content extends StatelessWidget {
                     : '${view.account.name} → ${view.toAccount!.name}',
               ),
               if (t.note != null) field(l10n.detail_note, t.note!),
+              if (t.tags.isNotEmpty) field(l10n.detail_tags, tagsLabel(t.tags)),
               if (t.recurringRuleId case final ruleId?)
                 Row(
                   children: [

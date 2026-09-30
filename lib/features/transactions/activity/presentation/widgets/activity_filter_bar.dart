@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/utils/local_date.dart';
 import 'package:expense_tracker/core/utils/money_format.dart';
 import 'package:expense_tracker/features/accounts/accounts_presentation.dart';
 import 'package:expense_tracker/features/categories/categories_presentation.dart';
+import 'package:expense_tracker/features/tags/tags_presentation.dart';
 import 'package:expense_tracker/features/transactions/activity/domain/entities/transaction_filter.dart';
 import 'package:expense_tracker/core/widgets/multi_select_sheet.dart';
 import 'package:expense_tracker/features/transactions/transaction/domain/entities/transaction.dart';
@@ -37,6 +38,7 @@ class ActivityFilterBar extends ConsumerWidget {
     );
     final categories = [...?expense.value, ...?income.value];
     final accounts = ref.watch(accountsProvider()).value ?? const [];
+    final tags = ref.watch(tagsProvider).value ?? const <Tag>[];
     final types = [
       TransactionType.expense,
       TransactionType.income,
@@ -174,6 +176,27 @@ class ActivityFilterBar extends ConsumerWidget {
                 }
               },
               onClear: () => onChanged(filter.copyWith(accountIds: const {})),
+            ),
+          if (tags.isNotEmpty || filter.tags.isNotEmpty)
+            chip(
+              key: const ValueKey('filter-tag'),
+              label: l10n.filter_tag,
+              value: filter.tags.isEmpty
+                  ? null
+                  : tagsLabel(filter.tags.toList()..sort()),
+              onPressed: () async {
+                final picked = await showMultiSelectSheet(
+                  context,
+                  title: l10n.filter_tag,
+                  selected: filter.tags,
+                  options: [
+                    for (final t in tags)
+                      (value: t.name, label: '#${t.name}', leading: null),
+                  ],
+                );
+                if (picked != null) onChanged(filter.copyWith(tags: picked));
+              },
+              onClear: () => onChanged(filter.copyWith(tags: const {})),
             ),
           chip(
             key: const ValueKey('filter-date'),

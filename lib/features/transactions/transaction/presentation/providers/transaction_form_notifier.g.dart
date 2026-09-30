@@ -59,7 +59,7 @@ final class TransactionFormNotifierProvider
 }
 
 String _$transactionFormNotifierHash() =>
-    r'cbf2e721bedbb7d294b99cc9aa08ceb4e352e02b';
+    r'247404e191863eb4abc4d0f244cffe5a054385d1';
 
 /// The Add/Edit screen (PRD TX-01…06): keypad expression, type, category,
 /// date, note; remembers the last-used category per type.

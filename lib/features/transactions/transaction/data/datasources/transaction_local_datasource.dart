@@ -27,6 +27,56 @@ class TransactionLocalDataSource {
   Future<int> delete(String id) =>
       (_db.delete(_db.transactions)..where((t) => t.id.equals(id))).go();
 
+  /// The transaction's tag names, sorted.
+  Future<List<String>> tagsOf(String id) async {
+    final rows = await _db
+        .customSelect(
+          'SELECT g.name FROM transaction_tags tt '
+          'JOIN tags g ON g.id = tt.tag_id '
+          'WHERE tt.transaction_id = ? ORDER BY g.name',
+          variables: [Variable<String>(id)],
+          readsFrom: {_db.tags, _db.transactionTags},
+        )
+        .get();
+    return [for (final r in rows) r.read<String>('name')];
+  }
+
+  /// Makes [names] (already normalized) the transaction's tags: creates the
+  /// tags that don't exist yet, then drops tags nothing uses any more. Call
+  /// inside a DB transaction.
+  Future<void> setTags(
+    String id,
+    List<String> names, {
+    required String Function() newId,
+    required int nowMs,
+  }) async {
+    await (_db.delete(
+      _db.transactionTags,
+    )..where((l) => l.transactionId.equals(id))).go();
+    for (final name in names) {
+      await _db
+          .into(_db.tags)
+          .insert(
+            TagsCompanion.insert(id: newId(), name: name, createdAt: nowMs),
+            mode: InsertMode.insertOrIgnore,
+          );
+      final tag = await (_db.select(
+        _db.tags,
+      )..where((g) => g.name.equals(name))).getSingle();
+      await _db
+          .into(_db.transactionTags)
+          .insert(
+            TransactionTagsCompanion.insert(transactionId: id, tagId: tag.id),
+          );
+    }
+    await pruneTags();
+  }
+
+  /// Deletes tags no transaction uses.
+  Future<void> pruneTags() => _db.customStatement(
+    'DELETE FROM tags WHERE id NOT IN (SELECT tag_id FROM transaction_tags)',
+  );
+
   /// Transactions joined with their category and accounts. Shared by the
   /// slices that list transactions.
   JoinedSelectStatement<HasResultSet, dynamic> joined() {

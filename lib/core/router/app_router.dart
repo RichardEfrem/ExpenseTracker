@@ -11,6 +11,7 @@ import 'package:expense_tracker/features/period/period_routes.dart';
 import 'package:expense_tracker/features/recurring/recurring_routes.dart';
 import 'package:expense_tracker/features/reports/reports_routes.dart';
 import 'package:expense_tracker/features/settings/settings_routes.dart';
+import 'package:expense_tracker/features/tags/tags_routes.dart';
 import 'package:expense_tracker/features/transactions/transactions_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,6 +33,7 @@ List<ModuleRoutes> _modules() => [
   onboardingRoutes(),
   periodRoutes(),
   backupRoutes(),
+  tagsRoutes(),
 ];
 
 GoRouter createAppRouter({String initialLocation = AppPaths.home}) {

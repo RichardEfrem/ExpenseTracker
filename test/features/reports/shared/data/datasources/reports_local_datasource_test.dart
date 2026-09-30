@@ -276,4 +276,60 @@ void main() {
     await add('expense', '2026-09-28', 1000, category: 'Food & Drinks');
     await expectation;
   });
+
+  group('by tag (RPT-08)', () {
+    final sep = ReportScope(
+      period: Period.monthContaining(LocalDate(2026, 9, 1)),
+    );
+
+    /// Tags the transaction dated [date] with [amount].
+    Future<void> tag(String date, int amount, String name) async {
+      final t =
+          await (db.select(db.transactions)
+                ..where((t) => t.date.equals(date) & t.amount.equals(amount)))
+              .getSingle();
+      await db
+          .into(db.tags)
+          .insert(
+            TagsCompanion.insert(id: name, name: name, createdAt: 0),
+            mode: InsertMode.insertOrIgnore,
+          );
+      await db
+          .into(db.transactionTags)
+          .insert(
+            TransactionTagsCompanion.insert(transactionId: t.id, tagId: name),
+          );
+    }
+
+    setUp(() async {
+      await tag('2026-09-05', 45000, 'trip-bali');
+      await tag('2026-09-10', 100000, 'trip-bali');
+      await tag('2026-09-12', 500000, 'trip-bali'); // transfer: never counts
+      await tag('2026-09-13', 10000, 'trip-bali'); // adjustment: never counts
+      await tag('2026-09-01', 8500000, 'trip-bali');
+      await tag('2026-09-05', 20000, 'food-run');
+      await tag('2026-09-05', 45000, 'food-run'); // two tags: counts twice
+    });
+
+    test('expense per tag, largest first, transfers excluded', () async {
+      expect(await source.byTag(sep, 'expense'), [
+        (name: 'trip-bali', amount: 145000, count: 2),
+        (name: 'food-run', amount: 65000, count: 2),
+      ]);
+    });
+
+    test('income per tag', () async {
+      expect(await source.byTag(sep, 'income'), [
+        (name: 'trip-bali', amount: 8500000, count: 1),
+      ]);
+    });
+
+    test('account scope and period apply', () async {
+      expect(await source.byTag(sep.copyWith(accountIds: {cash}), 'expense'), [
+        (name: 'food-run', amount: 65000, count: 2),
+        (name: 'trip-bali', amount: 45000, count: 1),
+      ]);
+      expect(await source.byTag(sep.previous, 'expense'), isEmpty);
+    });
+  });
 }

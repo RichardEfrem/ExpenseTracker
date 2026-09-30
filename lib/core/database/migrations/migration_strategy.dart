@@ -23,6 +23,12 @@ MigrationStrategy buildMigrationStrategy(
         await m.createTable(db.recurringRules);
         await m.createTable(db.pendingOccurrences);
       }
+      if (from < 3) {
+        // v3: tags (Phase 12).
+        await m.createTable(db.tags);
+        await m.createTable(db.transactionTags);
+        await m.createIndex(db.idxTransactionTagsTag);
+      }
     },
     beforeOpen: (details) async {
       await db.customStatement('PRAGMA foreign_keys = ON');

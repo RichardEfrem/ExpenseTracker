@@ -70,6 +70,7 @@ class TransactionFormNotifier extends _$TransactionFormNotifier {
         date: t.date,
         time: t.time,
         note: t.note,
+        tags: t.tags,
       );
     }
     final accountId = accounts.any((a) => a.id == lastAccount)
@@ -147,6 +148,8 @@ class TransactionFormNotifier extends _$TransactionFormNotifier {
     (s) => s.copyWith(note: note == null || note.trim().isEmpty ? null : note),
   );
 
+  void setTags(List<String> tags) => _update((s) => s.copyWith(tags: tags));
+
   /// Saves; true on success. A failure is kept in the state for display.
   Future<bool> save() async {
     final s = state.value;
@@ -161,6 +164,7 @@ class TransactionFormNotifier extends _$TransactionFormNotifier {
       date: s.date,
       time: s.time,
       note: s.note,
+      tags: s.tags,
     );
     final failure = s.isEditing
         ? (await ref.read(updateTransactionProvider)(

@@ -17,7 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$BackupFileDto {
 
  String get format; int get schemaVersion; String get appVersion;/// ISO 8601, UTC.
- String get exportedAt; List<AccountDto> get accounts; List<CategoryDto> get categories; List<TransactionDto> get transactions; List<RecurringRuleDto> get recurringRules; List<PendingOccurrenceDto> get pendingOccurrences; Map<String, String> get settings;
+ String get exportedAt; List<AccountDto> get accounts; List<CategoryDto> get categories; List<TransactionDto> get transactions; List<RecurringRuleDto> get recurringRules; List<PendingOccurrenceDto> get pendingOccurrences; List<TagDto> get tags; List<TransactionTagDto> get transactionTags; Map<String, String> get settings;
 /// Create a copy of BackupFileDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +30,16 @@ $BackupFileDtoCopyWith<BackupFileDto> get copyWith => _$BackupFileDtoCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BackupFileDto&&(identical(other.format, format) || other.format == format)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.exportedAt, exportedAt) || other.exportedAt == exportedAt)&&const DeepCollectionEquality().equals(other.accounts, accounts)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.transactions, transactions)&&const DeepCollectionEquality().equals(other.recurringRules, recurringRules)&&const DeepCollectionEquality().equals(other.pendingOccurrences, pendingOccurrences)&&const DeepCollectionEquality().equals(other.settings, settings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BackupFileDto&&(identical(other.format, format) || other.format == format)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.exportedAt, exportedAt) || other.exportedAt == exportedAt)&&const DeepCollectionEquality().equals(other.accounts, accounts)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.transactions, transactions)&&const DeepCollectionEquality().equals(other.recurringRules, recurringRules)&&const DeepCollectionEquality().equals(other.pendingOccurrences, pendingOccurrences)&&const DeepCollectionEquality().equals(other.tags, tags)&&const DeepCollectionEquality().equals(other.transactionTags, transactionTags)&&const DeepCollectionEquality().equals(other.settings, settings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,format,schemaVersion,appVersion,exportedAt,const DeepCollectionEquality().hash(accounts),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(transactions),const DeepCollectionEquality().hash(recurringRules),const DeepCollectionEquality().hash(pendingOccurrences),const DeepCollectionEquality().hash(settings));
+int get hashCode => Object.hash(runtimeType,format,schemaVersion,appVersion,exportedAt,const DeepCollectionEquality().hash(accounts),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(transactions),const DeepCollectionEquality().hash(recurringRules),const DeepCollectionEquality().hash(pendingOccurrences),const DeepCollectionEquality().hash(tags),const DeepCollectionEquality().hash(transactionTags),const DeepCollectionEquality().hash(settings));
 
 @override
 String toString() {
-  return 'BackupFileDto(format: $format, schemaVersion: $schemaVersion, appVersion: $appVersion, exportedAt: $exportedAt, accounts: $accounts, categories: $categories, transactions: $transactions, recurringRules: $recurringRules, pendingOccurrences: $pendingOccurrences, settings: $settings)';
+  return 'BackupFileDto(format: $format, schemaVersion: $schemaVersion, appVersion: $appVersion, exportedAt: $exportedAt, accounts: $accounts, categories: $categories, transactions: $transactions, recurringRules: $recurringRules, pendingOccurrences: $pendingOccurrences, tags: $tags, transactionTags: $transactionTags, settings: $settings)';
 }
 
 
@@ -50,7 +50,7 @@ abstract mixin class $BackupFileDtoCopyWith<$Res>  {
   factory $BackupFileDtoCopyWith(BackupFileDto value, $Res Function(BackupFileDto) _then) = _$BackupFileDtoCopyWithImpl;
 @useResult
 $Res call({
- String format, int schemaVersion, String appVersion, String exportedAt, List<AccountDto> accounts, List<CategoryDto> categories, List<TransactionDto> transactions, List<RecurringRuleDto> recurringRules, List<PendingOccurrenceDto> pendingOccurrences, Map<String, String> settings
+ String format, int schemaVersion, String appVersion, String exportedAt, List<AccountDto> accounts, List<CategoryDto> categories, List<TransactionDto> transactions, List<RecurringRuleDto> recurringRules, List<PendingOccurrenceDto> pendingOccurrences, List<TagDto> tags, List<TransactionTagDto> transactionTags, Map<String, String> settings
 });
 
 
@@ -67,7 +67,7 @@ class _$BackupFileDtoCopyWithImpl<$Res>
 
 /// Create a copy of BackupFileDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? format = null,Object? schemaVersion = null,Object? appVersion = null,Object? exportedAt = null,Object? accounts = null,Object? categories = null,Object? transactions = null,Object? recurringRules = null,Object? pendingOccurrences = null,Object? settings = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? format = null,Object? schemaVersion = null,Object? appVersion = null,Object? exportedAt = null,Object? accounts = null,Object? categories = null,Object? transactions = null,Object? recurringRules = null,Object? pendingOccurrences = null,Object? tags = null,Object? transactionTags = null,Object? settings = null,}) {
   return _then(BackupFileDto(
 format: null == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
 as String,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,9 @@ as List<AccountDto>,categories: null == categories ? _self.categories : categori
 as List<CategoryDto>,transactions: null == transactions ? _self.transactions : transactions // ignore: cast_nullable_to_non_nullable
 as List<TransactionDto>,recurringRules: null == recurringRules ? _self.recurringRules : recurringRules // ignore: cast_nullable_to_non_nullable
 as List<RecurringRuleDto>,pendingOccurrences: null == pendingOccurrences ? _self.pendingOccurrences : pendingOccurrences // ignore: cast_nullable_to_non_nullable
-as List<PendingOccurrenceDto>,settings: null == settings ? _self.settings : settings // ignore: cast_nullable_to_non_nullable
+as List<PendingOccurrenceDto>,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
+as List<TagDto>,transactionTags: null == transactionTags ? _self.transactionTags : transactionTags // ignore: cast_nullable_to_non_nullable
+as List<TransactionTagDto>,settings: null == settings ? _self.settings : settings // ignore: cast_nullable_to_non_nullable
 as Map<String, String>,
   ));
 }
@@ -164,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String format,  int schemaVersion,  String appVersion,  String exportedAt,  List<AccountDto> accounts,  List<CategoryDto> categories,  List<TransactionDto> transactions,  List<RecurringRuleDto> recurringRules,  List<PendingOccurrenceDto> pendingOccurrences,  Map<String, String> settings)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String format,  int schemaVersion,  String appVersion,  String exportedAt,  List<AccountDto> accounts,  List<CategoryDto> categories,  List<TransactionDto> transactions,  List<RecurringRuleDto> recurringRules,  List<PendingOccurrenceDto> pendingOccurrences,  List<TagDto> tags,  List<TransactionTagDto> transactionTags,  Map<String, String> settings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BackupFileDto() when $default != null:
-return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.settings);case _:
+return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.tags,_that.transactionTags,_that.settings);case _:
   return orElse();
 
 }
@@ -185,10 +187,10 @@ return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exported
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String format,  int schemaVersion,  String appVersion,  String exportedAt,  List<AccountDto> accounts,  List<CategoryDto> categories,  List<TransactionDto> transactions,  List<RecurringRuleDto> recurringRules,  List<PendingOccurrenceDto> pendingOccurrences,  Map<String, String> settings)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String format,  int schemaVersion,  String appVersion,  String exportedAt,  List<AccountDto> accounts,  List<CategoryDto> categories,  List<TransactionDto> transactions,  List<RecurringRuleDto> recurringRules,  List<PendingOccurrenceDto> pendingOccurrences,  List<TagDto> tags,  List<TransactionTagDto> transactionTags,  Map<String, String> settings)  $default,) {final _that = this;
 switch (_that) {
 case _BackupFileDto():
-return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.settings);case _:
+return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.tags,_that.transactionTags,_that.settings);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +207,10 @@ return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exported
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String format,  int schemaVersion,  String appVersion,  String exportedAt,  List<AccountDto> accounts,  List<CategoryDto> categories,  List<TransactionDto> transactions,  List<RecurringRuleDto> recurringRules,  List<PendingOccurrenceDto> pendingOccurrences,  Map<String, String> settings)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String format,  int schemaVersion,  String appVersion,  String exportedAt,  List<AccountDto> accounts,  List<CategoryDto> categories,  List<TransactionDto> transactions,  List<RecurringRuleDto> recurringRules,  List<PendingOccurrenceDto> pendingOccurrences,  List<TagDto> tags,  List<TransactionTagDto> transactionTags,  Map<String, String> settings)?  $default,) {final _that = this;
 switch (_that) {
 case _BackupFileDto() when $default != null:
-return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.settings);case _:
+return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exportedAt,_that.accounts,_that.categories,_that.transactions,_that.recurringRules,_that.pendingOccurrences,_that.tags,_that.transactionTags,_that.settings);case _:
   return null;
 
 }
@@ -220,7 +222,7 @@ return $default(_that.format,_that.schemaVersion,_that.appVersion,_that.exported
 @JsonSerializable()
 
 class _BackupFileDto implements BackupFileDto {
-  const _BackupFileDto({this.format = backupFormat, required this.schemaVersion, required this.appVersion, required this.exportedAt, required  List<AccountDto> accounts, required  List<CategoryDto> categories, required  List<TransactionDto> transactions,  List<RecurringRuleDto> recurringRules = const [],  List<PendingOccurrenceDto> pendingOccurrences = const [], required  Map<String, String> settings}): _accounts = accounts,_categories = categories,_transactions = transactions,_recurringRules = recurringRules,_pendingOccurrences = pendingOccurrences,_settings = settings;
+  const _BackupFileDto({this.format = backupFormat, required this.schemaVersion, required this.appVersion, required this.exportedAt, required  List<AccountDto> accounts, required  List<CategoryDto> categories, required  List<TransactionDto> transactions,  List<RecurringRuleDto> recurringRules = const [],  List<PendingOccurrenceDto> pendingOccurrences = const [],  List<TagDto> tags = const [],  List<TransactionTagDto> transactionTags = const [], required  Map<String, String> settings}): _accounts = accounts,_categories = categories,_transactions = transactions,_recurringRules = recurringRules,_pendingOccurrences = pendingOccurrences,_tags = tags,_transactionTags = transactionTags,_settings = settings;
   factory _BackupFileDto.fromJson(Map<String, dynamic> json) => _$BackupFileDtoFromJson(json);
 
 @override@JsonKey() final  String format;
@@ -263,6 +265,20 @@ class _BackupFileDto implements BackupFileDto {
   return EqualUnmodifiableListView(_pendingOccurrences);
 }
 
+ final  List<TagDto> _tags;
+@override@JsonKey() List<TagDto> get tags {
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_tags);
+}
+
+ final  List<TransactionTagDto> _transactionTags;
+@override@JsonKey() List<TransactionTagDto> get transactionTags {
+  if (_transactionTags is EqualUnmodifiableListView) return _transactionTags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_transactionTags);
+}
+
  final  Map<String, String> _settings;
 @override Map<String, String> get settings {
   if (_settings is EqualUnmodifiableMapView) return _settings;
@@ -284,16 +300,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BackupFileDto&&(identical(other.format, format) || other.format == format)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.exportedAt, exportedAt) || other.exportedAt == exportedAt)&&const DeepCollectionEquality().equals(other._accounts, _accounts)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._transactions, _transactions)&&const DeepCollectionEquality().equals(other._recurringRules, _recurringRules)&&const DeepCollectionEquality().equals(other._pendingOccurrences, _pendingOccurrences)&&const DeepCollectionEquality().equals(other._settings, _settings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BackupFileDto&&(identical(other.format, format) || other.format == format)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.appVersion, appVersion) || other.appVersion == appVersion)&&(identical(other.exportedAt, exportedAt) || other.exportedAt == exportedAt)&&const DeepCollectionEquality().equals(other._accounts, _accounts)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._transactions, _transactions)&&const DeepCollectionEquality().equals(other._recurringRules, _recurringRules)&&const DeepCollectionEquality().equals(other._pendingOccurrences, _pendingOccurrences)&&const DeepCollectionEquality().equals(other._tags, _tags)&&const DeepCollectionEquality().equals(other._transactionTags, _transactionTags)&&const DeepCollectionEquality().equals(other._settings, _settings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,format,schemaVersion,appVersion,exportedAt,const DeepCollectionEquality().hash(_accounts),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_transactions),const DeepCollectionEquality().hash(_recurringRules),const DeepCollectionEquality().hash(_pendingOccurrences),const DeepCollectionEquality().hash(_settings));
+int get hashCode => Object.hash(runtimeType,format,schemaVersion,appVersion,exportedAt,const DeepCollectionEquality().hash(_accounts),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_transactions),const DeepCollectionEquality().hash(_recurringRules),const DeepCollectionEquality().hash(_pendingOccurrences),const DeepCollectionEquality().hash(_tags),const DeepCollectionEquality().hash(_transactionTags),const DeepCollectionEquality().hash(_settings));
 
 @override
 String toString() {
-  return 'BackupFileDto(format: $format, schemaVersion: $schemaVersion, appVersion: $appVersion, exportedAt: $exportedAt, accounts: $accounts, categories: $categories, transactions: $transactions, recurringRules: $recurringRules, pendingOccurrences: $pendingOccurrences, settings: $settings)';
+  return 'BackupFileDto(format: $format, schemaVersion: $schemaVersion, appVersion: $appVersion, exportedAt: $exportedAt, accounts: $accounts, categories: $categories, transactions: $transactions, recurringRules: $recurringRules, pendingOccurrences: $pendingOccurrences, tags: $tags, transactionTags: $transactionTags, settings: $settings)';
 }
 
 
@@ -304,7 +320,7 @@ abstract mixin class _$BackupFileDtoCopyWith<$Res> implements $BackupFileDtoCopy
   factory _$BackupFileDtoCopyWith(_BackupFileDto value, $Res Function(_BackupFileDto) _then) = __$BackupFileDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String format, int schemaVersion, String appVersion, String exportedAt, List<AccountDto> accounts, List<CategoryDto> categories, List<TransactionDto> transactions, List<RecurringRuleDto> recurringRules, List<PendingOccurrenceDto> pendingOccurrences, Map<String, String> settings
+ String format, int schemaVersion, String appVersion, String exportedAt, List<AccountDto> accounts, List<CategoryDto> categories, List<TransactionDto> transactions, List<RecurringRuleDto> recurringRules, List<PendingOccurrenceDto> pendingOccurrences, List<TagDto> tags, List<TransactionTagDto> transactionTags, Map<String, String> settings
 });
 
 
@@ -321,7 +337,7 @@ class __$BackupFileDtoCopyWithImpl<$Res>
 
 /// Create a copy of BackupFileDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? format = null,Object? schemaVersion = null,Object? appVersion = null,Object? exportedAt = null,Object? accounts = null,Object? categories = null,Object? transactions = null,Object? recurringRules = null,Object? pendingOccurrences = null,Object? settings = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? format = null,Object? schemaVersion = null,Object? appVersion = null,Object? exportedAt = null,Object? accounts = null,Object? categories = null,Object? transactions = null,Object? recurringRules = null,Object? pendingOccurrences = null,Object? tags = null,Object? transactionTags = null,Object? settings = null,}) {
   return _then(_BackupFileDto(
 format: null == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
 as String,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
@@ -332,7 +348,9 @@ as List<AccountDto>,categories: null == categories ? _self._categories : categor
 as List<CategoryDto>,transactions: null == transactions ? _self._transactions : transactions // ignore: cast_nullable_to_non_nullable
 as List<TransactionDto>,recurringRules: null == recurringRules ? _self._recurringRules : recurringRules // ignore: cast_nullable_to_non_nullable
 as List<RecurringRuleDto>,pendingOccurrences: null == pendingOccurrences ? _self._pendingOccurrences : pendingOccurrences // ignore: cast_nullable_to_non_nullable
-as List<PendingOccurrenceDto>,settings: null == settings ? _self._settings : settings // ignore: cast_nullable_to_non_nullable
+as List<PendingOccurrenceDto>,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
+as List<TagDto>,transactionTags: null == transactionTags ? _self._transactionTags : transactionTags // ignore: cast_nullable_to_non_nullable
+as List<TransactionTagDto>,settings: null == settings ? _self._settings : settings // ignore: cast_nullable_to_non_nullable
 as Map<String, String>,
   ));
 }
@@ -1798,6 +1816,541 @@ as String,ruleId: null == ruleId ? _self.ruleId : ruleId // ignore: cast_nullabl
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$TagDto {
+
+ String get id; String get name; int get createdAt;
+/// Create a copy of TagDto
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TagDtoCopyWith<TagDto> get copyWith => _$TagDtoCopyWithImpl<TagDto>(this as TagDto, _$identity);
+
+  /// Serializes this TagDto to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,createdAt);
+
+@override
+String toString() {
+  return 'TagDto(id: $id, name: $name, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TagDtoCopyWith<$Res>  {
+  factory $TagDtoCopyWith(TagDto value, $Res Function(TagDto) _then) = _$TagDtoCopyWithImpl;
+@useResult
+$Res call({
+ String id, String name, int createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$TagDtoCopyWithImpl<$Res>
+    implements $TagDtoCopyWith<$Res> {
+  _$TagDtoCopyWithImpl(this._self, this._then);
+
+  final TagDto _self;
+  final $Res Function(TagDto) _then;
+
+/// Create a copy of TagDto
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? createdAt = null,}) {
+  return _then(TagDto(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [TagDto].
+extension TagDtoPatterns on TagDto {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TagDto value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TagDto() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TagDto value)  $default,){
+final _that = this;
+switch (_that) {
+case _TagDto():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TagDto value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TagDto() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  int createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TagDto() when $default != null:
+return $default(_that.id,_that.name,_that.createdAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  int createdAt)  $default,) {final _that = this;
+switch (_that) {
+case _TagDto():
+return $default(_that.id,_that.name,_that.createdAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  int createdAt)?  $default,) {final _that = this;
+switch (_that) {
+case _TagDto() when $default != null:
+return $default(_that.id,_that.name,_that.createdAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _TagDto extends TagDto {
+  const _TagDto({required this.id, required this.name, required this.createdAt}): super._();
+  factory _TagDto.fromJson(Map<String, dynamic> json) => _$TagDtoFromJson(json);
+
+@override final  String id;
+@override final  String name;
+@override final  int createdAt;
+
+/// Create a copy of TagDto
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TagDtoCopyWith<_TagDto> get copyWith => __$TagDtoCopyWithImpl<_TagDto>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TagDtoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,createdAt);
+
+@override
+String toString() {
+  return 'TagDto(id: $id, name: $name, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TagDtoCopyWith<$Res> implements $TagDtoCopyWith<$Res> {
+  factory _$TagDtoCopyWith(_TagDto value, $Res Function(_TagDto) _then) = __$TagDtoCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String name, int createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$TagDtoCopyWithImpl<$Res>
+    implements _$TagDtoCopyWith<$Res> {
+  __$TagDtoCopyWithImpl(this._self, this._then);
+
+  final _TagDto _self;
+  final $Res Function(_TagDto) _then;
+
+/// Create a copy of TagDto
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? createdAt = null,}) {
+  return _then(_TagDto(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$TransactionTagDto {
+
+ String get transactionId; String get tagId;
+/// Create a copy of TransactionTagDto
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TransactionTagDtoCopyWith<TransactionTagDto> get copyWith => _$TransactionTagDtoCopyWithImpl<TransactionTagDto>(this as TransactionTagDto, _$identity);
+
+  /// Serializes this TransactionTagDto to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransactionTagDto&&(identical(other.transactionId, transactionId) || other.transactionId == transactionId)&&(identical(other.tagId, tagId) || other.tagId == tagId));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,transactionId,tagId);
+
+@override
+String toString() {
+  return 'TransactionTagDto(transactionId: $transactionId, tagId: $tagId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TransactionTagDtoCopyWith<$Res>  {
+  factory $TransactionTagDtoCopyWith(TransactionTagDto value, $Res Function(TransactionTagDto) _then) = _$TransactionTagDtoCopyWithImpl;
+@useResult
+$Res call({
+ String transactionId, String tagId
+});
+
+
+
+
+}
+/// @nodoc
+class _$TransactionTagDtoCopyWithImpl<$Res>
+    implements $TransactionTagDtoCopyWith<$Res> {
+  _$TransactionTagDtoCopyWithImpl(this._self, this._then);
+
+  final TransactionTagDto _self;
+  final $Res Function(TransactionTagDto) _then;
+
+/// Create a copy of TransactionTagDto
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? transactionId = null,Object? tagId = null,}) {
+  return _then(TransactionTagDto(
+transactionId: null == transactionId ? _self.transactionId : transactionId // ignore: cast_nullable_to_non_nullable
+as String,tagId: null == tagId ? _self.tagId : tagId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [TransactionTagDto].
+extension TransactionTagDtoPatterns on TransactionTagDto {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TransactionTagDto value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TransactionTagDto() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TransactionTagDto value)  $default,){
+final _that = this;
+switch (_that) {
+case _TransactionTagDto():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TransactionTagDto value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TransactionTagDto() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String transactionId,  String tagId)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TransactionTagDto() when $default != null:
+return $default(_that.transactionId,_that.tagId);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String transactionId,  String tagId)  $default,) {final _that = this;
+switch (_that) {
+case _TransactionTagDto():
+return $default(_that.transactionId,_that.tagId);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String transactionId,  String tagId)?  $default,) {final _that = this;
+switch (_that) {
+case _TransactionTagDto() when $default != null:
+return $default(_that.transactionId,_that.tagId);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _TransactionTagDto extends TransactionTagDto {
+  const _TransactionTagDto({required this.transactionId, required this.tagId}): super._();
+  factory _TransactionTagDto.fromJson(Map<String, dynamic> json) => _$TransactionTagDtoFromJson(json);
+
+@override final  String transactionId;
+@override final  String tagId;
+
+/// Create a copy of TransactionTagDto
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TransactionTagDtoCopyWith<_TransactionTagDto> get copyWith => __$TransactionTagDtoCopyWithImpl<_TransactionTagDto>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$TransactionTagDtoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransactionTagDto&&(identical(other.transactionId, transactionId) || other.transactionId == transactionId)&&(identical(other.tagId, tagId) || other.tagId == tagId));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,transactionId,tagId);
+
+@override
+String toString() {
+  return 'TransactionTagDto(transactionId: $transactionId, tagId: $tagId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TransactionTagDtoCopyWith<$Res> implements $TransactionTagDtoCopyWith<$Res> {
+  factory _$TransactionTagDtoCopyWith(_TransactionTagDto value, $Res Function(_TransactionTagDto) _then) = __$TransactionTagDtoCopyWithImpl;
+@override @useResult
+$Res call({
+ String transactionId, String tagId
+});
+
+
+
+
+}
+/// @nodoc
+class __$TransactionTagDtoCopyWithImpl<$Res>
+    implements _$TransactionTagDtoCopyWith<$Res> {
+  __$TransactionTagDtoCopyWithImpl(this._self, this._then);
+
+  final _TransactionTagDto _self;
+  final $Res Function(_TransactionTagDto) _then;
+
+/// Create a copy of TransactionTagDto
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? transactionId = null,Object? tagId = null,}) {
+  return _then(_TransactionTagDto(
+transactionId: null == transactionId ? _self.transactionId : transactionId // ignore: cast_nullable_to_non_nullable
+as String,tagId: null == tagId ? _self.tagId : tagId // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

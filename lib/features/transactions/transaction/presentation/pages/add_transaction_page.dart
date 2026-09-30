@@ -12,6 +12,7 @@ import 'package:expense_tracker/core/widgets/amount_keypad.dart';
 import 'package:expense_tracker/core/widgets/empty_state.dart';
 import 'package:expense_tracker/features/accounts/accounts_presentation.dart';
 import 'package:expense_tracker/features/categories/categories_presentation.dart';
+import 'package:expense_tracker/features/tags/tags_presentation.dart';
 import 'package:expense_tracker/features/transactions/transaction/domain/entities/transaction.dart';
 import 'package:expense_tracker/features/transactions/transaction/presentation/providers/transaction_form_notifier.dart';
 import 'package:expense_tracker/features/transactions/transaction/presentation/providers/transaction_form_state.dart';
@@ -73,6 +74,11 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   Future<void> _editNote(TransactionFormState state) async {
     final note = await showNoteDialog(context, initial: state.note);
     if (note != null) ref.read(_provider.notifier).setNote(note);
+  }
+
+  Future<void> _editTags(TransactionFormState state) async {
+    final tags = await showTagPicker(context, selected: state.tags);
+    if (tags != null) ref.read(_provider.notifier).setTags(tags);
   }
 
   Future<void> _pickAccount({required bool destination}) async {
@@ -140,6 +146,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
           onCreateCategory: _createCategory,
           onPickDate: () => _pickDate(value),
           onEditNote: () => _editNote(value),
+          onEditTags: () => _editTags(value),
           onPickAccount: () => _pickAccount(destination: false),
           onPickToAccount: () => _pickAccount(destination: true),
           onSave: _save,
@@ -170,6 +177,7 @@ class _Body extends ConsumerWidget {
     required this.onCreateCategory,
     required this.onPickDate,
     required this.onEditNote,
+    required this.onEditTags,
     required this.onPickAccount,
     required this.onPickToAccount,
     required this.onSave,
@@ -183,6 +191,7 @@ class _Body extends ConsumerWidget {
   final ValueChanged<CategoryType> onCreateCategory;
   final VoidCallback onPickDate;
   final VoidCallback onEditNote;
+  final VoidCallback onEditTags;
   final VoidCallback onPickAccount;
   final VoidCallback onPickToAccount;
   final VoidCallback onSave;
@@ -256,6 +265,18 @@ class _Body extends ConsumerWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           onPressed: onEditNote,
+                        ),
+                        ActionChip(
+                          key: const ValueKey('tags-chip'),
+                          avatar: const Icon(Symbols.sell_rounded),
+                          label: Text(
+                            state.tags.isEmpty
+                                ? l10n.add_tags
+                                : tagsLabel(state.tags),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          onPressed: onEditTags,
                         ),
                       ],
                     ),

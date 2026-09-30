@@ -2621,7 +2621,7 @@ abstract class AppLocalizations {
   /// No description provided for @csv_hint.
   ///
   /// In en, this message translates to:
-  /// **'Columns: date, time, type, amount, category, account, to account, note. Amounts are whole rupiah.'**
+  /// **'Columns: date, time, type, amount, category, account, to account, note, tags. Amounts are whole rupiah.'**
   String get csv_hint;
 
   /// No description provided for @onboarding_step.
@@ -2719,6 +2719,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'How much cash do you have right now? Leave it at zero to skip.'**
   String get onboarding_cash_body;
+
+  /// No description provided for @validation_tag_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'A tag can have at most 32 characters.'**
+  String get validation_tag_too_long;
+
+  /// No description provided for @validation_too_many_tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at most 10 tags on one transaction.'**
+  String get validation_too_many_tags;
+
+  /// No description provided for @add_tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get add_tags;
+
+  /// No description provided for @detail_tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get detail_tags;
+
+  /// No description provided for @tags_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tags_title;
+
+  /// No description provided for @tags_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a tag, e.g. trip-bali'**
+  String get tags_hint;
+
+  /// No description provided for @tags_limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {max} tags'**
+  String tags_limit(int max);
+
+  /// No description provided for @tags_add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag'**
+  String get tags_add;
+
+  /// No description provided for @tags_remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove #{name}'**
+  String tags_remove(String name);
+
+  /// No description provided for @tags_suggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tags'**
+  String get tags_suggestions;
+
+  /// No description provided for @filter_tag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get filter_tag;
+
+  /// No description provided for @reports_tab_tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get reports_tab_tags;
+
+  /// No description provided for @tag_report_title.
+  ///
+  /// In en, this message translates to:
+  /// **'By tag'**
+  String get tag_report_title;
+
+  /// No description provided for @tag_report_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tagged transactions in this period. Add tags on the Add screen, e.g. #trip-bali.'**
+  String get tag_report_empty;
+
+  /// No description provided for @tag_report_overlap_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'A transaction with several tags counts under each.'**
+  String get tag_report_overlap_hint;
+
+  /// No description provided for @tag_report_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 transaction} other{{count} transactions}}'**
+  String tag_report_count(int count);
+
+  /// No description provided for @tag_report_row_label.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {amount}, {count, plural, =1{1 transaction} other{{count} transactions}}'**
+  String tag_report_row_label(String name, String amount, int count);
 }
 
 class _AppLocalizationsDelegate

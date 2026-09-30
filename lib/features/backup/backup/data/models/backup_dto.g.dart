@@ -6,35 +6,44 @@ part of 'backup_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_BackupFileDto _$BackupFileDtoFromJson(Map<String, dynamic> json) =>
-    _BackupFileDto(
-      format: json['format'] as String? ?? backupFormat,
-      schemaVersion: (json['schema_version'] as num).toInt(),
-      appVersion: json['app_version'] as String,
-      exportedAt: json['exported_at'] as String,
-      accounts: (json['accounts'] as List<dynamic>)
-          .map((e) => AccountDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      categories: (json['categories'] as List<dynamic>)
-          .map((e) => CategoryDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      transactions: (json['transactions'] as List<dynamic>)
-          .map((e) => TransactionDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      recurringRules:
-          (json['recurring_rules'] as List<dynamic>?)
-              ?.map((e) => RecurringRuleDto.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      pendingOccurrences:
-          (json['pending_occurrences'] as List<dynamic>?)
-              ?.map(
-                (e) => PendingOccurrenceDto.fromJson(e as Map<String, dynamic>),
-              )
-              .toList() ??
-          const [],
-      settings: Map<String, String>.from(json['settings'] as Map),
-    );
+_BackupFileDto _$BackupFileDtoFromJson(
+  Map<String, dynamic> json,
+) => _BackupFileDto(
+  format: json['format'] as String? ?? backupFormat,
+  schemaVersion: (json['schema_version'] as num).toInt(),
+  appVersion: json['app_version'] as String,
+  exportedAt: json['exported_at'] as String,
+  accounts: (json['accounts'] as List<dynamic>)
+      .map((e) => AccountDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  categories: (json['categories'] as List<dynamic>)
+      .map((e) => CategoryDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  transactions: (json['transactions'] as List<dynamic>)
+      .map((e) => TransactionDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  recurringRules:
+      (json['recurring_rules'] as List<dynamic>?)
+          ?.map((e) => RecurringRuleDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  pendingOccurrences:
+      (json['pending_occurrences'] as List<dynamic>?)
+          ?.map((e) => PendingOccurrenceDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  tags:
+      (json['tags'] as List<dynamic>?)
+          ?.map((e) => TagDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  transactionTags:
+      (json['transaction_tags'] as List<dynamic>?)
+          ?.map((e) => TransactionTagDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  settings: Map<String, String>.from(json['settings'] as Map),
+);
 
 Map<String, dynamic> _$BackupFileDtoToJson(
   _BackupFileDto instance,
@@ -50,6 +59,8 @@ Map<String, dynamic> _$BackupFileDtoToJson(
   'pending_occurrences': instance.pendingOccurrences
       .map((e) => e.toJson())
       .toList(),
+  'tags': instance.tags.map((e) => e.toJson()).toList(),
+  'transaction_tags': instance.transactionTags.map((e) => e.toJson()).toList(),
   'settings': instance.settings,
 };
 
@@ -196,3 +207,27 @@ Map<String, dynamic> _$PendingOccurrenceDtoToJson(
   'date': instance.date,
   'created_at': instance.createdAt,
 };
+
+_TagDto _$TagDtoFromJson(Map<String, dynamic> json) => _TagDto(
+  id: json['id'] as String,
+  name: json['name'] as String,
+  createdAt: (json['created_at'] as num).toInt(),
+);
+
+Map<String, dynamic> _$TagDtoToJson(_TagDto instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'created_at': instance.createdAt,
+};
+
+_TransactionTagDto _$TransactionTagDtoFromJson(Map<String, dynamic> json) =>
+    _TransactionTagDto(
+      transactionId: json['transaction_id'] as String,
+      tagId: json['tag_id'] as String,
+    );
+
+Map<String, dynamic> _$TransactionTagDtoToJson(_TransactionTagDto instance) =>
+    <String, dynamic>{
+      'transaction_id': instance.transactionId,
+      'tag_id': instance.tagId,
+    };

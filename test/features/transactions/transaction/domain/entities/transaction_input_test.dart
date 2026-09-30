@@ -80,4 +80,28 @@ void main() {
       isNull,
     );
   });
+
+  test('tags are normalized, deduplicated and sorted', () {
+    final valid = base
+        .copyWith(tags: ['Trip Bali', '#food', 'trip-bali', '  ', 'FOOD'])
+        .validated()
+        .getOrElse((r) => fail('$r'));
+    expect(valid.tags, ['food', 'trip-bali']);
+  });
+
+  test('tags: at most 10, each at most 32 characters', () {
+    expect(
+      reasonOf(base.copyWith(tags: [for (var i = 0; i < 11; i++) 't$i'])),
+      ValidationReason.tooManyTags,
+    );
+    expect(
+      reasonOf(base.copyWith(tags: [for (var i = 0; i < 10; i++) 't$i'])),
+      isNull,
+    );
+    expect(
+      reasonOf(base.copyWith(tags: ['x' * 33])),
+      ValidationReason.tagTooLong,
+    );
+    expect(reasonOf(base.copyWith(tags: ['x' * 32])), isNull);
+  });
 }

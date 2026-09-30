@@ -40,6 +40,8 @@ enum ValidationReason {
   endBeforeStart,
   pinInvalid,
   passwordTooShort,
+  tagTooLong,
+  tooManyTags,
 }
 
 /// Why a backup file could not be read or restored.

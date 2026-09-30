@@ -11,6 +11,7 @@ abstract final class FilterQueryCodec {
   static const _type = 'type';
   static const _category = 'category';
   static const _account = 'account';
+  static const _tag = 'tag';
   static const _from = 'from';
   static const _to = 'to';
   static const _min = 'min';
@@ -23,6 +24,7 @@ abstract final class FilterQueryCodec {
       if (filter.types.isNotEmpty) _type: join(filter.types.map((t) => t.name)),
       if (filter.categoryIds.isNotEmpty) _category: join(filter.categoryIds),
       if (filter.accountIds.isNotEmpty) _account: join(filter.accountIds),
+      if (filter.tags.isNotEmpty) _tag: join(filter.tags),
       if (filter.from != null) _from: filter.from!.toIso(),
       if (filter.to != null) _to: filter.to!.toIso(),
       if (filter.minAmount != null) _min: '${filter.minAmount}',
@@ -49,6 +51,7 @@ abstract final class FilterQueryCodec {
       },
       categoryIds: list(_category),
       accountIds: list(_account),
+      tags: list(_tag),
       from: LocalDate.tryParse(query[_from] ?? ''),
       to: LocalDate.tryParse(query[_to] ?? ''),
       minAmount: amount(_min),

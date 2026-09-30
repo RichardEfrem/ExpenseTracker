@@ -55,6 +55,14 @@ class BackupRepositoryImpl implements BackupRepository {
           pendingOccurrences: [
             for (final r in rows.pendingOccurrences) r.toEntity(),
           ],
+          tags: [
+            for (final r in rows.tags)
+              TagDto(id: r.id, name: r.name, createdAt: r.createdAt).toEntity(),
+          ],
+          tagLinks: [
+            for (final r in rows.transactionTags)
+              TagLink(transactionId: r.transactionId, tagId: r.tagId),
+          ],
           settings: {for (final r in rows.settings) r.key: r.value},
         );
       });
@@ -79,6 +87,11 @@ class BackupRepositoryImpl implements BackupRepository {
         pendingOccurrences: [
           for (final p in file.pendingOccurrences)
             PendingOccurrenceDto.fromEntity(p),
+        ],
+        tags: [for (final t in file.tags) TagDto.fromEntity(t)],
+        transactionTags: [
+          for (final l in file.tagLinks)
+            TransactionTagDto(transactionId: l.transactionId, tagId: l.tagId),
         ],
         settings: file.settings,
       ).toJson(),
@@ -112,6 +125,11 @@ class BackupRepositoryImpl implements BackupRepository {
             json.containsKey('pending_occurrences'))) {
       _corrupt('recurring lists');
     }
+    // From v3 on the tag lists are part of the format, even if empty.
+    if (version >= 3 &&
+        !(json.containsKey('tags') && json.containsKey('transaction_tags'))) {
+      _corrupt('tag lists');
+    }
     try {
       final dto = BackupFileDto.fromJson(json);
       _checkReferences(dto);
@@ -127,6 +145,11 @@ class BackupRepositoryImpl implements BackupRepository {
         ],
         pendingOccurrences: [
           for (final p in dto.pendingOccurrences) p.toRow().toEntity(),
+        ],
+        tags: [for (final t in dto.tags) t.toEntity()],
+        tagLinks: [
+          for (final l in dto.transactionTags)
+            TagLink(transactionId: l.transactionId, tagId: l.tagId),
         ],
         settings: dto.settings,
       );
@@ -165,6 +188,18 @@ class BackupRepositoryImpl implements BackupRepository {
         _corrupt('pending ${p.id} references a missing rule');
       }
     }
+    final transactions = {for (final t in dto.transactions) t.id};
+    final tags = {for (final t in dto.tags) t.id};
+    if (tags.length != {for (final t in dto.tags) t.name}.length) {
+      _corrupt('duplicate tag names');
+    }
+    for (final l in dto.transactionTags) {
+      if (!transactions.contains(l.transactionId) || !tags.contains(l.tagId)) {
+        _corrupt(
+          'tag link ${l.transactionId}/${l.tagId} references a missing row',
+        );
+      }
+    }
   }
 
   @override
@@ -188,6 +223,11 @@ class BackupRepositoryImpl implements BackupRepository {
           pendingOccurrences: [
             for (final p in file.pendingOccurrences)
               PendingOccurrenceDto.fromEntity(p).toRow(),
+          ],
+          tags: [for (final t in file.tags) TagDto.fromEntity(t).toRow()],
+          transactionTags: [
+            for (final l in file.tagLinks)
+              TransactionTagRow(transactionId: l.transactionId, tagId: l.tagId),
           ],
           settings: [
             for (final MapEntry(:key, :value) in file.settings.entries)

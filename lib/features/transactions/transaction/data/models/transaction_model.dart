@@ -45,8 +45,8 @@ extension JoinedTransactionMapper on JoinedTransactionRow {
 }
 
 extension TransactionInputJson on TransactionInput {
-  /// The write payload, keyed by `transactions` column. Every key is always
-  /// present: an explicit null clears the column on update (e.g. a removed
+  /// The write payload, keyed by `transactions` column. Tags are not in it:
+  /// they are links in `transaction_tags`. Every key is always present: an explicit null clears the column on update (e.g. a removed
   /// note, or the destination account when a transfer becomes an expense).
   Map<String, Object?> toJson() => {
     'type': type.name,

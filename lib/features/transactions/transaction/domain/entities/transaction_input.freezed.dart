@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TransactionInput {
 
- TransactionType get type; int get amount; String get accountId; String? get toAccountId; String? get categoryId; LocalDate get date; LocalTime get time; String? get note;
+ TransactionType get type; int get amount; String get accountId; String? get toAccountId; String? get categoryId; LocalDate get date; LocalTime get time; String? get note;/// Tag names as typed; [validated] normalizes them (see [Tag.normalize]).
+ List<String> get tags;
 /// Create a copy of TransactionInput
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +27,16 @@ $TransactionInputCopyWith<TransactionInput> get copyWith => _$TransactionInputCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransactionInput&&(identical(other.type, type) || other.type == type)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.toAccountId, toAccountId) || other.toAccountId == toAccountId)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TransactionInput&&(identical(other.type, type) || other.type == type)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.toAccountId, toAccountId) || other.toAccountId == toAccountId)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other.tags, tags));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,amount,accountId,toAccountId,categoryId,date,time,note);
+int get hashCode => Object.hash(runtimeType,type,amount,accountId,toAccountId,categoryId,date,time,note,const DeepCollectionEquality().hash(tags));
 
 @override
 String toString() {
-  return 'TransactionInput(type: $type, amount: $amount, accountId: $accountId, toAccountId: $toAccountId, categoryId: $categoryId, date: $date, time: $time, note: $note)';
+  return 'TransactionInput(type: $type, amount: $amount, accountId: $accountId, toAccountId: $toAccountId, categoryId: $categoryId, date: $date, time: $time, note: $note, tags: $tags)';
 }
 
 
@@ -46,7 +47,7 @@ abstract mixin class $TransactionInputCopyWith<$Res>  {
   factory $TransactionInputCopyWith(TransactionInput value, $Res Function(TransactionInput) _then) = _$TransactionInputCopyWithImpl;
 @useResult
 $Res call({
- TransactionType type, int amount, String accountId, String? toAccountId, String? categoryId, LocalDate date, LocalTime time, String? note
+ TransactionType type, int amount, String accountId, String? toAccountId, String? categoryId, LocalDate date, LocalTime time, String? note, List<String> tags
 });
 
 
@@ -63,7 +64,7 @@ class _$TransactionInputCopyWithImpl<$Res>
 
 /// Create a copy of TransactionInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? amount = null,Object? accountId = null,Object? toAccountId = freezed,Object? categoryId = freezed,Object? date = null,Object? time = null,Object? note = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? amount = null,Object? accountId = null,Object? toAccountId = freezed,Object? categoryId = freezed,Object? date = null,Object? time = null,Object? note = freezed,Object? tags = null,}) {
   return _then(TransactionInput(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as TransactionType,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -73,7 +74,8 @@ as String?,categoryId: freezed == categoryId ? _self.categoryId : categoryId // 
 as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as LocalDate,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as LocalTime,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -158,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TransactionType type,  int amount,  String accountId,  String? toAccountId,  String? categoryId,  LocalDate date,  LocalTime time,  String? note)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TransactionType type,  int amount,  String accountId,  String? toAccountId,  String? categoryId,  LocalDate date,  LocalTime time,  String? note,  List<String> tags)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TransactionInput() when $default != null:
-return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.categoryId,_that.date,_that.time,_that.note);case _:
+return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.categoryId,_that.date,_that.time,_that.note,_that.tags);case _:
   return orElse();
 
 }
@@ -179,10 +181,10 @@ return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TransactionType type,  int amount,  String accountId,  String? toAccountId,  String? categoryId,  LocalDate date,  LocalTime time,  String? note)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TransactionType type,  int amount,  String accountId,  String? toAccountId,  String? categoryId,  LocalDate date,  LocalTime time,  String? note,  List<String> tags)  $default,) {final _that = this;
 switch (_that) {
 case _TransactionInput():
-return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.categoryId,_that.date,_that.time,_that.note);case _:
+return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.categoryId,_that.date,_that.time,_that.note,_that.tags);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +201,10 @@ return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TransactionType type,  int amount,  String accountId,  String? toAccountId,  String? categoryId,  LocalDate date,  LocalTime time,  String? note)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TransactionType type,  int amount,  String accountId,  String? toAccountId,  String? categoryId,  LocalDate date,  LocalTime time,  String? note,  List<String> tags)?  $default,) {final _that = this;
 switch (_that) {
 case _TransactionInput() when $default != null:
-return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.categoryId,_that.date,_that.time,_that.note);case _:
+return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.categoryId,_that.date,_that.time,_that.note,_that.tags);case _:
   return null;
 
 }
@@ -214,7 +216,7 @@ return $default(_that.type,_that.amount,_that.accountId,_that.toAccountId,_that.
 
 
 class _TransactionInput extends TransactionInput {
-  const _TransactionInput({required this.type, required this.amount, required this.accountId, this.toAccountId, this.categoryId, required this.date, required this.time, this.note}): super._();
+  const _TransactionInput({required this.type, required this.amount, required this.accountId, this.toAccountId, this.categoryId, required this.date, required this.time, this.note,  List<String> tags = const <String>[]}): _tags = tags,super._();
   
 
 @override final  TransactionType type;
@@ -225,6 +227,15 @@ class _TransactionInput extends TransactionInput {
 @override final  LocalDate date;
 @override final  LocalTime time;
 @override final  String? note;
+/// Tag names as typed; [validated] normalizes them (see [Tag.normalize]).
+ final  List<String> _tags;
+/// Tag names as typed; [validated] normalizes them (see [Tag.normalize]).
+@override@JsonKey() List<String> get tags {
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_tags);
+}
+
 
 /// Create a copy of TransactionInput
 /// with the given fields replaced by the non-null parameter values.
@@ -236,16 +247,16 @@ _$TransactionInputCopyWith<_TransactionInput> get copyWith => __$TransactionInpu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransactionInput&&(identical(other.type, type) || other.type == type)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.toAccountId, toAccountId) || other.toAccountId == toAccountId)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TransactionInput&&(identical(other.type, type) || other.type == type)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.toAccountId, toAccountId) || other.toAccountId == toAccountId)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other._tags, _tags));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,amount,accountId,toAccountId,categoryId,date,time,note);
+int get hashCode => Object.hash(runtimeType,type,amount,accountId,toAccountId,categoryId,date,time,note,const DeepCollectionEquality().hash(_tags));
 
 @override
 String toString() {
-  return 'TransactionInput(type: $type, amount: $amount, accountId: $accountId, toAccountId: $toAccountId, categoryId: $categoryId, date: $date, time: $time, note: $note)';
+  return 'TransactionInput(type: $type, amount: $amount, accountId: $accountId, toAccountId: $toAccountId, categoryId: $categoryId, date: $date, time: $time, note: $note, tags: $tags)';
 }
 
 
@@ -256,7 +267,7 @@ abstract mixin class _$TransactionInputCopyWith<$Res> implements $TransactionInp
   factory _$TransactionInputCopyWith(_TransactionInput value, $Res Function(_TransactionInput) _then) = __$TransactionInputCopyWithImpl;
 @override @useResult
 $Res call({
- TransactionType type, int amount, String accountId, String? toAccountId, String? categoryId, LocalDate date, LocalTime time, String? note
+ TransactionType type, int amount, String accountId, String? toAccountId, String? categoryId, LocalDate date, LocalTime time, String? note, List<String> tags
 });
 
 
@@ -273,7 +284,7 @@ class __$TransactionInputCopyWithImpl<$Res>
 
 /// Create a copy of TransactionInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? amount = null,Object? accountId = null,Object? toAccountId = freezed,Object? categoryId = freezed,Object? date = null,Object? time = null,Object? note = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? amount = null,Object? accountId = null,Object? toAccountId = freezed,Object? categoryId = freezed,Object? date = null,Object? time = null,Object? note = freezed,Object? tags = null,}) {
   return _then(_TransactionInput(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as TransactionType,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -283,7 +294,8 @@ as String?,categoryId: freezed == categoryId ? _self.categoryId : categoryId // 
 as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as LocalDate,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as LocalTime,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

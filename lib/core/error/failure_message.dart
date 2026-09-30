@@ -42,4 +42,6 @@ String validationMessage(AppLocalizations l10n, ValidationReason reason) =>
       ValidationReason.endBeforeStart => l10n.validation_end_before_start,
       ValidationReason.pinInvalid => l10n.validation_pin,
       ValidationReason.passwordTooShort => l10n.validation_password_short,
+      ValidationReason.tagTooLong => l10n.validation_tag_too_long,
+      ValidationReason.tooManyTags => l10n.validation_too_many_tags,
     };

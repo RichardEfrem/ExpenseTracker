@@ -28,6 +28,7 @@ class DuplicateTransaction {
           date: LocalDate.fromDateTime(now),
           time: LocalTime.fromDateTime(now),
           note: t.note,
+          tags: t.tags,
         ),
       );
     });

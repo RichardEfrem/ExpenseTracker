@@ -157,6 +157,54 @@ void main() {
     test('text matches category name', () async {
       expect(await matching(const TransactionFilter(text: 'sal')), [salary]);
     });
+
+    Future<void> tag(String transactionId, String name) async {
+      await db
+          .into(db.tags)
+          .insert(
+            TagsCompanion.insert(id: name, name: name, createdAt: 0),
+            mode: InsertMode.insertOrIgnore,
+          );
+      await db
+          .into(db.transactionTags)
+          .insert(
+            TransactionTagsCompanion.insert(
+              transactionId: transactionId,
+              tagId: name,
+            ),
+          );
+    }
+
+    test('tags: any of the chosen tags (SRCH-02)', () async {
+      await tag(lunch, 'trip-bali');
+      await tag(taxi, 'trip-bali');
+      await tag(taxi, 'work');
+      await tag(salary, 'work');
+      expect(await matching(const TransactionFilter(tags: {'trip-bali'})), [
+        lunch,
+        taxi,
+      ]);
+      expect(
+        (await matching(
+          const TransactionFilter(tags: {'trip-bali', 'work'}),
+        )).toSet(),
+        {lunch, taxi, salary},
+        reason: 'no duplicates for a row with both tags',
+      );
+      expect(
+        await matching(
+          const TransactionFilter(tags: {'trip-bali'}, text: 'lunch'),
+        ),
+        [lunch],
+      );
+      expect((await summary(const TransactionFilter(tags: {'work'}))).count, 2);
+    });
+
+    test('text matches a tag, with or without #', () async {
+      await tag(taxi, 'trip-bali');
+      expect(await matching(const TransactionFilter(text: 'BALI')), [taxi]);
+      expect(await matching(const TransactionFilter(text: '#trip')), [taxi]);
+    });
     test('% and _ in search are literal', () async {
       expect(await matching(const TransactionFilter(text: '50%')), [taxi]);
       // As wildcards these would match "off" and "50% off".
